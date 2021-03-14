@@ -370,7 +370,7 @@ window.onload = function() {
         var title = document.createElement("div");  // Create div element
         title.id = "titleID";   // Set the element ID
         title.className = "gridHeader";
-        var titleText = document.createTextNode("My Weather Portal");   // Create text node under the div element
+        var titleText = document.createTextNode("Current Weather in Hong Kong");   // Create text node under the div element
         title.appendChild(titleText);   // Append text node to div
         content.appendChild(title);   // Append div element to document
 
