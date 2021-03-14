@@ -1,3 +1,13 @@
+// Set the favicon (i.e. shortcut icon) for the web page
+var favicon = document.querySelector("link[rel~='icon']");
+if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'shortcut icon';
+    document.getElementsByTagName('head')[0].appendChild(favicon);
+}
+favicon.href = 'images/favicon.png';
+
+// Execute after the browser has completely load all content
 window.onload = function() {
 
     /* ---------- Helper Functions ---------- */
