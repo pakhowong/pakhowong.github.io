@@ -1,0 +1,315 @@
+body {
+    background-color: #F6F6F6;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+/* ---------- Grid Properties ---------- */
+
+.gridContainer {
+    display: grid;
+    width: 98%;
+    max-width: 850px;   /* Optimal desktop browser should have at least 1000px of screen width */
+    grid-template-columns: auto auto auto;
+    grid-gap: 20px;
+    background-color: #F6F6F6;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gridHeader {
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.gridWide {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    height: 170px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-shadow: 5px 5px lightgray; 
+}
+
+.gridMedium {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    height: 170px;
+    box-shadow: 5px 5px lightgray;
+}
+
+.gridSmall {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    height: 170px;
+    box-shadow: 5px 5px lightgray;  
+}
+
+/* ---------- End of Grid Properties ---------- */
+
+
+/* ---------- Web Page Elements ---------- */
+
+#titleID {
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+#headerBlockID {
+    background-repeat: no-repeat;
+    background-size: cover; /* Stretch and crop the image */
+    height: 130px;
+    position: relative;
+    padding: 10px;
+}
+
+#headerBlockLocationID {
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+    padding-bottom: 15px;
+}
+
+#headerBlockWeatherIconContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+#headerBlockWeatherIconID {
+    height: 60px;
+    width: auto;
+}
+
+#headerBlockTemperatureContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+#headerBlockTemperatureID {
+    font-size: 50px;
+    padding-bottom: 0px;
+    margin: 0px;
+}
+
+#headerBlockHumidityContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+#headerBlockHumidityIconID {
+    height: 40px;
+    width: auto;
+}
+
+#headerBlockHumidityID {
+    font-size: 40px;
+}
+
+#headerBlockRainfallContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+#headerBlockRainfallIconID {
+    height: 40px;
+    width: auto;
+}
+
+#headerBlockRainfallID {
+    font-size: 40px;
+}
+
+#headerBlockUVContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+#headerBlockUVIconID {
+    height: 40px;
+    width: auto;
+}
+
+#headerBlockUVID {
+    font-size: 40px;
+}
+
+#headerBlockWarningID {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    background-color: #EF7F7E;
+    max-width: 90px;
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+#headerBlockUpdateID {
+    font-size: 10px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+#headerBlockWarningMessageID {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    background-color: #EF7F7E;
+    width: auto;
+    height: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+#myDataBlockID {
+    background-color: #CDFFCC;
+    position: relative;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#myDataBlockHeadingID {
+    display: block;
+}
+
+#myDataBlockRegionContainerID {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    display: inline-block;
+}
+
+#myDataBlockDistrictID {
+    font-size: 15px;
+    font-weight: normal;
+}
+
+#myDataBlockSuburbID {
+    font-size: 15px;
+    font-weight: normal;
+}
+
+#myDataBlockTemperatureID {
+    font-size: 40px;
+    font-weight: normal;
+    display: inline;
+    padding-left: 30px;
+}
+
+#myDataBlockRainfallContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 60px;
+}
+
+#myDataBlockRainfallIconID {
+    height: 40px;
+    width: auto;
+}
+
+#myDataBlockRainfallID {
+    font-size: 40px;
+    font-weight: normal;
+}
+
+#myDataBlockAQHIContainerID {
+    display: inline;
+    height: 60px;
+    vertical-align: middle;
+    padding-left: 60px;
+    padding-top: 15px;
+}
+
+#myDataBlockAQHIIconID {
+    height: 40px;
+    width: auto;
+}
+
+#myDataBlockAQHIID {
+    font-weight: normal;
+}
+
+#temperaturesBlockID {
+    background-color:white;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#temperaturesBlockPromptID {
+    font-size: 15px;
+    font-weight: normal;
+    padding-top: 15px;
+    padding-left: 10px;
+}
+
+#temperaturesBlockDropdownID {
+    margin-left: 10px;
+}
+
+#temperaturesBlockTemperatureID {
+    font-size: 40px;
+    font-weight: normal;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+#forecastBlockID {
+    background-color: #EDEDF9;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#forecastBlockHeadingID {
+    position: absolute;
+}
+
+#forecastBlockTableContainerID {
+    display: table;
+    padding-top: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: auto;   /* Horizontally scrollable table */  
+    font-weight: normal;
+}
+
+#forecastBlockTableID {
+    display: flex;
+    white-space: nowrap;
+}
+
+.forecastBlockTableCell {
+    text-align: center;
+    font-size: 15px;
+    padding: 5px;
+}
