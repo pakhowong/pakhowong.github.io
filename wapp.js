@@ -715,7 +715,7 @@ window.onload = function() {
             longitude = position.coords.longitude;
             
             // Call Reverse Geocoding API
-            fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=18&addressdetails=1', {method: 'get'})
+            fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=18&addressdetails=1&accept-language=en', {method: 'get'})
                 .then(response => {
                     if (response.status == 200) {
                         return response.json();
