@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BN(O) Dynamic Absence Checker</title>
+<title>UK BN(O) Immigration</title>
 <style>
   :root{
     --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --border:#d1d5db;
@@ -73,36 +73,37 @@
 </head>
 <body>
 <div class="container">
-  <h1>BN(O) ILR & Citizenship Absence Checker</h1>
+  <h1>UK BN(O) Immigration</h1>
+  <h2>Absence Tracker</h2>
   <div class="intro">
-    Dynamic calendar view with year picker. Red cells are days you were outside the UK. Under each date, the bracketed number is the accumulated absence count in the previous 12 months, inclusive of that day.
-    Days with a starred date have an embedded hyperlink for supporting documents such as tickets or boarding passes.
+    ILR requirement: ≤180 days of absence from The UK in any rolling 12 months
+    Citizenship requirement: ≤450 days of absence from The UK over a five-year period and ≤90 days of absence in the last 12 months before citizenship application
   </div>
 
   <div class="grid">
     <div class="card">
       <div id="ilrPill" class="pill neutral">Checking ILR…</div>
-      <div><strong>ILR window:</strong> 1 Oct 2024 to 30 Sep 2029</div>
+      <div><strong>ILR window:</strong> 1 October 2024 to 30 September 2029</div>
       <div id="ilrText" class="small"></div>
     </div>
     <div class="card">
       <div id="citPill" class="pill neutral">Checking citizenship…</div>
-      <div><strong>Citizenship window:</strong> 1 Oct 2025 to 30 Sep 2030</div>
+      <div><strong>Citizenship window:</strong> 1 October 2025 to 30 September 2030</div>
       <div id="citText" class="small"></div>
     </div>
     <div class="card">
-      <div class="pill neutral">Current data</div>
+      <div><strong>Summary</strong></div>
       <div id="dataText" class="small"></div>
     </div>
   </div>
 
   <div class="grid">
     <div class="card">
-      <div><strong>Remaining days available today</strong></div>
+      <div><strong>Remaining holiday quota</strong></div>
       <div id="today180Text" class="small" style="margin-top:8px;"></div>
     </div>
     <div class="card">
-      <div><strong>Additional 90-day rolling safety rule</strong></div>
+      <div><strong>Additional safety buffer</strong></div>
       <div id="today90Text" class="small" style="margin-top:8px;"></div>
     </div>
   </div>
@@ -120,7 +121,7 @@
     <div class="legend-row">
       <span><span class="swatch absent"></span>Absent from the UK</span>
       <span><span class="swatch today"></span>Today</span>
-      <span><span class="swatch linked"></span>Day has supporting-document hyperlink (starred date)</span>
+      <span><span class="swatch linked"></span>Days with supporting document</span>
     </div>
   </div>
 
@@ -128,10 +129,10 @@
 
   <div class="footnote">
     Notes:
-    <br>1. Absence ranges and document links are hardcoded.
-    <br>2. Both departure day and return day are counted as absent days.
-    <br>3. The additional 90-day rolling safety rule ignores all absence days before 1 October 2025.
-    <br>4. Edit the <code>DAY_LINKS</code> object in the code to attach your Google Drive links to specific dates.
+    <br>1. Both the departure day and the return day are already removed beforehand.
+    <br>2. As a safety buffer, an additional rule '≤90-day of absence over a 12-month rolling period' is added and it ignores all absence days before 1 October 2025.
+    <br>3. Days of absence are added (hardcode) under <code>ABSENCE_RANGES</code>.
+    <br>4. Supporting documents are added (hardcode) under <code>DAY_LINKS</code> object as Google Drive links to specific dates.
   </div>
 </div>
 
@@ -304,9 +305,9 @@ function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
     `Absence days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
 
   document.getElementById("dataText").innerHTML =
-    `Trips entered: <strong>${ABSENCE_RANGES.length}</strong><br>` +
-    `Total absent days shown in tracked period: <strong>${totalAbsent}</strong><br>` +
-    `Days with document links: <strong>${Object.keys(DAY_LINKS).length}</strong>`;
+    `Trips taken: <strong>${ABSENCE_RANGES.length}</strong><br>` +
+    `Total number of absent days: <strong>${totalAbsent}</strong><br>` +
+    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS).length}</strong>`;
 
   document.getElementById("today180Text").innerHTML =
     `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
@@ -319,8 +320,8 @@ function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
       `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
   } else {
     document.getElementById("today90Text").innerHTML =
-      `As of <strong>${todayKey}</strong>, applying your self-imposed rolling 12-month limit from <strong>${SAFETY_RULE_START}</strong>, and ignoring all days before that date, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
-      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
+      `As of <strong>${todayKey}</strong>, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Remaining days available under the 90-day rolling safety buffer rule: <strong>${safetyRemaining}</strong> day(s).`;
   }
 
   document.getElementById("currentDateText").innerHTML =
