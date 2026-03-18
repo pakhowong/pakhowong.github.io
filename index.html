@@ -76,8 +76,9 @@
   <h1>UK BN(O) Immigration</h1>
   <h2>Absence Tracker</h2>
   <div class="intro">
-    <br>ILR requirement: ≤180 days of absence from The UK in any rolling 12 months
+    ILR requirement: ≤180 days of absence from The UK in any rolling 12 months
     <br>Citizenship requirement: ≤450 days of absence from The UK over a five-year period and ≤90 days of absence in the last 12 months before citizenship application
+    <br><br><a href="https://my.flightradar24.com/pakhowong">Flight History</a>
   </div>
 
   <div class="grid">
@@ -302,7 +303,7 @@ function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
 
   document.getElementById("citText").innerHTML =
     `Total absence days in citizenship window: <strong>${citTotal}</strong> / ${CIT_TOTAL_LIMIT}.<br>` +
-    `Absence days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
+    `Absent days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
 
   document.getElementById("dataText").innerHTML =
     `Trips taken: <strong>${ABSENCE_RANGES.length}</strong><br>` +
