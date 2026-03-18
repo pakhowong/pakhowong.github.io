@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BN(O) Dynamic Absence Checker</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --border:#d1d5db;
+    --accent:#1d4ed8; --absent-bg:#fee2e2; --absent-border:#ef4444; --today-bg:#dbeafe;
+    --ok-bg:#dcfce7; --ok-text:#166534; --bad-bg:#fee2e2; --bad-text:#991b1b; --neutral-bg:#e5e7eb;
+    --link:#7c3aed;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); }
+  .container { max-width:1700px; margin:0 auto; padding:16px; }
+  h1 { margin:0 0 8px; font-size:28px; }
+  .intro { color:var(--muted); line-height:1.45; margin-bottom:18px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .pill { display:inline-block; padding:6px 10px; border-radius:999px; font-size:14px; font-weight:700; margin-bottom:8px; }
+  .pill.ok { background:var(--ok-bg); color:var(--ok-text); }
+  .pill.bad { background:var(--bad-bg); color:var(--bad-text); }
+  .pill.neutral { background:var(--neutral-bg); color:#374151; }
+  .small { font-size:13px; color:var(--muted); line-height:1.45; }
+  .legend, .controls { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 16px; margin-bottom:16px; }
+  .legend-row { display:flex; flex-wrap:wrap; gap:18px; margin-top:8px; color:var(--muted); font-size:14px; align-items:center; }
+  .swatch { display:inline-block; width:18px; height:18px; border:1px solid var(--border); border-radius:4px; vertical-align:middle; margin-right:8px; }
+  .swatch.absent { background:var(--absent-bg); border-color:var(--absent-border); }
+  .swatch.today { background:var(--today-bg); border-color:var(--accent); }
+  .swatch.linked { background:#f3e8ff; border-color:var(--link); }
+  .controls-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  label { font-weight:700; }
+  select {
+    border:1px solid var(--border); border-radius:8px; background:#fff; padding:8px 10px; font-size:14px;
+  }
+  .months { display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:16px; overflow-x:hidden; }
+  .month { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,.04); min-width:0; }
+  .month-title { font-size:18px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+  .weekdays, .days { display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:4px; width:100%; }
+  .weekday { text-align:center; font-size:12px; font-weight:700; color:var(--muted); padding-bottom:4px; }
+  .day, .empty {
+    min-height:66px; border:1px solid var(--border); border-radius:8px; background:#fff; padding:4px;
+    min-width:0; overflow:hidden;
+  }
+  .empty { background:#f9fafb; border-style:dashed; }
+  .day.absent { background:var(--absent-bg); border-color:var(--absent-border); }
+  .day.today { outline:2px solid var(--accent); outline-offset:1px; background:var(--today-bg); }
+  .day.has-link .day-num { color:var(--link); }
+  .day-link {
+    display:block; color:inherit; text-decoration:none; width:100%; height:100%;
+  }
+  .day-link:hover { text-decoration:none; }
+  .day-num {
+    font-size:12px; font-weight:700; line-height:1.2; margin-bottom:6px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .star { color:var(--link); font-weight:700; margin-left:2px; }
+  .rolling {
+    font-size:12px; line-height:1.2; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .footnote { margin-top:18px; color:var(--muted); font-size:13px; line-height:1.5; }
+  code { background:#eef2ff; padding:1px 4px; border-radius:4px; }
+  @media (max-width:1200px){ .months{ grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); } }
+  @media (max-width:720px){
+    .container{ padding:12px; }
+    .months{ grid-template-columns:1fr; }
+    .day, .empty{ min-height:56px; padding:3px; }
+    .day-num, .rolling{ font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>BN(O) ILR & Citizenship Absence Checker</h1>
+  <div class="intro">
+    Dynamic calendar view with year picker. Red cells are days you were outside the UK. Under each date, the bracketed number is the accumulated absence count in the previous 12 months, inclusive of that day.
+    Days with a starred date have an embedded hyperlink for supporting documents such as tickets or boarding passes.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div id="ilrPill" class="pill neutral">Checking ILR…</div>
+      <div><strong>ILR window:</strong> 1 Oct 2024 to 30 Sep 2029</div>
+      <div id="ilrText" class="small"></div>
+    </div>
+    <div class="card">
+      <div id="citPill" class="pill neutral">Checking citizenship…</div>
+      <div><strong>Citizenship window:</strong> 1 Oct 2025 to 30 Sep 2030</div>
+      <div id="citText" class="small"></div>
+    </div>
+    <div class="card">
+      <div class="pill neutral">Current data</div>
+      <div id="dataText" class="small"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div><strong>Remaining days available today</strong></div>
+      <div id="today180Text" class="small" style="margin-top:8px;"></div>
+    </div>
+    <div class="card">
+      <div><strong>Additional 90-day rolling safety rule</strong></div>
+      <div id="today90Text" class="small" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-row">
+      <label for="yearPicker">Calendar year:</label>
+      <select id="yearPicker"></select>
+      <div id="currentDateText" class="small"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <strong>Legend</strong>
+    <div class="legend-row">
+      <span><span class="swatch absent"></span>Absent from the UK</span>
+      <span><span class="swatch today"></span>Today</span>
+      <span><span class="swatch linked"></span>Day has supporting-document hyperlink (starred date)</span>
+    </div>
+  </div>
+
+  <div id="months" class="months"></div>
+
+  <div class="footnote">
+    Notes:
+    <br>1. Absence ranges and document links are hardcoded.
+    <br>2. Both departure day and return day are counted as absent days.
+    <br>3. The additional 90-day rolling safety rule ignores all absence days before 1 October 2025.
+    <br>4. Edit the <code>DAY_LINKS</code> object in the code to attach your Google Drive links to specific dates.
+  </div>
+</div>
+
+<script>
+const ABSENCE_RANGES = [
+  ["2024-10-01", "2024-10-17"],
+  ["2024-10-24", "2024-10-26"],
+  ["2024-11-10", "2024-11-18"],
+  ["2025-01-03", "2025-01-06"],
+  ["2025-01-19", "2025-01-21"],
+  ["2025-01-27", "2025-01-29"],
+  ["2025-03-09", "2025-03-15"],
+  ["2025-03-23", "2025-04-05"],
+  ["2025-04-19", "2025-05-11"],
+  ["2025-05-18", "2025-06-06"],
+  ["2025-07-03", "2025-07-06"],
+  ["2025-07-09", "2025-08-08"],
+  ["2025-08-24", "2025-10-15"],
+  ["2025-11-25", "2025-12-01"],
+  ["2025-12-26", "2026-01-02"],
+  ["2026-02-07", "2026-02-19"],
+  ["2026-03-27", "2026-04-11"],
+  ["2026-05-04", "2026-05-25"]
+];
+
+const DAY_LINKS = {
+  "2024-10-01": "https://drive.google.com/",
+  "2024-10-24": "https://drive.google.com/",
+  "2025-03-23": "https://drive.google.com/",
+  "2025-08-24": "https://drive.google.com/",
+  "2025-12-26": "https://drive.google.com/",
+  "2026-03-27": "https://drive.google.com/"
+};
+
+const SITE_START = "2024-10-01";
+const SITE_END = "2031-12-31";
+
+const ILR_START = "2024-10-01";
+const ILR_END = "2029-09-30";
+const CIT_START = "2025-10-01";
+const CIT_END = "2030-09-30";
+const CIT_FINAL_START = "2029-10-01";
+const CIT_FINAL_END = "2030-09-30";
+
+const ILR_LIMIT = 180;
+const CIT_TOTAL_LIMIT = 450;
+const CIT_FINAL_12M_LIMIT = 90;
+
+const SAFETY_RULE_START = "2025-10-01";
+const SAFETY_RULE_LIMIT = 90;
+
+function parseDateLocal(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function addDays(date, n) {
+  const dt = new Date(date);
+  dt.setDate(dt.getDate() + n);
+  return dt;
+}
+
+function buildAbsenceSet(ranges) {
+  const absent = new Set();
+  for (const [startStr, endStr] of ranges) {
+    let current = parseDateLocal(startStr);
+    const end = parseDateLocal(endStr);
+    while (current <= end) {
+      absent.add(formatDate(current));
+      current = addDays(current, 1);
+    }
+  }
+  return absent;
+}
+
+function buildRollingCounts(siteStartStr, siteEndStr, absentSet, minCountDateStr = null) {
+  const counts = {};
+  let current = parseDateLocal(siteStartStr);
+  const siteEnd = parseDateLocal(siteEndStr);
+  const minCountDate = minCountDateStr ? parseDateLocal(minCountDateStr) : null;
+
+  while (current <= siteEnd) {
+    const windowStart = addDays(current, -364);
+    let probe = new Date(windowStart);
+    let count = 0;
+
+    while (probe <= current) {
+      const key = formatDate(probe);
+      if (absentSet.has(key) && (!minCountDate || probe >= minCountDate)) {
+        count++;
+      }
+      probe = addDays(probe, 1);
+    }
+
+    counts[formatDate(current)] = count;
+    current = addDays(current, 1);
+  }
+  return counts;
+}
+
+function countAbsencesBetween(absentSet, startStr, endStr) {
+  let d = parseDateLocal(startStr);
+  const end = parseDateLocal(endStr);
+  let count = 0;
+  while (d <= end) {
+    if (absentSet.has(formatDate(d))) count++;
+    d = addDays(d, 1);
+  }
+  return count;
+}
+
+function maxRollingInRange(rollingCounts, startStr, endStr) {
+  let d = parseDateLocal(startStr);
+  const end = parseDateLocal(endStr);
+  let max = -1;
+  let maxDate = "";
+  while (d <= end) {
+    const key = formatDate(d);
+    const value = rollingCounts[key] || 0;
+    if (value > max) {
+      max = value;
+      maxDate = key;
+    }
+    d = addDays(d, 1);
+  }
+  return { max, maxDate };
+}
+
+function monthTitle(year, monthIndex) {
+  return new Date(year, monthIndex, 1).toLocaleString("en-GB", { month: "long", year: "numeric" });
+}
+
+function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
+  const ilr = maxRollingInRange(rollingCounts, ILR_START, ILR_END);
+  const ilrCompliant = ilr.max <= ILR_LIMIT;
+
+  const citTotal = countAbsencesBetween(absentSet, CIT_START, CIT_END);
+  const citFinal12m = countAbsencesBetween(absentSet, CIT_FINAL_START, CIT_FINAL_END);
+  const citCompliant = citTotal <= CIT_TOTAL_LIMIT && citFinal12m <= CIT_FINAL_12M_LIMIT;
+
+  const today = new Date();
+  const todayKey = formatDate(today);
+  const todayRolling = rollingCounts[todayKey] || 0;
+  const todayRemaining180 = ILR_LIMIT - todayRolling;
+
+  const safetyStart = parseDateLocal(SAFETY_RULE_START);
+  const safetyRefDate = today < safetyStart ? safetyStart : today;
+  const safetyRefKey = formatDate(safetyRefDate);
+  const safetyUsed = safetyRollingCounts[safetyRefKey] || 0;
+  const safetyRemaining = SAFETY_RULE_LIMIT - safetyUsed;
+
+  const totalAbsent = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
+
+  const ilrPill = document.getElementById("ilrPill");
+  ilrPill.className = "pill " + (ilrCompliant ? "ok" : "bad");
+  ilrPill.textContent = ilrCompliant ? "ILR compliant" : "ILR not compliant";
+
+  document.getElementById("ilrText").innerHTML =
+    `Highest rolling 12-month absence count: <strong>${ilr.max}</strong> day(s), on <strong>${ilr.maxDate}</strong>. Limit: ${ILR_LIMIT}.`;
+
+  const citPill = document.getElementById("citPill");
+  citPill.className = "pill " + (citCompliant ? "ok" : "bad");
+  citPill.textContent = citCompliant ? "Citizenship compliant" : "Citizenship not compliant";
+
+  document.getElementById("citText").innerHTML =
+    `Total absence days in citizenship window: <strong>${citTotal}</strong> / ${CIT_TOTAL_LIMIT}.<br>` +
+    `Absence days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
+
+  document.getElementById("dataText").innerHTML =
+    `Trips entered: <strong>${ABSENCE_RANGES.length}</strong><br>` +
+    `Total absent days shown in tracked period: <strong>${totalAbsent}</strong><br>` +
+    `Days with document links: <strong>${Object.keys(DAY_LINKS).length}</strong>`;
+
+  document.getElementById("today180Text").innerHTML =
+    `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
+    `Remaining days available under the ILR 180-day rolling limit: <strong>${todayRemaining180}</strong> day(s).`;
+
+  if (today < safetyStart) {
+    document.getElementById("today90Text").innerHTML =
+      `Your self-imposed 90-day rolling rule starts on <strong>${SAFETY_RULE_START}</strong>.<br>` +
+      `Using <strong>${SAFETY_RULE_START}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
+  } else {
+    document.getElementById("today90Text").innerHTML =
+      `As of <strong>${todayKey}</strong>, applying your self-imposed rolling 12-month limit from <strong>${SAFETY_RULE_START}</strong>, and ignoring all days before that date, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
+  }
+
+  document.getElementById("currentDateText").innerHTML =
+    `Current date: <strong>${todayKey}</strong>`;
+}
+
+function createDayCell(dateObj, absentSet, rollingCounts) {
+  const key = formatDate(dateObj);
+  const hasLink = Boolean(DAY_LINKS[key]);
+  const isToday = key === formatDate(new Date());
+
+  const cell = document.createElement("div");
+  cell.className = "day";
+  if (absentSet.has(key)) cell.classList.add("absent");
+  if (isToday) cell.classList.add("today");
+  if (hasLink) cell.classList.add("has-link");
+
+  const wrapper = hasLink ? document.createElement("a") : document.createElement("div");
+  wrapper.className = "day-link";
+  if (hasLink) {
+    wrapper.href = DAY_LINKS[key];
+    wrapper.target = "_blank";
+    wrapper.rel = "noopener noreferrer";
+    wrapper.title = "Open supporting document";
+  } else {
+    wrapper.title = key;
+  }
+
+  const dayNum = document.createElement("div");
+  dayNum.className = "day-num";
+  dayNum.innerHTML = `${dateObj.getDate()}${hasLink ? '<span class="star">★</span>' : ''}`;
+
+  const rolling = document.createElement("div");
+  rolling.className = "rolling";
+  rolling.textContent = `(${rollingCounts[key] || 0})`;
+
+  wrapper.appendChild(dayNum);
+  wrapper.appendChild(rolling);
+  cell.appendChild(wrapper);
+  return cell;
+}
+
+function renderYearCalendar(year, absentSet, rollingCounts) {
+  const monthsEl = document.getElementById("months");
+  monthsEl.innerHTML = "";
+
+  for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+    const month = document.createElement("div");
+    month.className = "month";
+
+    const title = document.createElement("div");
+    title.className = "month-title";
+    title.textContent = monthTitle(year, monthIndex);
+    month.appendChild(title);
+
+    const weekdays = document.createElement("div");
+    weekdays.className = "weekdays";
+    ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(wd => {
+      const el = document.createElement("div");
+      el.className = "weekday";
+      el.textContent = wd;
+      weekdays.appendChild(el);
+    });
+    month.appendChild(weekdays);
+
+    const days = document.createElement("div");
+    days.className = "days";
+
+    const firstOfMonth = new Date(year, monthIndex, 1);
+    const mondayIndex = (firstOfMonth.getDay() + 6) % 7;
+    for (let i = 0; i < mondayIndex; i++) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      days.appendChild(empty);
+    }
+
+    const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateObj = new Date(year, monthIndex, day);
+      days.appendChild(createDayCell(dateObj, absentSet, rollingCounts));
+    }
+
+    month.appendChild(days);
+    monthsEl.appendChild(month);
+  }
+}
+
+function populateYearPicker() {
+  const picker = document.getElementById("yearPicker");
+  for (let year = 2024; year <= 2031; year++) {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    picker.appendChild(option);
+  }
+
+  const currentYear = new Date().getFullYear();
+  picker.value = (currentYear >= 2024 && currentYear <= 2031) ? String(currentYear) : "2024";
+}
+
+function init() {
+  const absentSet = buildAbsenceSet(ABSENCE_RANGES);
+  const rollingCounts = buildRollingCounts(SITE_START, SITE_END, absentSet);
+  const safetyRollingCounts = buildRollingCounts(SITE_START, SITE_END, absentSet, SAFETY_RULE_START);
+
+  renderSummary(absentSet, rollingCounts, safetyRollingCounts);
+  populateYearPicker();
+
+  const picker = document.getElementById("yearPicker");
+  renderYearCalendar(Number(picker.value), absentSet, rollingCounts);
+
+  picker.addEventListener("change", () => {
+    renderYearCalendar(Number(picker.value), absentSet, rollingCounts);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
