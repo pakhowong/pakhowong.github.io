@@ -46,7 +46,18 @@
   .empty { background:#f9fafb; border-style:dashed; }
   .day.absent { background:var(--absent-bg); border-color:var(--absent-border); }
   .day.today { outline:2px solid var(--accent); outline-offset:1px; background:var(--today-bg); }
-  .day.has-link .day-num { color:var(--link); }
+  .day.has-link {
+    background:#f3e8ff;            /* light purple background */
+    border-color:#7c3aed;          /* purple border */
+  }
+  .day.has-link .day-num {
+    color:#7c3aed;
+    font-weight:700;
+  }
+  .day.absent.has-link {
+    background: linear-gradient(135deg, #fee2e2 50%, #f3e8ff 50%);
+    border-color:#7c3aed;
+  }
   .day-link {
     display:block; color:inherit; text-decoration:none; width:100%; height:100%;
   }
@@ -69,6 +80,26 @@
     .day, .empty{ min-height:56px; padding:3px; }
     .day-num, .rolling{ font-size:11px; }
   }
+  .external-links {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .external-links button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .external-links button:hover {
+    background: #1e40af;
+  }
 </style>
 </head>
 <body>
@@ -78,8 +109,11 @@
   <div class="intro">
     ILR requirement: ≤180 days of absence from The UK in any rolling 12 months
     <br>Citizenship requirement: ≤450 days of absence from The UK over a five-year period and ≤90 days of absence in the last 12 months before citizenship application
-    <br><br><a href="https://my.flightradar24.com/pakhowong" target="_blank" rel="noopener noreferrer">Flight History</a>     |     
-    <a href="https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055">UK eVisa Portal</a>
+  </div>
+
+  <div class="external-links">
+    <button onclick="openExternal('flightradar')">✈️ Flight History</button>
+    <button onclick="openExternal('ukvi')">🇬🇧 UK eVisa Portal</button>
   </div>
 
   <div class="grid">
@@ -429,6 +463,18 @@ function populateYearPicker() {
   picker.value = (currentYear >= 2024 && currentYear <= 2031) ? String(currentYear) : "2024";
 }
 
+function openExternal(type) {
+  let url = "";
+
+  if (type === "flightradar") {
+    url = "https://my.flightradar24.com/pakhowong";
+  } else if (type === "ukvi") {
+    url = "https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055";
+  }
+
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+  
 function init() {
   const absentSet = buildAbsenceSet(ABSENCE_RANGES);
   const rollingCounts = buildRollingCounts(SITE_START, SITE_END, absentSet);
