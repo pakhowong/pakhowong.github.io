@@ -201,12 +201,30 @@ const ABSENCE_RANGES = [
 ];
 
 const DAY_LINKS = {
-  "2025-04-18": "https://drive.google.com/file/d/1MSc6fa7umFZ4CQBIRWSQmAMYFmSmuhDr/view?usp=drivesdk",
-  "2025-05-12": "https://drive.google.com/file/d/1EpIe8Ay8_-6G5DdWAb6x28tiwZgldBOu/view?usp=drivesdk",
-  "2026-03-26": "https://drive.google.com/file/d/1vqktjU51xKapXwjX5VNEIhCLtn5DFyiL/view?usp=drivesdk",
-  "2026-04-12": "https://drive.google.com/file/d/1-7K17aZ7N8rrpTm3wKYtvM8Xz3N0GD4_/view?usp=drivesdk",
-  "2026-05-03": "https://drive.google.com/file/d/1Gz5onLtwm5Pj3t9PlvZfFl7wZ-njSK4t/view?usp=drivesdk",
-  "2026-05-26": "https://drive.google.com/file/d/1t-x6Ac3Eqt3CNcBJxVktLZDOMekVE70V/view?usp=drivesdk"
+  "2025-04-18": {
+    url: "https://drive.google.com/file/d/1MSc6fa7umFZ4CQBIRWSQmAMYFmSmuhDr/view?usp=drivesdk",
+    name: "LGW to GYD"
+  },
+  "2025-05-12": {
+    url: "https://drive.google.com/file/d/1EpIe8Ay8_-6G5DdWAb6x28tiwZgldBOu/view?usp=drivesdk",
+    name: "NRT to LGW"
+  },
+  "2026-03-26": {
+    url: "https://drive.google.com/file/d/1vqktjU51xKapXwjX5VNEIhCLtn5DFyiL/view?usp=drivesdk",
+    name: "LGW to ARN"
+  },
+  "2026-04-12": {
+    url: "https://drive.google.com/file/d/1vqktjU51xKapXwjX5VNEIhCLtn5DFyiL/view?usp=drivesdk",
+    name: "LGW to ARN"
+  },
+  "2026-05-03": {
+    url: "https://drive.google.com/file/d/1Gz5onLtwm5Pj3t9PlvZfFl7wZ-njSK4t/view?usp=drivesdk",
+    name: "LHR to SFO"
+  },
+  "2026-05-26": {
+    url: "https://drive.google.com/file/d/1t-x6Ac3Eqt3CNcBJxVktLZDOMekVE70V/view?usp=drivesdk",
+    name: "MIA to LHR"
+  }
 };
 
 const SITE_START = "2024-10-01";
@@ -388,17 +406,19 @@ function createDayCell(dateObj, absentSet, rollingCounts) {
   const wrapper = hasLink ? document.createElement("a") : document.createElement("div");
   wrapper.className = "day-link";
   if (hasLink) {
-    wrapper.href = DAY_LINKS[key];
+    wrapper.href = DAY_LINKS[key].url;
     wrapper.target = "_blank";
     wrapper.rel = "noopener noreferrer";
-    wrapper.title = "Open supporting document";
+    wrapper.title = DAY_LINKS[key].name;
   } else {
     wrapper.title = key;
   }
 
   const dayNum = document.createElement("div");
   dayNum.className = "day-num";
-  dayNum.innerHTML = `${dateObj.getDate()}${hasLink ? '<span class="star">★</span>' : ''}`;
+  dayNum.innerHTML = hasLink
+    ? `${dateObj.getDate()}<span class="star" title="${DAY_LINKS[key].name}">★</span>`
+    : `${dateObj.getDate()}`;
 
   const rolling = document.createElement("div");
   rolling.className = "rolling";
@@ -425,7 +445,7 @@ function renderYearCalendar(year, absentSet, rollingCounts) {
 
     const weekdays = document.createElement("div");
     weekdays.className = "weekdays";
-    ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(wd => {
+    ["Sun", "Mon","Tue","Wed","Thu","Fri","Sat"].forEach(wd => {
       const el = document.createElement("div");
       el.className = "weekday";
       el.textContent = wd;
@@ -437,8 +457,8 @@ function renderYearCalendar(year, absentSet, rollingCounts) {
     days.className = "days";
 
     const firstOfMonth = new Date(year, monthIndex, 1);
-    const mondayIndex = (firstOfMonth.getDay() + 6) % 7;
-    for (let i = 0; i < mondayIndex; i++) {
+    const sundayIndex = firstOfMonth.getDay();
+    for (let i = 0; i < sundayIndex; i++) {
       const empty = document.createElement("div");
       empty.className = "empty";
       days.appendChild(empty);
