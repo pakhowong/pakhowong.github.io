@@ -520,3 +520,95 @@ init();
 </script>
 </body>
 </html>
+
+
+<!-- ===================== Countries Visited (Natural Earth Sovereignty) ===================== -->
+<div class="map-card" style="margin-top:40px;">
+  <h2>Countries Visited</h2>
+  <div class="small">
+    Uses Natural Earth (Admin-0 Sovereignty). Hover shows country name. Click to zoom. 
+    Microstates and missing entities are supplemented with markers.
+  </div>
+
+  <div style="margin-top:10px; font-size:14px;">
+    <strong>Legend:</strong><br>
+    <span style="display:inline-block;width:14px;height:14px;background:#93c5fd;border:1px solid #1d4ed8;margin-right:6px;"></span>Visited country
+    &nbsp;&nbsp;
+    <span style="display:inline-block;width:14px;height:14px;background:#fbbf24;border-radius:50%;margin-right:6px;"></span>Microstate / marker
+  </div>
+
+  <div id="visitedMapNE" style="width:100%;height:650px;margin-top:12px;"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const VISITED_COUNTRIES_USER = [
+  "Albania","Andorra","Antigua and Barbuda","Armenia","Australia","Austria","Azerbaijan","Bahamas",
+  "Barbados","Belgium","Belize","Bosnia and Herzegovina","Brunei","Cambodia","Canada","China",
+  "Cook Islands","Croatia","Cyprus","Czech Republic","Denmark","Dominica","Dominican Republic",
+  "Egypt","Estonia","Fiji","Finland","France","Georgia","Germany","Greece","Grenada","Guatemala",
+  "Hungary","Iceland","Indonesia","Ireland","Israel","Italy","Jamaica","Japan","Jordan",
+  "Kazakhstan","Kyrgyzstan","Laos","Latvia","Liechtenstein","Lithuania","Luxembourg","Malaysia",
+  "Maldives","Malta","Mexico","Monaco","Montenegro","Nepal","New Zealand","Niue","Norway","Oman",
+  "Palestine","Philippines","Poland","Portugal","Romania","Samoa","San Marino","Saudi Arabia",
+  "Serbia","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka",
+  "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Switzerland","Syria",
+  "Taiwan","Tajikistan","Thailand","Netherlands","Tonga","Trinidad and Tobago","Turkey",
+  "United Arab Emirates","United Kingdom","United States","Uzbekistan","Vanuatu","Vatican City",
+  "Vietnam","Qatar"
+];
+
+const NAME_ALIASES = {
+  "United States": "United States of America",
+  "Czech Republic": "Czechia",
+  "Bosnia and Herzegovina": "Bosnia and Herz.",
+  "Palestine": "Palestine",
+  "South Korea": "South Korea",
+  "North Korea": "North Korea",
+  "Russia": "Russia",
+  "Syria": "Syria"
+};
+
+function normaliseName(name){
+  return NAME_ALIASES[name] || name;
+}
+
+async function initMap(){
+  const map = L.map('visitedMapNE').setView([20,0],2);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap & CARTO'
+  }).addTo(map);
+
+  const res = await fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_sovereignty.geojson');
+  const geo = await res.json();
+
+  const visitedSet = new Set(VISITED_COUNTRIES_USER.map(normaliseName));
+
+  const visited = geo.features.filter(f => {
+    const n = f.properties.SOVEREIGNT || f.properties.ADMIN;
+    return visitedSet.has(n);
+  });
+
+  const layer = L.geoJSON(visited, {
+    style:{
+      color:'#1d4ed8',
+      weight:1.5,
+      fillColor:'#93c5fd',
+      fillOpacity:0.6
+    },
+    onEachFeature:(f,l)=>{
+      const n = f.properties.SOVEREIGNT || f.properties.ADMIN;
+      l.bindTooltip(n);
+      l.on('click',()=>map.fitBounds(l.getBounds()));
+    }
+  }).addTo(map);
+
+  if(visited.length){
+    map.fitBounds(layer.getBounds().pad(0.2));
+  }
+}
+
+initMap();
+</script>
