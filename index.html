@@ -240,7 +240,6 @@
         <div class="country-visited-title">Countries Visited</div>
         <div id="countryVisitedStatusText" class="small country-visited-status">Loading map…</div>
       </div>
-      <div id="countryVisitedCountText" class="small"></div>
     </div>
 
     <div class="country-visited-legend">
@@ -865,8 +864,7 @@ init();
 
       if (statusText) {
         statusText.textContent =
-          document.getElementById("countryVisitedCountText").innerHTML =
-            `Visited <strong>${VISITED_NATIONS_NAMES.length}</strong> out of 200 countries`;
+          `Visited ${VISITED_NATIONS_NAMES.length} out of 200 countries`;
       }
 
       window.COUNTRY_NAME_RESOLUTION_TABLE = COUNTRY_NAME_RESOLUTION_TABLE;
