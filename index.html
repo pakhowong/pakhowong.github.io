@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UK BN(O) Immigration</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
+<title>UK BN(O) Immigration</title>
 <style>
   :root{
     --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --border:#d1d5db;
@@ -115,6 +114,7 @@
     padding: 14px 16px;
     box-shadow: 0 1px 2px rgba(0,0,0,.04);
     margin-top: 24px;
+    margin-bottom: 24px;
   }
   .country-visited-header {
     display: flex;
@@ -130,14 +130,14 @@
     color: var(--accent);
     margin: 0 0 6px;
   }
+  .country-visited-status {
+    margin-top: 4px;
+  }
   .country-visited-legend {
     margin-top: 10px;
     margin-bottom: 14px;
     color: var(--muted);
     font-size: 14px;
-  }
-  .country-visited-legend .legend-row {
-    margin-top: 0;
   }
   .country-visited-map {
     width: 100%;
@@ -149,9 +149,9 @@
     background: #93c5fd;
     border-color: #1d4ed8;
   }
-  .country-swatch-micro {
-    background: #fde68a;
-    border-color: #d97706;
+  .country-swatch-city {
+    background: #fbbf24;
+    border-color: #b45309;
     border-radius: 50%;
   }
   .leaflet-tooltip.country-tooltip {
@@ -238,13 +238,15 @@
     <div class="country-visited-header">
       <div>
         <div class="country-visited-title">Countries Visited</div>
+        <div id="countryVisitedStatusText" class="small country-visited-status">Loading map…</div>
       </div>
       <div id="countryVisitedCountText" class="small"></div>
     </div>
 
     <div class="country-visited-legend">
       <div class="legend-row">
-        <span><span class="swatch country-swatch-visited"></span>Visited country boundary</span>
+        <span><span class="swatch country-swatch-visited"></span>Visited country / territory boundary</span>
+        <span><span class="swatch country-swatch-city"></span>Visited city pin</span>
       </div>
     </div>
 
@@ -601,39 +603,66 @@ function init() {
 
 init();
 </script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 (function () {
   const ALL_REFERENCE_COUNTRY_NAMES = [
     "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Côte D'Ivoire","Croatia","Cuba","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe","Cook Islands","Niue","Taiwan","Kosovo","Sahrawi Arab Democratic Republic (Western Sahara)"
   ];
 
-  const VISITED_COUNTRY_NAMES = [
+  const VISITED_NATIONS_NAMES = [
     "Albania","Andorra","Antigua and Barbuda","Armenia","Australia","Austria","Azerbaijan","Bahamas","Barbados","Belgium","Belize","Bosnia and Herzegovina","Brunei","Cambodia","Canada","China","Cook Islands","Croatia","Cyprus","Czech Republic","Denmark","Dominica","Dominican Republic","Egypt","Estonia","Fiji","Finland","France","Georgia","Germany","Greece","Grenada","Guatemala","Hungary","Iceland","Indonesia","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kyrgyzstan","Laos","Latvia","Liechtenstein","Lithuania","Luxembourg","Malaysia","Maldives","Malta","Mexico","Monaco","Montenegro","Nepal","New Zealand","Niue","Norway","Oman","Palestine","Philippines","Poland","Portugal","Romania","Samoa","San Marino","Saudi Arabia","Serbia","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Switzerland","Syria","Taiwan","Tajikistan","Thailand","Netherlands","Tonga","Trinidad and Tobago","Turkey","United Arab Emirates","United Kingdom","United States","Uzbekistan","Vanuatu","Vatican City","Vietnam","Qatar"
   ];
+  
+  const VISITED_TERRITORIES_NAMES = [
+  	"Akrotiri Sovereign Base Area", "Guam", "Hong Kong S.A.R.", "Macao S.A.R.", "Puerto Rico", "Svalbard"
+  ];
+  
+  const VISITED_COUNTRY_NAMES = VISITED_NATIONS_NAMES.concat(VISITED_TERRITORIES_NAMES);
 
-  // Use your preferred country names from the 200-country list on the left.
-  // Only discrepancies need to be listed here; everything else falls back to itself.
-  const COUNTRY_NAME_TO_MAP_NAME = {
-    "Bahamas": "The Bahamas",
-    "Bosnia and Herzegovina": "Bosnia and Herz.",
+  const COUNTRY_ALIAS = {
+    "Myanmar": "Burma",
     "Cabo Verde": "Cape Verde",
-    "Congo (Congo-Brazzaville)": "Republic of the Congo",
-    "Côte D'Ivoire": "Ivory Coast",
-    "Czech Republic": "Czechia",
-    "Eswatini": "eSwatini",
+    "Congo (Congo-Brazzaville)": "Congo (Brazzaville)",
+    "Democratic Republic of the Congo": "Congo (Kinshasa)",
+    "Côte D'Ivoire": "Cote D’Ivoire",
     "Micronesia": "Federated States of Micronesia",
+    "Gambia": "Gambia, The",
+    "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara",
     "North Macedonia": "Macedonia",
-    "Sao Tome and Principe": "São Tomé and Príncipe",
-    "Timor-Leste": "East Timor",
+    "Eswatini": "Swaziland",
     "United States": "United States of America",
-    "Vatican City": "Vatican",
-    "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara"
+    "Vatican City": "Vatican"
   };
 
-  const NATURAL_EARTH_GEOJSON_URL = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson";
+  const COUNTRY_TO_MAP_UNIT_EXPANSION = {
+    "Cyprus": ["Cyprus", "Northern Cyprus"],
+    "Somalia": ["Somalia", "Somaliland"]
+  };
+
+  const COUNTRY_TO_MAP_UNIT_OVERRIDE = {
+    "Niue": ["Niue"],
+    "South Sudan": ["South Sudan"],
+    "Antigua and Barbuda": ["Antigua", "Barbuda"]
+  };
+
+  const COUNTRY_GEOJSON_URLS = [
+    "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
+    "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
+  ];
+
+  const MAP_UNIT_GEOJSON_URLS = [
+    "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_map_units.geojson",
+    "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_map_units.geojson"
+  ];
+
+  const CITY_PINS = [
+    { name: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503 },
+    { name: "London", country: "United Kingdom", lat: 51.5074, lng: -0.1278 },
+    { name: "New York", country: "United States", lat: 40.7128, lng: -74.0060 },
+    { name: "Hong Kong", country: "China", lat: 22.3193, lng: 114.1694 }
+  ];
 
   function normaliseCountryName(value) {
     return String(value || "")
@@ -647,46 +676,107 @@ init();
       .toLowerCase();
   }
 
-  function resolveCountryNameForMap(userCountryName) {
-    return COUNTRY_NAME_TO_MAP_NAME[userCountryName] || userCountryName;
+  function getCanonicalCountryName(userCountryName) {
+    return COUNTRY_ALIAS[userCountryName] || userCountryName;
+  }
+
+  function getExpansionTargets(canonicalCountryName) {
+    return COUNTRY_TO_MAP_UNIT_EXPANSION[canonicalCountryName] || [canonicalCountryName];
+  }
+
+  function getOverrideMapUnits(userCountryName) {
+    return COUNTRY_TO_MAP_UNIT_OVERRIDE[userCountryName] || null;
   }
 
   const COUNTRY_NAME_RESOLUTION_TABLE = Object.fromEntries(
-    ALL_REFERENCE_COUNTRY_NAMES.map(name => [name, resolveCountryNameForMap(name)])
-  );
-
-  const visitedNormalisedNames = new Set(
-    VISITED_COUNTRY_NAMES.map(name => normaliseCountryName(resolveCountryNameForMap(name)))
+    ALL_REFERENCE_COUNTRY_NAMES.map(name => [
+      name,
+      {
+        canonical_country_name: getCanonicalCountryName(name),
+        expansion_targets: getExpansionTargets(getCanonicalCountryName(name)),
+        map_unit_override: getOverrideMapUnits(name) || []
+      }
+    ])
   );
 
   function getFeatureDisplayName(feature) {
     const p = feature.properties || {};
-    return p.ADMIN || p.NAME_LONG || p.NAME || p.SOVEREIGNT || p.BRK_NAME || "Unknown";
+    return p.ADMIN || p.NAME_LONG || p.NAME || p.GEOUNIT || p.BRK_NAME || p.FORMAL_EN || p.NAME_EN || "Unknown";
   }
 
-  function getFeatureCandidateNames(feature) {
+  function getCandidateNames(feature) {
     const p = feature.properties || {};
-    return [
-      p.ADMIN, p.NAME_LONG, p.NAME, p.SOVEREIGNT, p.BRK_NAME, p.GEOUNIT, p.FORMAL_EN, p.NAME_EN
-    ].filter(Boolean);
+    return [p.ADMIN, p.NAME_LONG, p.NAME, p.GEOUNIT, p.BRK_NAME, p.FORMAL_EN, p.NAME_EN].filter(Boolean);
   }
 
-  function isVisitedFeature(feature) {
-    return getFeatureCandidateNames(feature).some(name =>
-      visitedNormalisedNames.has(normaliseCountryName(name))
-    );
+  async function fetchGeoJsonWithFallback(urls) {
+    let lastError = null;
+    for (const url of urls) {
+      try {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!data || !Array.isArray(data.features)) throw new Error("Invalid GeoJSON payload");
+        return { data, url };
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError || new Error("Unable to load map data");
   }
 
-  function createCountryVisitedSectionMap() {
+  function matchesAny(feature, targetNames) {
+    const candidates = getCandidateNames(feature).map(normaliseCountryName);
+    return targetNames.some(name => candidates.includes(normaliseCountryName(name)));
+  }
+
+  function resolveDisplayName(feature, visitedList) {
+    const candidates = getCandidateNames(feature).map(normaliseCountryName);
+
+    for (const country of visitedList) {
+      const canonical = getCanonicalCountryName(country);
+      const expansion = getExpansionTargets(canonical);
+      const expandedNormalised = expansion.map(normaliseCountryName);
+
+      if (expandedNormalised.some(name => candidates.includes(name))) {
+        return canonical;
+      }
+    }
+
+    return getFeatureDisplayName(feature);
+  }
+
+  function addCityPins(map) {
+    CITY_PINS.forEach(city => {
+      L.circleMarker([city.lat, city.lng], {
+        radius: 3,
+        color: "#b45309",
+        weight: 1.5,
+        fillColor: "#fbbf24",
+        fillOpacity: 1
+      })
+      .addTo(map)
+      .bindTooltip(`${city.name}, ${city.country}`, {
+        sticky: true,
+        direction: "top",
+        className: "country-tooltip"
+      })
+      .on("click", () => map.setView([city.lat, city.lng], 7));
+    });
+  }
+
+  async function createCountryVisitedSectionMap() {
     const mapContainer = document.getElementById("countryVisitedMap");
+    const statusText = document.getElementById("countryVisitedStatusText");
     if (!mapContainer || typeof L === "undefined") return;
 
-    const countText = document.getElementById("countryVisitedCountText");
-    countText.innerHTML = `Visited countries: <strong>${VISITED_COUNTRY_NAMES.length}</strong>`;
+    document.getElementById("countryVisitedCountText").innerHTML =
+      `Visited countries: <strong>${VISITED_COUNTRY_NAMES.length}</strong>`;
 
     const map = L.map("countryVisitedMap", {
       worldCopyJump: true,
-      zoomSnap: 0.25
+      zoomSnap: 0.25,
+      zoomControl: true
     }).setView([20, 0], 2);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
@@ -695,73 +785,103 @@ init();
       maxZoom: 8
     }).addTo(map);
 
-    fetch(NATURAL_EARTH_GEOJSON_URL)
-      .then(response => response.json())
-      .then(geojson => {
-        const visitedFeatures = geojson.features.filter(isVisitedFeature);
+    try {
+      if (statusText) statusText.textContent = "Loading Natural Earth data…";
 
-        const visitedLayer = L.geoJSON(
-          { type: "FeatureCollection", features: visitedFeatures },
-          {
-            style: function () {
-              return {
+      const countryResult = await fetchGeoJsonWithFallback(COUNTRY_GEOJSON_URLS);
+      const mapUnitResult = await fetchGeoJsonWithFallback(MAP_UNIT_GEOJSON_URLS);
+
+      const standardCountryTargets = [];
+      const overrideMapUnitTargets = [];
+
+      VISITED_COUNTRY_NAMES.forEach(name => {
+        const override = getOverrideMapUnits(name);
+        if (override && override.length) {
+          overrideMapUnitTargets.push(...override);
+        } else {
+          const canonical = getCanonicalCountryName(name);
+          standardCountryTargets.push(...getExpansionTargets(canonical));
+        }
+      });
+
+      const countryFeatures = countryResult.data.features.filter(feature =>
+        matchesAny(feature, standardCountryTargets)
+      );
+
+      const mapUnitFeatures = mapUnitResult.data.features.filter(feature =>
+        matchesAny(feature, overrideMapUnitTargets)
+      );
+
+      const allVisitedFeatures = [...countryFeatures, ...mapUnitFeatures];
+
+      const visitedLayer = L.geoJSON(
+        { type: "FeatureCollection", features: allVisitedFeatures },
+        {
+          style: function () {
+            return {
+              color: "#1d4ed8",
+              weight: 1.5,
+              fillColor: "#93c5fd",
+              fillOpacity: 0.6
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            const displayName = resolveDisplayName(feature, VISITED_COUNTRY_NAMES);
+
+            layer.bindTooltip(displayName, {
+              sticky: true,
+              direction: "top",
+              className: "country-tooltip"
+            });
+
+            layer.on("mouseover", function () {
+              this.setStyle({ weight: 2.2, fillOpacity: 0.78 });
+              if (this.bringToFront) this.bringToFront();
+            });
+
+            layer.on("mouseout", function () {
+              this.setStyle({
                 color: "#1d4ed8",
                 weight: 1.5,
                 fillColor: "#93c5fd",
                 fillOpacity: 0.6
-              };
-            },
-            onEachFeature: function (feature, layer) {
-              const displayName = getFeatureDisplayName(feature);
-
-              layer.bindTooltip(displayName, {
-                sticky: true,
-                direction: "top",
-                className: "country-tooltip"
               });
+            });
 
-              layer.on("mouseover", function () {
-                this.setStyle({
-                  weight: 2.2,
-                  fillOpacity: 0.78
-                });
-                this.bringToFront();
-              });
-
-              layer.on("mouseout", function () {
-                this.setStyle({
-                  color: "#1d4ed8",
-                  weight: 1.5,
-                  fillColor: "#93c5fd",
-                  fillOpacity: 0.6
-                });
-              });
-
-              layer.on("click", function () {
-                const bounds = this.getBounds();
-                if (bounds.isValid()) {
-                  map.fitBounds(bounds.pad(0.5));
-                }
-              });
-            }
-          }
-        ).addTo(map);
-
-        if (visitedFeatures.length > 0) {
-          const bounds = visitedLayer.getBounds();
-          if (bounds.isValid()) {
-            map.fitBounds(bounds.pad(0.12));
-            map.setZoom(2);
+            layer.on("click", function () {
+              const bounds = this.getBounds();
+              if (bounds.isValid()) map.fitBounds(bounds.pad(0.5));
+            });
           }
         }
+      ).addTo(map);
 
-        // Maintenance helper: exposes the resolved mapping table for all 200 countries in DevTools.
-        window.COUNTRY_NAME_RESOLUTION_TABLE = COUNTRY_NAME_RESOLUTION_TABLE;
-      })
-      .catch(error => {
-        mapContainer.innerHTML = '<div class="small">Unable to load the country map right now.</div>';
-        console.error("Country map load failed:", error);
-      });
+      addCityPins(map);
+
+      if (allVisitedFeatures.length > 0) {
+        const bounds = visitedLayer.getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds.pad(0.12));
+          map.setZoom(2);
+        }
+      }
+
+      if (statusText) {
+        statusText.textContent =
+          `Loaded successfully. Country source: ${countryResult.url.includes("raw.githubusercontent") ? "GitHub Raw" : "jsDelivr"}; Map Unit source: ${mapUnitResult.url.includes("raw.githubusercontent") ? "GitHub Raw" : "jsDelivr"}.`;
+      }
+
+      window.COUNTRY_NAME_RESOLUTION_TABLE = COUNTRY_NAME_RESOLUTION_TABLE;
+      window.COUNTRY_GEOJSON_URLS = COUNTRY_GEOJSON_URLS;
+      window.MAP_UNIT_GEOJSON_URLS = MAP_UNIT_GEOJSON_URLS;
+      window.CITY_PINS = CITY_PINS;
+    } catch (error) {
+      if (statusText) {
+        statusText.textContent = "Unable to load map data. Please re-open the file with internet access.";
+      }
+      mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the country map right now.</div>';
+      console.error("Country map load failed:", error);
+    }
   }
 
   if (document.readyState === "loading") {
