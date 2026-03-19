@@ -117,8 +117,8 @@
   </div>
 
   <div class="external-links">
-    <button onclick="openExternal('flightradar')">✈️ Flight History</button>
-    <button onclick="openExternal('ukvi')">🇬🇧 UK eVisa Portal</button>
+    <button onclick="openExternal('flightradar')">Flight History</button>
+    <button onclick="openExternal('ukvi')">UK eVisa Portal</button>
   </div>
 
   <div class="grid">
@@ -365,7 +365,7 @@ function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
   citPill.textContent = citCompliant ? "Citizenship compliant" : "Citizenship not compliant";
 
   document.getElementById("citText").innerHTML =
-    `Total absence days in citizenship window: <strong>${citTotal}</strong> / ${CIT_TOTAL_LIMIT}.<br>` +
+    `Total absent days in citizenship window: <strong>${citTotal}</strong> / ${CIT_TOTAL_LIMIT}.<br>` +
     `Absent days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
 
   document.getElementById("dataText").innerHTML =
