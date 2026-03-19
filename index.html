@@ -245,8 +245,8 @@
 
     <div class="country-visited-legend">
       <div class="legend-row">
-        <span><span class="swatch country-swatch-visited"></span>Visited country / territory boundary</span>
-        <span><span class="swatch country-swatch-city"></span>Visited city pin</span>
+        <span><span class="swatch country-swatch-visited"></span>Visited country</span>
+        <span><span class="swatch country-swatch-city"></span>Visited city</span>
       </div>
     </div>
 
@@ -771,7 +771,7 @@ init();
     if (!mapContainer || typeof L === "undefined") return;
 
     document.getElementById("countryVisitedCountText").innerHTML =
-      `Visited countries: <strong>${VISITED_COUNTRY_NAMES.length}</strong>`;
+      `Visited countries: <strong>${VISITED_NATIONS_NAMES.length}</strong> out of 200`;
 
     const map = L.map("countryVisitedMap", {
       worldCopyJump: true,
@@ -864,11 +864,6 @@ init();
           map.fitBounds(bounds.pad(0.12));
           map.setZoom(2);
         }
-      }
-
-      if (statusText) {
-        statusText.textContent =
-          `Loaded successfully. Country source: ${countryResult.url.includes("raw.githubusercontent") ? "GitHub Raw" : "jsDelivr"}; Map Unit source: ${mapUnitResult.url.includes("raw.githubusercontent") ? "GitHub Raw" : "jsDelivr"}.`;
       }
 
       window.COUNTRY_NAME_RESOLUTION_TABLE = COUNTRY_NAME_RESOLUTION_TABLE;
