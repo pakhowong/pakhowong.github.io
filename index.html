@@ -770,9 +770,6 @@ init();
     const statusText = document.getElementById("countryVisitedStatusText");
     if (!mapContainer || typeof L === "undefined") return;
 
-    document.getElementById("countryVisitedCountText").innerHTML =
-      `Visited countries: <strong>${VISITED_NATIONS_NAMES.length}</strong> out of 200`;
-
     const map = L.map("countryVisitedMap", {
       worldCopyJump: true,
       zoomSnap: 0.25,
@@ -864,6 +861,12 @@ init();
           map.fitBounds(bounds.pad(0.12));
           map.setZoom(2);
         }
+      }
+
+      if (statusText) {
+        statusText.textContent =
+          document.getElementById("countryVisitedCountText").innerHTML =
+            `Visited <strong>${VISITED_NATIONS_NAMES.length}</strong> out of 200 countries`;
       }
 
       window.COUNTRY_NAME_RESOLUTION_TABLE = COUNTRY_NAME_RESOLUTION_TABLE;
