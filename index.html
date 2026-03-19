@@ -238,9 +238,6 @@
     <div class="country-visited-header">
       <div>
         <div class="country-visited-title">Countries Visited</div>
-        <div class="small">
-          Uses Natural Earth country boundaries for smoother overlays. Hover shows the country name, click zooms to the country, and tiny countries are reinforced with marker dots when needed.
-        </div>
       </div>
       <div id="countryVisitedCountText" class="small"></div>
     </div>
@@ -248,7 +245,6 @@
     <div class="country-visited-legend">
       <div class="legend-row">
         <span><span class="swatch country-swatch-visited"></span>Visited country boundary</span>
-        <span><span class="swatch country-swatch-micro"></span>Extra marker for very small countries / islands</span>
       </div>
     </div>
 
@@ -637,28 +633,6 @@ init();
     "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara"
   };
 
-  const SMALL_COUNTRY_MARKERS = {
-    "Andorra": [42.5063, 1.5218],
-    "Antigua and Barbuda": [17.0608, -61.7964],
-    "Barbados": [13.1939, -59.5432],
-    "Cook Islands": [-21.2367, -159.7777],
-    "Dominica": [15.4150, -61.3710],
-    "Grenada": [12.1165, -61.6790],
-    "Liechtenstein": [47.1660, 9.5554],
-    "Maldives": [3.2028, 73.2207],
-    "Malta": [35.9375, 14.3754],
-    "Monaco": [43.7384, 7.4246],
-    "Niue": [-19.0544, -169.8672],
-    "Samoa": [-13.7590, -172.1046],
-    "San Marino": [43.9424, 12.4578],
-    "Singapore": [1.3521, 103.8198],
-    "Saint Kitts and Nevis": [17.3578, -62.7830],
-    "Saint Lucia": [13.9094, -60.9789],
-    "Saint Vincent and the Grenadines": [13.2528, -61.1971],
-    "Tonga": [-21.1789, -175.1982],
-    "Vatican City": [41.9029, 12.4534]
-  };
-
   const NATURAL_EARTH_GEOJSON_URL = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson";
 
   function normaliseCountryName(value) {
@@ -772,28 +746,6 @@ init();
             }
           }
         ).addTo(map);
-
-        VISITED_COUNTRY_NAMES.forEach(name => {
-          const coords = SMALL_COUNTRY_MARKERS[name];
-          if (!coords) return;
-
-          L.circleMarker(coords, {
-            radius: 5.5,
-            color: "#b45309",
-            weight: 1.5,
-            fillColor: "#fde68a",
-            fillOpacity: 1
-          })
-            .bindTooltip(name, {
-              sticky: true,
-              direction: "top",
-              className: "country-tooltip"
-            })
-            .on("click", function () {
-              map.setView(coords, 6);
-            })
-            .addTo(map);
-        });
 
         if (visitedFeatures.length > 0) {
           const bounds = visitedLayer.getBounds();
