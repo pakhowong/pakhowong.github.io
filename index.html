@@ -1115,6 +1115,7 @@ init();
   function addCityPins(map) {
     CITY_PINS.forEach(city => {
       L.circleMarker([city.lat, city.lng], {
+        pane: "cityPane",
         radius: 3,
         color: "#b45309",
         weight: 1.5,
@@ -1125,7 +1126,8 @@ init();
       .bindTooltip(`${city.name}, ${city.country}`, {
         sticky: true,
         direction: "top",
-        className: "country-tooltip"
+        className: "country-tooltip",
+        pane: "tooltipPane"
       })
       .on("click", () => map.setView([city.lat, city.lng], 7));
     });
@@ -1142,10 +1144,29 @@ init();
       zoomControl: true
     }).setView([20, 0], 2);
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    map.createPane("countryPane");
+    map.getPane("countryPane").style.zIndex = 400;
+
+    map.createPane("labelPane");
+    map.getPane("labelPane").style.zIndex = 500;
+
+    map.createPane("cityPane");
+    map.getPane("cityPane").style.zIndex = 650;
+
+    map.createPane("tooltipPane");
+    map.getPane("tooltipPane").style.zIndex = 700;
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
       attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
       subdomains: "abcd",
       maxZoom: 8
+    }).addTo(map);
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      subdomains: "abcd",
+      maxZoom: 8,
+      pane: "labelPane"
     }).addTo(map);
 
     try {
@@ -1180,6 +1201,7 @@ init();
       const visitedLayer = L.geoJSON(
         { type: "FeatureCollection", features: allVisitedFeatures },
         {
+          pane: "countryPane",
           style: function () {
             return {
               color: "#1d4ed8",
@@ -1194,12 +1216,12 @@ init();
             layer.bindTooltip(displayName, {
               sticky: true,
               direction: "top",
-              className: "country-tooltip"
+              className: "country-tooltip",
+              pane: "tooltipPane"
             });
 
             layer.on("mouseover", function () {
               this.setStyle({ weight: 2.2, fillOpacity: 0.78 });
-              if (this.bringToFront) this.bringToFront();
             });
 
             layer.on("mouseout", function () {
