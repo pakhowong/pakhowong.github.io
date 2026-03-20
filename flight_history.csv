@@ -255,8 +255,8 @@ Date,"Flight number",From,To,"Dep time","Arr time",Duration,Airline,Aircraft,Reg
 2026-02-13,C6219,"Tashkent / Yuzhnyy (TAS/UTTT)","Bishkek / Manas (BSZ/UCFM)",11:00:00,13:10:00,01:10:00,"Canjet Airlines (C6/CJA)","Airbus A321LR (A21N)",,,0,1,1,,2857,925,187,2181
 2026-02-15,SZ218,"Bishkek / Manas (BSZ/UCFM)","Dushanbe / Dushanbe (DYU/UTDD)",13:40:00,14:00:00,01:20:00,"Somon Air (SZ/SMR)","Boeing 737-800 (B738)",,,0,1,1,,925,770,1738,231
 2026-02-18,SZ215,"Dushanbe / Dushanbe (DYU/UTDD)","Almaty / Almaty (ALA/UAAA)",11:00:00,13:40:00,01:40:00,"Somon Air (SZ/SMR)","Boeing 737-900 (B739)",VQ-BBB,,0,1,1,,770,100,1738,232
-2026-03-29,W45190,"Stockholm / Arlanda (ARN/ESSA)","Tirana / Rinas (TIA/LATI)",20:55:00,00:05:00,03:10:00,"Aero Services Executive (W4/BES)","Airbus A321-200 (A321)",,,0,1,0,,3622,2922,126,2076
-2026-03-26,D84460,"London / Gatwick (LGW/EGKK)","Stockholm / Arlanda (ARN/ESSA)",20:10:00,23:30:00,03:20:00,"Norwegian Air International (D8/IBK)","Boeing 737-800 (B738)",,,0,1,0,,1614,3622,1644,231
+2026-03-29,W45190,"Stockholm / Arlanda (ARN/ESSA)","Tirana / Rinas (TIA/LATI)",20:55:00,00:05:00,03:10:00,"Aero Services Executive (W4/BES)","Airbus A321-200 (A321)",,,0,1,1,,3622,2922,126,2076
+2026-03-26,D84460,"London / Gatwick (LGW/EGKK)","Stockholm / Arlanda (ARN/ESSA)",20:10:00,23:30:00,03:20:00,"Norwegian Air International (D8/IBK)","Boeing 737-800 (B738)",,,0,1,1,,1614,3622,1644,231
 2026-04-11,FR5634,"Tirana / Rinas (TIA/LATI)","Milan / Malpensa (MXP/LIMC)",22:45:00,00:50:00,02:05:00,"Ryanair (FR/RYR)"," ()",,,0,1,1,,2922,1983,668,0
 2026-04-12,W46419,"Milan / Malpensa (MXP/LIMC)","Glasgow / Glasgow (GLA/EGPF)",06:25:00,08:05:00,02:40:00,"Wizz Air Malta (W4/WMT)"," ()",,,0,1,1,,1983,1000,3024,0
 2026-05-25,AA38,"Miami / Miami International (MIA/KMIA)","London / Heathrow (LHR/EGLL)",19:40:00,09:25:00,08:45:00,"American Airlines (AA/AAL)","Boeing 777-300ER (B77W)",,,0,1,1,,1831,1618,4,2023
@@ -264,5 +264,8 @@ Date,"Flight number",From,To,"Dep time","Arr time",Duration,Airline,Aircraft,Reg
 2026-05-17,AA329,"Miami / Miami International (MIA/KMIA)","Managua / Managua (MGA/MNMG)",13:02:00,13:46:00,02:44:00,"American Airlines (AA/AAL)","Boeing 737 MAX 8 (B38M)",,,0,1,1,,1831,1814,4,2123
 2026-05-25,UA2203,"San Salvador / El Salvador (SAL/MSLP)","Houston / George Bush Intercontinental (IAH/KIAH)",01:15:00,05:20:00,03:05:00,"United Airlines (UA/UAL)","Boeing 737 MAX 9 (B39M)",,,0,1,1,,2588,1204,808,2124
 2026-05-25,UA1966,"Houston / George Bush Intercontinental (IAH/KIAH)","Miami / Miami International (MIA/KMIA)",07:25:00,11:12:00,02:47:00,"United Airlines (UA/UAL)","Boeing 737-900 (B739)",,,0,1,1,,1204,1831,808,232
-2026-05-03,BA285,"London / Heathrow (LHR/EGLL)","San Francisco / San Francisco International (SFO/KSFO)",10:45:00,13:50:00,11:05:00,"British Airways (BA/BAW)","Airbus A380-800 (A388)",,,0,1,0,,1618,2644,113,39
-2026-04-17,RK329,"Glasgow / Glasgow (GLA/EGPF)","London / Stansted (STN/EGSS)",21:15:00,22:45:00,01:30:00,"Ryanair UK (RK/RUK)"," ()",,,0,1,0,,1000,2785,2669,0
+2026-05-03,BA285,"London / Heathrow (LHR/EGLL)","San Francisco / San Francisco International (SFO/KSFO)",10:45:00,13:50:00,11:05:00,"British Airways (BA/BAW)","Airbus A380-800 (A388)",,,0,1,1,,1618,2644,113,39
+2026-04-17,RK329,"Glasgow / Glasgow (GLA/EGPF)","London / Stansted (STN/EGSS)",21:15:00,22:45:00,01:30:00,"Ryanair UK (RK/RUK)"," ()",,,0,1,1,,1000,2785,2669,0
+2026-05-05,F92858,"San Francisco / San Francisco International (SFO/KSFO)","Los Angeles / Los Angeles International (LAX/KLAX)",20:48:00,22:26:00,01:38:00,"Frontier Airlines (F9/FFT)","Airbus A321LR (A21N)",,,0,1,1,,2644,1559,302,2181
+2026-05-12,F91116,"Las Vegas / McCarran (LAS/KLAS)","Atlanta / Hartsfield-Jackson (ATL/KATL)",06:45:00,13:55:00,04:10:00,"Frontier Airlines (F9/FFT)","Airbus A321LR (A21N)",,,0,1,1,,1557,179,302,2181
+2026-05-12,F94712,"Atlanta / Hartsfield-Jackson (ATL/KATL)","Baltimore / Washington (BWI/KBWI)",21:00:00,22:57:00,01:57:00,"Frontier Airlines (F9/FFT)"," ()",,,0,1,1,,179,449,302,0
