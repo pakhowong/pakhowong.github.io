@@ -870,7 +870,7 @@ init();
       window.CITY_PINS = CITY_PINS;
     } catch (error) {
       if (statusText) {
-        statusText.textContent = "Unable to load map data. Please re-open the file with internet access.";
+        statusText.textContent = "Unable to load map data. Please re-open the file with Internet access.";
       }
       mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the country map right now.</div>';
       console.error("Country map load failed:", error);
@@ -1229,7 +1229,7 @@ init();
               )
               .join("<br>")
           )
-          .join("<br><br>──────────<br><br>");
+          .join("<br>──────────<br>");
 
         segments.forEach(segment => {
           const polyline = L.polyline(segment, {
@@ -1270,7 +1270,7 @@ init();
       }
 
       if (statusText) {
-        statusText.textContent = `Flights taken: <strong>${plottedFlights}</strong> · Routes (pairs) flown: <strong>${routePairs.size}</strong> · Airports visited: <strong>${airportMarkers.size}</strong> · Missing airport data: ${missingAirports}.`;
+        statusText.textContent = `Flights taken: ${plottedFlights} · Routes (pairs) flown: ${routePairs.size} · Airports visited: ${airportMarkers.size} · Missing airport data: ${missingAirports}.`;
       }
     } catch (error) {
       if (statusText) {
