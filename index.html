@@ -901,9 +901,7 @@ init();
     "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
   ];
 
-  const OPENFLIGHTS_AIRPORTS_URLS = [
-    "/flights/airports.dat"
-  ];
+  const OPENFLIGHTS_JSON_URL = "flights/airports.json";
 
   function parseCsv(text) {
     const rows = [];
@@ -940,105 +938,6 @@ init();
     if (row.some(cell => cell !== "")) rows.push(row);
 
     return rows;
-  }
-
-  function parseDelimitedLine(line) {
-    const fields = [];
-    let value = "";
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-      const next = line[i + 1];
-
-      if (char === '"') {
-        if (inQuotes && next === '"') {
-          value += '"';
-          i++;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (char === "," && !inQuotes) {
-        fields.push(value);
-        value = "";
-      } else {
-        value += char;
-      }
-    }
-
-    fields.push(value);
-    return fields;
-  }
-
-  function loadFlightHistoryFromCsv(csvText) {
-    const rows = parseCsv(csvText);
-    if (!rows.length) return [];
-
-    const header = rows[0];
-    const index = Object.fromEntries(header.map((name, i) => [name, i]));
-    const fromToPattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
-
-    return rows.slice(1).map(cells => {
-      const get = name => (cells[index[name]] || "").trim();
-
-      const fromRaw = get("From");
-      const toRaw = get("To");
-      const fromMatch = fromRaw.match(fromToPattern);
-      const toMatch = toRaw.match(fromToPattern);
-
-      if (!fromMatch || !toMatch) return null;
-
-      const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
-      const [, toCity, toAirport, toIata, toIcao] = toMatch;
-
-      return {
-        date: get("Date"),
-        flight_number: get("Flight number"),
-        from_city: fromCity.trim(),
-        from_airport: fromAirport.trim(),
-        from_iata: fromIata.trim(),
-        from_icao: fromIcao.trim(),
-        to_city: toCity.trim(),
-        to_airport: toAirport.trim(),
-        to_iata: toIata.trim(),
-        to_icao: toIcao.trim(),
-        airline: get("Airline")
-      };
-    }).filter(Boolean);
-  }
-
-  function parseOpenFlightsAirports(text) {
-    const byIcao = {};
-    const lines = text.split(/\r?\n/).filter(Boolean);
-
-    lines.forEach(line => {
-      const fields = parseDelimitedLine(line);
-      if (fields.length < 8) return;
-
-      const name = fields[1] || "";
-      const city = fields[2] || "";
-      const country = fields[3] || "";
-      const iata = fields[4] || "";
-      const icao = fields[5] || "";
-      const lat = Number(fields[6]);
-      const lon = Number(fields[7]);
-
-      if (!icao || icao === "\\N") return;
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
-
-      byIcao[icao] = {
-        name,
-        city,
-        country,
-        iata: iata && iata !== "\\N" ? iata : "",
-        icao,
-        lat,
-        lon,
-        source: "openflights"
-      };
-    });
-
-    return byIcao;
   }
 
   function buildIataIndex(airportsByIcao) {
@@ -1239,13 +1138,13 @@ init();
     try {
       if (statusText) statusText.textContent = "Loading flight history CSV and airport databases…";
 
-      const [csvText, mwggAirports, openFlightsText] = await Promise.all([
+      const [csvText, mwggAirports, openFlightsData] = await Promise.all([
         fetchTextWithFallback([FLIGHT_HISTORY_CSV_URL]),
         fetchJsonWithFallback(MWGG_AIRPORTS_URLS),
-        fetchTextWithFallback(OPENFLIGHTS_AIRPORTS_URLS)
+        fetchJsonWithFallback([OPENFLIGHTS_JSON_URL])
       ]);
 
-      const openFlightsAirports = parseOpenFlightsAirports(openFlightsText);
+      const openFlightsAirports = openFlightsData.by_icao || {};
       const mwggIataIndex = buildIataIndex(
         Object.fromEntries(
           Object.entries(mwggAirports).map(([icao, airport]) => [
@@ -1263,7 +1162,7 @@ init();
           ])
         )
       );
-      const openFlightsIataIndex = buildIataIndex(openFlightsAirports);
+      const openFlightsIataIndex = openFlightsData.by_iata || {};
       const FLIGHT_HISTORY = loadFlightHistoryFromCsv(csvText);
 
       const airportMarkers = new Map();
