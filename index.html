@@ -1042,7 +1042,33 @@ init();
     return byIcao;
   }
 
-  function getHybridAirport(icao, mwggAirports, openFlightsAirports) {
+  function buildIataIndex(airportsByIcao) {
+    const byIata = {};
+    Object.values(airportsByIcao).forEach(airport => {
+      const iata = String(airport.iata || "").trim();
+      if (!iata || iata === "\\N") return;
+
+      const lat = Number(airport.lat);
+      const lon = Number(airport.lon);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+      if (!byIata[iata]) {
+        byIata[iata] = {
+          name: airport.name || "",
+          city: airport.city || "",
+          country: airport.country || "",
+          iata,
+          icao: airport.icao || "",
+          lat,
+          lon,
+          source: airport.source || "mwgg"
+        };
+      }
+    });
+    return byIata;
+  }
+
+  function getHybridAirportSmart(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
     const mwgg = mwggAirports[icao];
     if (mwgg && Number.isFinite(Number(mwgg.lat)) && Number.isFinite(Number(mwgg.lon))) {
       return {
@@ -1059,6 +1085,14 @@ init();
 
     const openFlights = openFlightsAirports[icao];
     if (openFlights) return openFlights;
+
+    if (iata) {
+      const mwggByIata = mwggIataIndex[iata];
+      if (mwggByIata) return mwggByIata;
+
+      const openByIata = openFlightsIataIndex[iata];
+      if (openByIata) return openByIata;
+    }
 
     return null;
   }
@@ -1213,6 +1247,24 @@ init();
       ]);
 
       const openFlightsAirports = parseOpenFlightsAirports(openFlightsText);
+      const mwggIataIndex = buildIataIndex(
+        Object.fromEntries(
+          Object.entries(mwggAirports).map(([icao, airport]) => [
+            icao,
+            {
+              name: airport.name || "",
+              city: airport.city || "",
+              country: airport.country || "",
+              iata: airport.iata || "",
+              icao: airport.icao || icao,
+              lat: Number(airport.lat),
+              lon: Number(airport.lon),
+              source: "mwgg"
+            }
+          ])
+        )
+      );
+      const openFlightsIataIndex = buildIataIndex(openFlightsAirports);
       const FLIGHT_HISTORY = loadFlightHistoryFromCsv(csvText);
 
       const airportMarkers = new Map();
@@ -1224,8 +1276,22 @@ init();
       let openFlightsFallbackHits = 0;
 
       FLIGHT_HISTORY.forEach(flight => {
-        const fromAirport = getHybridAirport(flight.from_icao, mwggAirports, openFlightsAirports);
-        const toAirport = getHybridAirport(flight.to_icao, mwggAirports, openFlightsAirports);
+        const fromAirport = getHybridAirportSmart(
+          flight.from_icao,
+          flight.from_iata,
+          mwggAirports,
+          openFlightsAirports,
+          mwggIataIndex,
+          openFlightsIataIndex
+        );
+        const toAirport = getHybridAirportSmart(
+          flight.to_icao,
+          flight.to_iata,
+          mwggAirports,
+          openFlightsAirports,
+          mwggIataIndex,
+          openFlightsIataIndex
+        );
 
         if (!fromAirport || !toAirport) {
           missingAirports += 1;
