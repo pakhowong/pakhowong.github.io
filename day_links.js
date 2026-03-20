@@ -35,6 +35,14 @@ const DAY_LINKS = {
     url: "",
     name: " to "
   },
+  "2025-01-26": {
+    url: "",
+    name: " to "
+  },
+  "2025-01-30": {
+    url: "",
+    name: " to "
+  },
   "2025-03-08": {
     url: "https://drive.google.com/file/d/15ZDEaAfNSVTO47Ud89tr2QnOxGoI6qxu/view?usp=drivesdk",
     name: "LHR to HND"
