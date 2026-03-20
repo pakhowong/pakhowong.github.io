@@ -1,15 +1,15 @@
 const DAY_LINKS = {
   "2024-10-18": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1zvgjT2k1ghWwsbg92WV9YIxkmThGkVps/view?usp=drivesdk",
+    name: "AYT to LTN"
   },
   "2024-10-23": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1--4BzZmynfxmyZR_TP_2W7LvkhAfxYHi/view?usp=drivesdk",
+    name: "STN to AAR"
   },
   "2024-10-27": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1X8TF6SUNoB7ZGQ3FrBIN0BrscMrIBBIb/view?usp=drivesdk",
+    name: "AAR to STN"
   },
   "2024-11-09": {
     url: "",
@@ -92,20 +92,20 @@ const DAY_LINKS = {
     name: "HKG to LHR"
   },
   "2025-11-24": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1MkhUFpu7V_yBX7OrWs2LwXL3mhsLFZmx/view?usp=drivesdk",
+    name: "LGW to NRT"
   },
   "2025-12-02": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1x6Zt_Rn4SoN-9pv8CIOJ5F-w2c33O4QW/view?usp=drivesdk",
+    name: "HND to LHR"
   },
   "2025-12-25": {
     url: "https://drive.google.com/file/d/1tEcYgzixbsVV9GI1loL-qkwTlGvk_Vkl/view?usp=drivesdk",
     name: "STN to SAW"
   },
   "2026-01-03": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1sHrHOzWSLj9jA-NlKKXYV8S8GqFVIORB/view?usp=drivesdk",
+    name: "IST to STN"
   },
   "2026-02-06": {
     url: "https://drive.google.com/file/d/1uQmJmdw_X_jhV-zwVj8qHyWUpugzjvKc/view?usp=drivesdk",
