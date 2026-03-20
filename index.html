@@ -270,7 +270,7 @@
         <div class="country-visited-title">Flight History</div>
         <div id="flightHistoryStatusText" class="small country-visited-status">Loading flight map…</div>
         <div class="external-links">
-          <button onclick="openExternal('flightradar')">Flight History</button>
+          <button onclick="openExternal('flightradar')">myFlightradar24</button>
         </div>
       </div>
     </div>
@@ -1269,11 +1269,8 @@ init();
         map.fitBounds(bounds.pad(0.12));
       }
 
-      if (countText) {
-        countText.innerHTML = `Flights: <strong>${plottedFlights}</strong> · Route pairs: <strong>${routePairs.size}</strong> · Airports: <strong>${airportMarkers.size}</strong>`;
-      }
       if (statusText) {
-        statusText.textContent = `Loaded flight history successfully. Missing airports: ${missingAirports}.`;
+        statusText.textContent = `Flights taken: <strong>${plottedFlights}</strong> · Routes (pairs) flown: <strong>${routePairs.size}</strong> · Airports visited: <strong>${airportMarkers.size}</strong> · Missing airport data: ${missingAirports}.`;
       }
     } catch (error) {
       if (statusText) {
