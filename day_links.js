@@ -20,12 +20,12 @@ const DAY_LINKS = {
     name: " to "
   },
   "2025-01-02": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1zuix9pJU5TxNvttR2SlF3GIwHo_CC1uJ/view?usp=drivesdk",
+    name: "MAN to OSL"
   },
   "2025-01-07": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1sBWTcaZIOTbDjg5yZD3nb4rwvPlGLBPG/view?usp=drivesdk",
+    name: "OSL to LHR"
   },
   "2025-01-18": {
     url: "",
@@ -36,12 +36,12 @@ const DAY_LINKS = {
     name: " to "
   },
   "2025-01-26": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/11MnpI6ORGWVnDKcu0sfaWw5YkqyVsGRy/view?usp=drivesdk",
+    name: "LGW to KEF"
   },
   "2025-01-30": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1LAtLUj2pDaqee6EF3UGxxInL83-M4Dhb/view?usp=drivesdk",
+    name: "KEF to LTN"
   },
   "2025-03-08": {
     url: "https://drive.google.com/file/d/15ZDEaAfNSVTO47Ud89tr2QnOxGoI6qxu/view?usp=drivesdk",
@@ -52,12 +52,12 @@ const DAY_LINKS = {
     name: "HND to LHR"
   },
   "2025-03-22": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1QYUttTT7-Mdm5-2dL4V04MshfBkMFZZd/view?usp=drivesdk",
+    name: "LHR to EWR"
   },
   "2025-04-06": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1wYjQk5Hk_PHCj1q5m4LSEHatlC9ZEk9J/view?usp=drivesdk",
+    name: "EWR to LHR"
   },
   "2025-04-18": {
     url: "https://drive.google.com/file/d/1MSc6fa7umFZ4CQBIRWSQmAMYFmSmuhDr/view?usp=drivesdk",
@@ -68,32 +68,32 @@ const DAY_LINKS = {
     name: "NRT to LGW"
   },
   "2025-05-17": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/18BKEyEdf80Qr3Vmw_m47QzJZrNgEIgs7/view?usp=drivesdk",
+    name: "STN to MLA"
   },
   "2025-06-07": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1DoqwSau_tOP0NuFOiZgS60GiBnmGIri_/view?usp=drivesdk",
+    name: "NRT to LGW"
   },
   "2025-07-02": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1p4nLFBHvk1vS4iGyvsEYXdsw-eltWDXH/view?usp=drivesdk",
+    name: "STN to IBZ"
   },
   "2025-07-07": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1DmaXg7pWWMHYhuOwsNXpJDu_0i0L16JW/view?usp=drivesdk",
+    name: "IBZ to LTN"
   },
   "2025-07-08": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1eAR603IE2qEley7z2WkY5bA8lJvh1mGr/view?usp=drivesdk",
+    name: "LTN to VNO"
   },
   "2025-08-09": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/16MiJdcEDSBw92zSCw7FExFEb42D9LSMg/view?usp=drivesdk",
+    name: "LCA to STN"
   },
   "2025-08-23": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1Uz2faUVT7_hVa0v3oKUqglUbnIYM7TXu/view?usp=drivesdk",
+    name: "LGW to MED"
   },
   "2025-10-16": {
     url: "https://drive.google.com/file/d/14uIZWvqpsh9Ib-1S6-YnaIMZOw8Xqqjp/view?usp=drivesdk",
