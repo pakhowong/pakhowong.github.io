@@ -1,4 +1,4 @@
-# 🌍 UK Immigration Tracker & Travel Map
+# 🌍 Travel History Tracker
 
 This repository powers my personal website:  
 👉 https://pakhowong.github.io/
@@ -24,8 +24,8 @@ It combines **UK immigration tracking**, **global travel visualisation**, and **
 - Based on **Natural Earth datasets**
 - Handles:
   - Overseas territories
-  - Map units vs sovereign states
-- Includes expansion logic (e.g. Cyprus → Northern Cyprus)
+  - Countries vs sovereign states
+- Includes expansion logic (e.g. Cyprus includes both Southern and Northern Cyprus)
 
 ---
 
@@ -96,7 +96,7 @@ This improves coverage for:
 ## ⚙️ Design Principles
 
 - Modular data separation (JS + CSV)
-- Accurate geographic modelling (map units vs countries)
+- Accurate geographic modelling (countries vs sovereign states)
 - Performance-focused (lightweight HTML)
 
 ---
@@ -113,13 +113,10 @@ This improves coverage for:
 
 ## 📌 Notes
 
-This project is for personal tracking and visualisation only.  
-Refer to official UK Home Office guidance for immigration compliance.
+This project is for personal travel tracking and visualisation only.
 
 ---
 
 ## 👤 Author
 
-Pak Ho Wong  
-MSc (Software Engineering), University of Oxford  
-MBA, NYU Stern  
+Pakho Wong
