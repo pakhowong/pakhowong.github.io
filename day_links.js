@@ -1,4 +1,12 @@
 const DAY_LINKS = {
+  "2025-03-08": {
+    url: "https://drive.google.com/file/d/15ZDEaAfNSVTO47Ud89tr2QnOxGoI6qxu/view?usp=drivesdk",
+    name: "LHR to HND"
+  },
+  "2025-03-15": {
+    url: "https://drive.google.com/file/d/1_aO1Z84b8N5A0n3d9pQG4oyGftE1GdIz/view?usp=drivesdk",
+    name: "HND to LHR"
+  },
   "2025-04-18": {
     url: "https://drive.google.com/file/d/1MSc6fa7umFZ4CQBIRWSQmAMYFmSmuhDr/view?usp=drivesdk",
     name: "LGW to GYD"
