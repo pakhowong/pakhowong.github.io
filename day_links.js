@@ -15,6 +15,10 @@ const DAY_LINKS = {
     url: "https://drive.google.com/file/d/1EpIe8Ay8_-6G5DdWAb6x28tiwZgldBOu/view?usp=drivesdk",
     name: "NRT to LGW"
   },
+  "2025-10-16": {
+    url: "https://drive.google.com/file/d/14uIZWvqpsh9Ib-1S6-YnaIMZOw8Xqqjp/view?usp=drivesdk",
+    name: "HKG to LHR"
+  },
   "2026-03-26": {
     url: "https://drive.google.com/file/d/1vqktjU51xKapXwjX5VNEIhCLtn5DFyiL/view?usp=drivesdk",
     name: "LGW to ARN"
