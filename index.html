@@ -901,7 +901,7 @@ init();
     "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
   ];
 
-  const OPENFLIGHTS_JSON_URL = "flights/airports.json";
+  const OPENFLIGHTS_JSON_URL = "./flights/airports.json";
 
   function parseCsv(text) {
     const rows = [];
@@ -1138,11 +1138,22 @@ init();
     try {
       if (statusText) statusText.textContent = "Loading flight history CSV and airport databases…";
 
-      const [csvText, mwggAirports, openFlightsData] = await Promise.all([
+      const [csvText, mwggAirports] = await Promise.all([
         fetchTextWithFallback([FLIGHT_HISTORY_CSV_URL]),
-        fetchJsonWithFallback(MWGG_AIRPORTS_URLS),
-        fetchJsonWithFallback([OPENFLIGHTS_JSON_URL])
+        fetchJsonWithFallback(MWGG_AIRPORTS_URLS)
       ]);
+
+      let openFlightsData = { by_icao: {}, by_iata: {} };
+      let openFlightsLoaded = false;
+      try {
+        const candidate = await fetchJsonWithFallback([OPENFLIGHTS_JSON_URL]);
+        if (candidate && typeof candidate === "object") {
+          openFlightsData = candidate;
+          openFlightsLoaded = true;
+        }
+      } catch (error) {
+        console.warn("OpenFlights JSON unavailable; continuing with mwgg only.", error);
+      }
 
       const openFlightsAirports = openFlightsData.by_icao || {};
       const mwggIataIndex = buildIataIndex(
