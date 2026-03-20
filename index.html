@@ -896,9 +896,14 @@ init();
 (function () {
   const FLIGHT_HISTORY_CSV_URL = "flight_history.csv";
 
-  const AIRPORTS_DATA_URLS = [
+  const MWGG_AIRPORTS_URLS = [
     "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
     "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
+  ];
+
+  const OPENFLIGHTS_AIRPORTS_URLS = [
+    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports-extended.dat",
+    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat"
   ];
 
   function parseCsv(text) {
@@ -938,6 +943,34 @@ init();
     return rows;
   }
 
+  function parseDelimitedLine(line) {
+    const fields = [];
+    let value = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const next = line[i + 1];
+
+      if (char === '"') {
+        if (inQuotes && next === '"') {
+          value += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === "," && !inQuotes) {
+        fields.push(value);
+        value = "";
+      } else {
+        value += char;
+      }
+    }
+
+    fields.push(value);
+    return fields;
+  }
+
   function loadFlightHistoryFromCsv(csvText) {
     const rows = parseCsv(csvText);
     if (!rows.length) return [];
@@ -973,6 +1006,61 @@ init();
         airline: get("Airline")
       };
     }).filter(Boolean);
+  }
+
+  function parseOpenFlightsAirports(text) {
+    const byIcao = {};
+    const lines = text.split(/\r?\n/).filter(Boolean);
+
+    lines.forEach(line => {
+      const fields = parseDelimitedLine(line);
+      if (fields.length < 8) return;
+
+      const name = fields[1] || "";
+      const city = fields[2] || "";
+      const country = fields[3] || "";
+      const iata = fields[4] || "";
+      const icao = fields[5] || "";
+      const lat = Number(fields[6]);
+      const lon = Number(fields[7]);
+
+      if (!icao || icao === "\\N") return;
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+      byIcao[icao] = {
+        name,
+        city,
+        country,
+        iata: iata && iata !== "\\N" ? iata : "",
+        icao,
+        lat,
+        lon,
+        source: "openflights"
+      };
+    });
+
+    return byIcao;
+  }
+
+  function getHybridAirport(icao, mwggAirports, openFlightsAirports) {
+    const mwgg = mwggAirports[icao];
+    if (mwgg && Number.isFinite(Number(mwgg.lat)) && Number.isFinite(Number(mwgg.lon))) {
+      return {
+        name: mwgg.name || "",
+        city: mwgg.city || "",
+        country: mwgg.country || "",
+        iata: mwgg.iata || "",
+        icao: mwgg.icao || icao,
+        lat: Number(mwgg.lat),
+        lon: Number(mwgg.lon),
+        source: "mwgg"
+      };
+    }
+
+    const openFlights = openFlightsAirports[icao];
+    if (openFlights) return openFlights;
+
+    return null;
   }
 
   function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
@@ -1111,19 +1199,20 @@ init();
   async function initFlightHistoryMap() {
     const mapContainer = document.getElementById("flightHistoryMap");
     const statusText = document.getElementById("flightHistoryStatusText");
-    const countText = document.getElementById("flightHistoryCountText");
     if (!mapContainer || typeof L === "undefined") return;
 
     const map = createFlightMapBase("flightHistoryMap");
 
     try {
-      if (statusText) statusText.textContent = "Loading flight history CSV…";
+      if (statusText) statusText.textContent = "Loading flight history CSV and airport databases…";
 
-      const [csvText, airports] = await Promise.all([
+      const [csvText, mwggAirports, openFlightsText] = await Promise.all([
         fetchTextWithFallback([FLIGHT_HISTORY_CSV_URL]),
-        fetchJsonWithFallback(AIRPORTS_DATA_URLS)
+        fetchJsonWithFallback(MWGG_AIRPORTS_URLS),
+        fetchTextWithFallback(OPENFLIGHTS_AIRPORTS_URLS)
       ]);
 
+      const openFlightsAirports = parseOpenFlightsAirports(openFlightsText);
       const FLIGHT_HISTORY = loadFlightHistoryFromCsv(csvText);
 
       const airportMarkers = new Map();
@@ -1132,15 +1221,19 @@ init();
 
       let plottedFlights = 0;
       let missingAirports = 0;
+      let openFlightsFallbackHits = 0;
 
       FLIGHT_HISTORY.forEach(flight => {
-        const fromAirport = airports[flight.from_icao];
-        const toAirport = airports[flight.to_icao];
+        const fromAirport = getHybridAirport(flight.from_icao, mwggAirports, openFlightsAirports);
+        const toAirport = getHybridAirport(flight.to_icao, mwggAirports, openFlightsAirports);
 
         if (!fromAirport || !toAirport) {
           missingAirports += 1;
           return;
         }
+
+        if (fromAirport.source === "openflights") openFlightsFallbackHits += 1;
+        if (toAirport.source === "openflights") openFlightsFallbackHits += 1;
 
         const fromLat = Number(fromAirport.lat);
         const fromLng = Number(fromAirport.lon);
@@ -1275,7 +1368,8 @@ init();
       }
 
       if (statusText) {
-        statusText.textContent = `Flights taken: ${plottedFlights} · Routes (pairs) flown: ${routePairs.size} · Airports visited: ${airportMarkers.size} · Missing airport data: ${missingAirports}.`;
+        statusText.textContent =
+          `Flights taken: ${plottedFlights} · Routes (pairs) flown: ${routePairs.size} · Airports visited: ${airportMarkers.size} · OpenFlights fallback matches: ${openFlightsFallbackHits} · Missing airport data: ${missingAirports}.`;
       }
     } catch (error) {
       if (statusText) {
@@ -1293,6 +1387,7 @@ init();
   }
 })();
 </script>
+
 
 <script src="city_pins.js"></script>
 </body>
