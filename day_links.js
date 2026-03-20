@@ -100,20 +100,20 @@ const DAY_LINKS = {
     name: " to "
   },
   "2025-12-25": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1tEcYgzixbsVV9GI1loL-qkwTlGvk_Vkl/view?usp=drivesdk",
+    name: "STN to SAW"
   },
   "2026-01-03": {
     url: "",
     name: " to "
   },
   "2026-02-06": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1uQmJmdw_X_jhV-zwVj8qHyWUpugzjvKc/view?usp=drivesdk",
+    name: "LGW to IST"
   },
   "2026-02-20": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/11crx45CqTavagWCHD5yct9v7eVrkCflF/view?usp=drivesdk",
+    name: "ESB to STN"
   },
   "2026-03-26": {
     url: "https://drive.google.com/file/d/1vqktjU51xKapXwjX5VNEIhCLtn5DFyiL/view?usp=drivesdk",
