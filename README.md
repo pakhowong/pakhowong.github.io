@@ -95,7 +95,7 @@ This improves coverage for:
 
 ## ⚙️ Design Principles
 
-- Modular data separation (JS + CSV)
+- Modular data separation (JS + JSON + CSV)
 - Accurate geographic modelling (countries vs sovereign states)
 - Performance-focused (lightweight HTML)
 
@@ -103,7 +103,6 @@ This improves coverage for:
 
 ## 🚀 Future Improvements
 
-- Preprocessed airport database (JSON)
 - Travel analytics dashboard
 - Timeline visualisation
 - Google Photos integration
