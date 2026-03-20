@@ -12,12 +12,12 @@ const DAY_LINKS = {
     name: "AAR to STN"
   },
   "2024-11-09": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1770X7dWt5Cc8aLLMCgT-lgAfAcBtOtjX/view?usp=drivesdk",
+    name: "LHR to MAD"
   },
   "2024-11-19": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1gkxLi86twO0TZ_-7bXHkm1MiplYy8K3m/view?usp=drivesdk",
+    name: "BCN to LGW"
   },
   "2025-01-02": {
     url: "https://drive.google.com/file/d/1zuix9pJU5TxNvttR2SlF3GIwHo_CC1uJ/view?usp=drivesdk",
@@ -28,12 +28,12 @@ const DAY_LINKS = {
     name: "OSL to LHR"
   },
   "2025-01-18": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1MA6YsowoUWQ0TQ9lPN_f4_ecCnW-0Q8w/view?usp=drivesdk",
+    name: "STN to LIS"
   },
   "2025-01-22": {
-    url: "",
-    name: " to "
+    url: "https://drive.google.com/file/d/1ubCAVsksvr_WUFyX93Bxc57UY2lCTcLF/view?usp=drivesdk",
+    name: "LIS to STN"
   },
   "2025-01-26": {
     url: "https://drive.google.com/file/d/11MnpI6ORGWVnDKcu0sfaWw5YkqyVsGRy/view?usp=drivesdk",
