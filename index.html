@@ -249,6 +249,9 @@
       <div>
         <div class="country-visited-title">Countries Visited</div>
         <div id="countryVisitedStatusText" class="small country-visited-status">Loading map…</div>
+        <div class="external-links">
+          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
+        </div>
       </div>
     </div>
 
@@ -560,6 +563,8 @@ function openExternal(type) {
     url = "https://my.flightradar24.com/pakhowong";
   } else if (type === "ukvi") {
     url = "https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055";
+  } else if (type === "tripadvisor") {
+    url = "https://www.tripadvisor.com/TravelMap-a_uid.F6C602C817208086EF58C16209420541";
   }
 
   window.open(url, "_blank", "noopener,noreferrer");
