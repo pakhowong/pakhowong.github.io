@@ -902,8 +902,7 @@ init();
   ];
 
   const OPENFLIGHTS_AIRPORTS_URLS = [
-    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports-extended.dat",
-    "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat"
+    "/airports.dat"
   ];
 
   function parseCsv(text) {
@@ -1441,8 +1440,14 @@ init();
       }
 
       if (statusText) {
-        statusText.textContent =
-          `Flights taken: ${plottedFlights} · Routes (pairs) flown: ${routePairs.size} · Airports visited: ${airportMarkers.size} · OpenFlights fallback matches: ${openFlightsFallbackHits} · Missing airport data: ${missingAirports}.`;
+        if (missingAirports >= 1) {
+          statusText.textContent =
+            `Flights taken: ${plottedFlights} | Routes (pairs) flown: ${routePairs.size} | Airports visited: ${airportMarkers.size} | OpenFlights fallback matches: ${openFlightsFallbackHits} | Missing airport data: ${missingAirports}`;
+        } else {
+          statusText.textContent =
+            `Flights taken: ${plottedFlights} | Routes (pairs) flown: ${routePairs.size} | Airports visited: ${airportMarkers.size}`;
+      
+        }
       }
     } catch (error) {
       if (statusText) {
