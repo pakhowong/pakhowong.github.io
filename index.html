@@ -895,13 +895,12 @@ init();
 <script>
 (function () {
   const FLIGHT_HISTORY_CSV_URL = "flight_history.csv";
+  const OPENFLIGHTS_JSON_URL = "./flights/airports.json";
 
   const MWGG_AIRPORTS_URLS = [
     "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
     "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
   ];
-
-  const OPENFLIGHTS_JSON_URL = "./flights/airports.json";
 
   function parseCsv(text) {
     const rows = [];
@@ -940,6 +939,43 @@ init();
     return rows;
   }
 
+  function loadFlightHistoryFromCsv(csvText) {
+    const rows = parseCsv(csvText);
+    if (!rows.length) return [];
+
+    const header = rows[0];
+    const index = Object.fromEntries(header.map((name, i) => [name, i]));
+    const fromToPattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
+
+    return rows.slice(1).map(cells => {
+      const get = name => (cells[index[name]] || "").trim();
+
+      const fromRaw = get("From");
+      const toRaw = get("To");
+      const fromMatch = fromRaw.match(fromToPattern);
+      const toMatch = toRaw.match(fromToPattern);
+
+      if (!fromMatch || !toMatch) return null;
+
+      const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
+      const [, toCity, toAirport, toIata, toIcao] = toMatch;
+
+      return {
+        date: get("Date"),
+        flight_number: get("Flight number"),
+        from_city: fromCity.trim(),
+        from_airport: fromAirport.trim(),
+        from_iata: fromIata.trim(),
+        from_icao: fromIcao.trim(),
+        to_city: toCity.trim(),
+        to_airport: toAirport.trim(),
+        to_iata: toIata.trim(),
+        to_icao: toIcao.trim(),
+        airline: get("Airline")
+      };
+    }).filter(Boolean);
+  }
+
   function buildIataIndex(airportsByIcao) {
     const byIata = {};
     Object.values(airportsByIcao).forEach(airport => {
@@ -966,29 +1002,37 @@ init();
     return byIata;
   }
 
-  function getHybridAirportSmart(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
-    const mwgg = mwggAirports[icao];
-    if (mwgg && Number.isFinite(Number(mwgg.lat)) && Number.isFinite(Number(mwgg.lon))) {
-      return {
-        name: mwgg.name || "",
-        city: mwgg.city || "",
-        country: mwgg.country || "",
-        iata: mwgg.iata || "",
-        icao: mwgg.icao || icao,
-        lat: Number(mwgg.lat),
-        lon: Number(mwgg.lon),
-        source: "mwgg"
-      };
-    }
+  function normaliseAirportRecord(record, fallbackIcao, source) {
+    if (!record) return null;
 
-    const openFlights = openFlightsAirports[icao];
-    if (openFlights) return openFlights;
+    const lat = Number(record.lat);
+    const lon = Number(record.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+    return {
+      name: record.name || "",
+      city: record.city || "",
+      country: record.country || "",
+      iata: record.iata || "",
+      icao: record.icao || fallbackIcao || "",
+      lat,
+      lon,
+      source
+    };
+  }
+
+  function getHybridAirportSmart(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
+    const mwggByIcao = normaliseAirportRecord(mwggAirports[icao], icao, "mwgg");
+    if (mwggByIcao) return mwggByIcao;
+
+    const openByIcao = normaliseAirportRecord(openFlightsAirports[icao], icao, "openflights");
+    if (openByIcao) return openByIcao;
 
     if (iata) {
-      const mwggByIata = mwggIataIndex[iata];
+      const mwggByIata = normaliseAirportRecord(mwggIataIndex[iata], "", "mwgg");
       if (mwggByIata) return mwggByIata;
 
-      const openByIata = openFlightsIataIndex[iata];
+      const openByIata = normaliseAirportRecord(openFlightsIataIndex[iata], "", "openflights");
       if (openByIata) return openByIata;
     }
 
@@ -1004,11 +1048,10 @@ init();
 
     const sinφ1 = Math.sin(φ1), cosφ1 = Math.cos(φ1);
     const sinφ2 = Math.sin(φ2), cosφ2 = Math.cos(φ2);
-    const Δλ = λ2 - λ1;
 
     const d = 2 * Math.asin(Math.sqrt(
       Math.sin((φ2 - φ1) / 2) ** 2 +
-      cosφ1 * cosφ2 * Math.sin(Δλ / 2) ** 2
+      cosφ1 * cosφ2 * Math.sin((λ2 - λ1) / 2) ** 2
     ));
 
     if (!isFinite(d) || d === 0) {
@@ -1145,6 +1188,7 @@ init();
 
       let openFlightsData = { by_icao: {}, by_iata: {} };
       let openFlightsLoaded = false;
+
       try {
         const candidate = await fetchJsonWithFallback([OPENFLIGHTS_JSON_URL]);
         if (candidate && typeof candidate === "object") {
@@ -1156,6 +1200,7 @@ init();
       }
 
       const openFlightsAirports = openFlightsData.by_icao || {};
+      const openFlightsIataIndex = openFlightsData.by_iata || {};
       const mwggIataIndex = buildIataIndex(
         Object.fromEntries(
           Object.entries(mwggAirports).map(([icao, airport]) => [
@@ -1173,7 +1218,7 @@ init();
           ])
         )
       );
-      const openFlightsIataIndex = openFlightsData.by_iata || {};
+
       const FLIGHT_HISTORY = loadFlightHistoryFromCsv(csvText);
 
       const airportMarkers = new Map();
@@ -1204,13 +1249,11 @@ init();
 
         if (!fromAirport || !toAirport) {
           missingAirports += 1;
-        
           console.warn("Missing airport:", {
             from_icao: flight.from_icao,
             to_icao: flight.to_icao,
             flight: flight
           });
-        
           return;
         }
 
@@ -1352,11 +1395,10 @@ init();
       if (statusText) {
         if (missingAirports >= 1) {
           statusText.textContent =
-            `Flights taken: ${plottedFlights} | Routes (pairs) flown: ${routePairs.size} | Airports visited: ${airportMarkers.size} | OpenFlights fallback matches: ${openFlightsFallbackHits} | Missing airport data: ${missingAirports}`;
+            `Flights taken: ${plottedFlights} | Routes (pairs) flown: ${routePairs.size} | Airports visited: ${airportMarkers.size} | OpenFlights ${openFlightsLoaded ? "loaded" : "not loaded"} | OpenFlights fallback matches: ${openFlightsFallbackHits} | Missing airport data: ${missingAirports}.`;
         } else {
           statusText.textContent =
             `Flights taken: ${plottedFlights} | Routes (pairs) flown: ${routePairs.size} | Airports visited: ${airportMarkers.size}`;
-      
         }
       }
     } catch (error) {
@@ -1375,7 +1417,6 @@ init();
   }
 })();
 </script>
-
 
 <script src="city_pins.js"></script>
 </body>
