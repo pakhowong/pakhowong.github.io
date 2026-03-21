@@ -60,9 +60,12 @@
     padding:18px 14px 28px;
   }
   .page-girl{
-    position:fixed;
-    inset:0;
-    background:url("./images/travel-girl.png") calc(50% + 160px) 30px / min(56vw, 430px) auto no-repeat;
+    position:absolute;
+    left:350px;
+    top:28px;
+    width:min(56vw, 430px);
+    height:860px;
+    background:url("./images/travel-girl.png") left top / contain no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
@@ -306,6 +309,63 @@
     font-size:12px;
     color:#64748b;
   }
+
+  .summary-compact{
+    display:grid;
+    gap:10px;
+  }
+  .summary-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:10px 12px;
+    border-radius:16px;
+    background:rgba(248,250,252,.48);
+    border:1px solid rgba(148,163,184,.10);
+    backdrop-filter: blur(8px);
+  }
+  .summary-row .label{
+    font-size:13px;
+    font-weight:700;
+    color:#475569;
+    line-height:1.25;
+  }
+  .summary-row .value{
+    font-size:18px;
+    font-weight:800;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .summary-row .value.small{
+    font-size:15px;
+  }
+  .summary-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:34px;
+    height:34px;
+    padding:0 10px;
+    border-radius:999px;
+    background:rgba(219,234,254,.92);
+    color:var(--accent);
+    font-size:14px;
+    font-weight:800;
+  }
+  .summary-meter{
+    margin-top:6px;
+    height:8px;
+    border-radius:999px;
+    background:rgba(191,219,254,.45);
+    overflow:hidden;
+  }
+  .summary-meter-bar{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, #60a5fa, #2563eb);
+    width:0%;
+  }
   .check-list{
     display:grid;
     gap:8px;
@@ -416,8 +476,12 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      background-position: calc(50% + 110px) 74px;
-      background-size: min(64vw, 320px) auto;
+      left:210px;
+      top:74px;
+      width:min(64vw, 320px);
+      height:620px;
+      background-position:left top;
+      background-size:contain;
     }
     .hero-panel{ min-height:430px; padding:22px 14px 14px; }
     .hero-title{ font-size:42px; max-width:250px; }
@@ -493,37 +557,48 @@
 
           <section class="panel glass mini-panel" style="margin-top:14px;">
             <h3>Absence Summary</h3>
-            <div class="summary-box">
-              <div class="kicker">ILR Window</div>
-              <div class="sub" id="summaryIlrWindow">1 October 2024 to 30 September 2029</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Citizenship Window</div>
-              <div class="sub" id="summaryCitWindow">1 October 2025 to 30 September 2030</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Total absent days in citizenship window</div>
-              <div class="big" id="summaryCitTotal">--</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Absent days in the final 12 months</div>
-              <div class="big" id="summaryCitFinal">--</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Remaining days under the 90-day rolling safety buffer</div>
-              <div class="big" id="summarySafetyRemaining">--</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Trips taken</div>
-              <div class="big" id="summaryTripsTaken">--</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Total number of absent days</div>
-              <div class="big" id="summaryTotalAbsent">--</div>
-            </div>
-            <div class="summary-box">
-              <div class="kicker">Days with supporting documents</div>
-              <div class="big" id="summarySupportingDocs">--</div>
+            <div class="summary-compact">
+              <div class="summary-row">
+                <div>
+                  <div class="label">ILR window</div>
+                  <div class="sub" id="summaryIlrWindow">1 Oct 2024 – 30 Sep 2029</div>
+                </div>
+                <div class="summary-badge">ILR</div>
+              </div>
+
+              <div class="summary-row">
+                <div>
+                  <div class="label">Citizenship window</div>
+                  <div class="sub" id="summaryCitWindow">1 Oct 2025 – 30 Sep 2030</div>
+                </div>
+                <div class="summary-badge">CIT</div>
+              </div>
+
+              <div class="summary-row">
+                <div>
+                  <div class="label">Citizenship days used</div>
+                  <div class="summary-meter"><div class="summary-meter-bar" id="summaryCitTotalBar"></div></div>
+                </div>
+                <div class="value" id="summaryCitTotal">--</div>
+              </div>
+
+              <div class="summary-row">
+                <div>
+                  <div class="label">Final 12 months used</div>
+                  <div class="summary-meter"><div class="summary-meter-bar" id="summaryCitFinalBar"></div></div>
+                </div>
+                <div class="value" id="summaryCitFinal">--</div>
+              </div>
+
+              <div class="summary-row">
+                <div class="label">Safety buffer left</div>
+                <div class="value" id="summarySafetyRemaining">--</div>
+              </div>
+
+              <div class="summary-row">
+                <div class="label">Trips / Absent days / Docs</div>
+                <div class="value small"><span id="summaryTripsTaken">--</span> · <span id="summaryTotalAbsent">--</span> · <span id="summarySupportingDocs">--</span></div>
+              </div>
             </div>
           </section>
         </div>
@@ -786,19 +861,25 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
 
   const summaryIlrWindow = document.getElementById("summaryIlrWindow");
-  if (summaryIlrWindow) summaryIlrWindow.textContent = "1 October 2024 to 30 September 2029";
+  if (summaryIlrWindow) summaryIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
 
   const summaryCitWindow = document.getElementById("summaryCitWindow");
-  if (summaryCitWindow) summaryCitWindow.textContent = "1 October 2025 to 30 September 2030";
+  if (summaryCitWindow) summaryCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
 
   const summaryCitTotal = document.getElementById("summaryCitTotal");
-  if (summaryCitTotal) summaryCitTotal.textContent = `${citizenshipTotal} / ${citizenship.totalLimit}`;
+  if (summaryCitTotal) summaryCitTotal.textContent = `${citizenshipTotal}/${citizenship.totalLimit}`;
+
+  const summaryCitTotalBar = document.getElementById("summaryCitTotalBar");
+  if (summaryCitTotalBar) summaryCitTotalBar.style.width = `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}%`;
 
   const summaryCitFinal = document.getElementById("summaryCitFinal");
-  if (summaryCitFinal) summaryCitFinal.textContent = `${citizenshipFinalYear} / ${citizenship.finalTwelveMonthsLimit}`;
+  if (summaryCitFinal) summaryCitFinal.textContent = `${citizenshipFinalYear}/${citizenship.finalTwelveMonthsLimit}`;
+
+  const summaryCitFinalBar = document.getElementById("summaryCitFinalBar");
+  if (summaryCitFinalBar) summaryCitFinalBar.style.width = `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}%`;
 
   const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
-  if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining} days`;
+  if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining}d`;
 
   const summaryTripsTaken = document.getElementById("summaryTripsTaken");
   if (summaryTripsTaken) summaryTripsTaken.textContent = String(ABSENCE_RANGES_DATA.length);
