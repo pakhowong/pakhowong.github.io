@@ -292,6 +292,30 @@
 
 
 
+
+<script>
+/*
+============================================================================
+GLOBAL DEBUG LOGGER
+----------------------------------------------------------------------------
+Provides structured logging with context to make debugging easier.
+============================================================================
+*/
+function debugLog(context, message, data = null) {
+  const timestamp = new Date().toISOString();
+  if (data !== null) {
+    console.log(`[${timestamp}] [${context}] ${message}`, data);
+  } else {
+    console.log(`[${timestamp}] [${context}] ${message}`);
+  }
+}
+
+function debugError(context, message, error = null) {
+  const timestamp = new Date().toISOString();
+  console.error(`[${timestamp}] [${context}] ERROR: ${message}`, error);
+}
+</script>
+
 <script>
 /*
   ============================================================================
@@ -1139,6 +1163,8 @@ function initAbsenceTracker() {
   // --------------------------------------------------------------------------
 
   window.initTravelMap = function initTravelMap() {
+    debugLog("MAP", "Initialising travel map...");
+
     const mapContainer = document.getElementById("travelMap");
     const statusText = document.getElementById("travelMapStatusText");
     if (!mapContainer || typeof L === "undefined") return;
@@ -1316,6 +1342,8 @@ function initAbsenceTracker() {
     }
 
     async function loadVisitedCountries() {
+      debugLog("MAP", "Loading visited countries...");
+
       const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
       const visitedCountries = Array.isArray(window.VISITED_COUNTRIES_DATA) ? window.VISITED_COUNTRIES_DATA : [];
       const targetNames = visitedCountries.flatMap(country => {
@@ -1366,6 +1394,8 @@ function initAbsenceTracker() {
     }
 
     async function loadFlightHistory() {
+      debugLog("MAP", "Loading flight history...");
+
       const [csvText, mwggAirports, openFlightsData] = await Promise.all([
         fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
         fetchJsonWithFallback(TRAVEL_MAP_CONFIG.mwggAirportUrls),
@@ -1570,7 +1600,10 @@ function initAbsenceTracker() {
     bindToggleButtons();
 
     Promise.all([loadVisitedCountries(), loadFlightHistory()])
-      .then(updateStatusText)
+      .then(() => {
+        debugLog("MAP", "Travel map fully loaded");
+        updateStatusText();
+      })
       .catch(error => {
         statusText.textContent = "Unable to load the travel map right now.";
         mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
@@ -1596,14 +1629,24 @@ function initAbsenceTracker() {
   ============================================================================
 */
 async function fetchLocalJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+  debugLog("DATA_FETCH", `Fetching JSON: ${path}`);
+  try {
+    const response = await fetch(path, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    debugLog("DATA_FETCH", `Successfully loaded ${path}`, data);
+    return data;
+  } catch (error) {
+    debugError("DATA_FETCH", `Failed to load ${path}`, error);
+    throw error;
   }
-  return response.json();
 }
 
 async function initSiteData() {
+  debugLog("BOOTSTRAP", "Initialising site data...");
+
   try {
     const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
       fetchLocalJson("./data/absence_ranges.json"),
@@ -1623,7 +1666,9 @@ async function initSiteData() {
     window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(window.VISITED_TERRITORIES_DATA || []);
 
     try {
-      initAbsenceTracker();
+      debugLog("BOOTSTRAP", "Starting Absence Tracker...");
+initAbsenceTracker();
+debugLog("BOOTSTRAP", "Absence Tracker initialised");
     } catch (error) {
       console.error("Absence tracker init failed:", error);
       const months = document.getElementById("months");
@@ -1634,7 +1679,9 @@ async function initSiteData() {
 
     try {
       if (typeof window.initTravelMap === "function") {
-        window.initTravelMap();
+        debugLog("BOOTSTRAP", "Starting Travel Map...");
+window.initTravelMap();
+debugLog("BOOTSTRAP", "Travel Map initialised");
       } else {
         throw new Error("initTravelMap is not available");
       }
