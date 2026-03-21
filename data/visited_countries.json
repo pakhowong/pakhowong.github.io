@@ -1,0 +1,802 @@
+[
+  {
+    "country": "Afghanistan",
+    "visited": false
+  },
+  {
+    "country": "Albania",
+    "visited": true
+  },
+  {
+    "country": "Algeria",
+    "visited": false
+  },
+  {
+    "country": "Andorra",
+    "visited": true
+  },
+  {
+    "country": "Angola",
+    "visited": false
+  },
+  {
+    "country": "Antigua and Barbuda",
+    "visited": true
+  },
+  {
+    "country": "Argentina",
+    "visited": false
+  },
+  {
+    "country": "Armenia",
+    "visited": true
+  },
+  {
+    "country": "Australia",
+    "visited": true
+  },
+  {
+    "country": "Austria",
+    "visited": true
+  },
+  {
+    "country": "Azerbaijan",
+    "visited": true
+  },
+  {
+    "country": "Bahamas",
+    "visited": true
+  },
+  {
+    "country": "Bahrain",
+    "visited": false
+  },
+  {
+    "country": "Bangladesh",
+    "visited": false
+  },
+  {
+    "country": "Barbados",
+    "visited": true
+  },
+  {
+    "country": "Belarus",
+    "visited": false
+  },
+  {
+    "country": "Belgium",
+    "visited": true
+  },
+  {
+    "country": "Belize",
+    "visited": true
+  },
+  {
+    "country": "Benin",
+    "visited": false
+  },
+  {
+    "country": "Bhutan",
+    "visited": false
+  },
+  {
+    "country": "Bolivia",
+    "visited": false
+  },
+  {
+    "country": "Bosnia and Herzegovina",
+    "visited": true
+  },
+  {
+    "country": "Botswana",
+    "visited": false
+  },
+  {
+    "country": "Brazil",
+    "visited": false
+  },
+  {
+    "country": "Brunei",
+    "visited": true
+  },
+  {
+    "country": "Bulgaria",
+    "visited": false
+  },
+  {
+    "country": "Burkina Faso",
+    "visited": false
+  },
+  {
+    "country": "Burundi",
+    "visited": false
+  },
+  {
+    "country": "Cabo Verde",
+    "visited": false
+  },
+  {
+    "country": "Cambodia",
+    "visited": true
+  },
+  {
+    "country": "Cameroon",
+    "visited": false
+  },
+  {
+    "country": "Canada",
+    "visited": true
+  },
+  {
+    "country": "Central African Republic",
+    "visited": false
+  },
+  {
+    "country": "Chad",
+    "visited": false
+  },
+  {
+    "country": "Chile",
+    "visited": false
+  },
+  {
+    "country": "China",
+    "visited": true
+  },
+  {
+    "country": "Colombia",
+    "visited": false
+  },
+  {
+    "country": "Comoros",
+    "visited": false
+  },
+  {
+    "country": "Congo (Congo-Brazzaville)",
+    "visited": false
+  },
+  {
+    "country": "Costa Rica",
+    "visited": false
+  },
+  {
+    "country": "Côte D'Ivoire",
+    "visited": false
+  },
+  {
+    "country": "Croatia",
+    "visited": true
+  },
+  {
+    "country": "Cuba",
+    "visited": false
+  },
+  {
+    "country": "Cyprus",
+    "visited": true
+  },
+  {
+    "country": "Czech Republic",
+    "visited": true
+  },
+  {
+    "country": "Democratic Republic of the Congo",
+    "visited": false
+  },
+  {
+    "country": "Denmark",
+    "visited": true
+  },
+  {
+    "country": "Djibouti",
+    "visited": false
+  },
+  {
+    "country": "Dominica",
+    "visited": true
+  },
+  {
+    "country": "Dominican Republic",
+    "visited": true
+  },
+  {
+    "country": "Ecuador",
+    "visited": false
+  },
+  {
+    "country": "Egypt",
+    "visited": true
+  },
+  {
+    "country": "El Salvador",
+    "visited": false
+  },
+  {
+    "country": "Equatorial Guinea",
+    "visited": false
+  },
+  {
+    "country": "Eritrea",
+    "visited": false
+  },
+  {
+    "country": "Estonia",
+    "visited": true
+  },
+  {
+    "country": "Eswatini",
+    "visited": false
+  },
+  {
+    "country": "Ethiopia",
+    "visited": false
+  },
+  {
+    "country": "Fiji",
+    "visited": true
+  },
+  {
+    "country": "Finland",
+    "visited": true
+  },
+  {
+    "country": "France",
+    "visited": true
+  },
+  {
+    "country": "Gabon",
+    "visited": false
+  },
+  {
+    "country": "Gambia",
+    "visited": false
+  },
+  {
+    "country": "Georgia",
+    "visited": true
+  },
+  {
+    "country": "Germany",
+    "visited": true
+  },
+  {
+    "country": "Ghana",
+    "visited": false
+  },
+  {
+    "country": "Greece",
+    "visited": true
+  },
+  {
+    "country": "Grenada",
+    "visited": true
+  },
+  {
+    "country": "Guatemala",
+    "visited": true
+  },
+  {
+    "country": "Guinea",
+    "visited": false
+  },
+  {
+    "country": "Guinea-Bissau",
+    "visited": false
+  },
+  {
+    "country": "Guyana",
+    "visited": false
+  },
+  {
+    "country": "Haiti",
+    "visited": false
+  },
+  {
+    "country": "Honduras",
+    "visited": false
+  },
+  {
+    "country": "Hungary",
+    "visited": true
+  },
+  {
+    "country": "Iceland",
+    "visited": true
+  },
+  {
+    "country": "India",
+    "visited": false
+  },
+  {
+    "country": "Indonesia",
+    "visited": true
+  },
+  {
+    "country": "Iran",
+    "visited": false
+  },
+  {
+    "country": "Iraq",
+    "visited": false
+  },
+  {
+    "country": "Ireland",
+    "visited": true
+  },
+  {
+    "country": "Israel",
+    "visited": true
+  },
+  {
+    "country": "Italy",
+    "visited": true
+  },
+  {
+    "country": "Jamaica",
+    "visited": true
+  },
+  {
+    "country": "Japan",
+    "visited": true
+  },
+  {
+    "country": "Jordan",
+    "visited": true
+  },
+  {
+    "country": "Kazakhstan",
+    "visited": true
+  },
+  {
+    "country": "Kenya",
+    "visited": false
+  },
+  {
+    "country": "Kiribati",
+    "visited": false
+  },
+  {
+    "country": "Kuwait",
+    "visited": false
+  },
+  {
+    "country": "Kyrgyzstan",
+    "visited": true
+  },
+  {
+    "country": "Laos",
+    "visited": true
+  },
+  {
+    "country": "Latvia",
+    "visited": true
+  },
+  {
+    "country": "Lebanon",
+    "visited": false
+  },
+  {
+    "country": "Lesotho",
+    "visited": false
+  },
+  {
+    "country": "Liberia",
+    "visited": false
+  },
+  {
+    "country": "Libya",
+    "visited": false
+  },
+  {
+    "country": "Liechtenstein",
+    "visited": true
+  },
+  {
+    "country": "Lithuania",
+    "visited": true
+  },
+  {
+    "country": "Luxembourg",
+    "visited": true
+  },
+  {
+    "country": "Madagascar",
+    "visited": false
+  },
+  {
+    "country": "Malawi",
+    "visited": false
+  },
+  {
+    "country": "Malaysia",
+    "visited": true
+  },
+  {
+    "country": "Maldives",
+    "visited": true
+  },
+  {
+    "country": "Mali",
+    "visited": false
+  },
+  {
+    "country": "Malta",
+    "visited": true
+  },
+  {
+    "country": "Marshall Islands",
+    "visited": false
+  },
+  {
+    "country": "Mauritania",
+    "visited": false
+  },
+  {
+    "country": "Mauritius",
+    "visited": false
+  },
+  {
+    "country": "Mexico",
+    "visited": true
+  },
+  {
+    "country": "Micronesia",
+    "visited": false
+  },
+  {
+    "country": "Moldova",
+    "visited": false
+  },
+  {
+    "country": "Monaco",
+    "visited": true
+  },
+  {
+    "country": "Mongolia",
+    "visited": false
+  },
+  {
+    "country": "Montenegro",
+    "visited": true
+  },
+  {
+    "country": "Morocco",
+    "visited": false
+  },
+  {
+    "country": "Mozambique",
+    "visited": false
+  },
+  {
+    "country": "Myanmar",
+    "visited": false
+  },
+  {
+    "country": "Namibia",
+    "visited": false
+  },
+  {
+    "country": "Nauru",
+    "visited": false
+  },
+  {
+    "country": "Nepal",
+    "visited": true
+  },
+  {
+    "country": "Netherlands",
+    "visited": true
+  },
+  {
+    "country": "New Zealand",
+    "visited": true
+  },
+  {
+    "country": "Nicaragua",
+    "visited": false
+  },
+  {
+    "country": "Niger",
+    "visited": false
+  },
+  {
+    "country": "Nigeria",
+    "visited": false
+  },
+  {
+    "country": "North Korea",
+    "visited": false
+  },
+  {
+    "country": "North Macedonia",
+    "visited": true
+  },
+  {
+    "country": "Norway",
+    "visited": true
+  },
+  {
+    "country": "Oman",
+    "visited": true
+  },
+  {
+    "country": "Pakistan",
+    "visited": false
+  },
+  {
+    "country": "Palau",
+    "visited": false
+  },
+  {
+    "country": "Palestine",
+    "visited": true
+  },
+  {
+    "country": "Panama",
+    "visited": false
+  },
+  {
+    "country": "Papua New Guinea",
+    "visited": false
+  },
+  {
+    "country": "Paraguay",
+    "visited": false
+  },
+  {
+    "country": "Peru",
+    "visited": false
+  },
+  {
+    "country": "Philippines",
+    "visited": true
+  },
+  {
+    "country": "Poland",
+    "visited": true
+  },
+  {
+    "country": "Portugal",
+    "visited": true
+  },
+  {
+    "country": "Qatar",
+    "visited": true
+  },
+  {
+    "country": "Romania",
+    "visited": true
+  },
+  {
+    "country": "Russia",
+    "visited": false
+  },
+  {
+    "country": "Rwanda",
+    "visited": false
+  },
+  {
+    "country": "Saint Kitts and Nevis",
+    "visited": true
+  },
+  {
+    "country": "Saint Lucia",
+    "visited": true
+  },
+  {
+    "country": "Saint Vincent and the Grenadines",
+    "visited": true
+  },
+  {
+    "country": "Samoa",
+    "visited": true
+  },
+  {
+    "country": "San Marino",
+    "visited": true
+  },
+  {
+    "country": "Sao Tome and Principe",
+    "visited": false
+  },
+  {
+    "country": "Saudi Arabia",
+    "visited": true
+  },
+  {
+    "country": "Senegal",
+    "visited": false
+  },
+  {
+    "country": "Serbia",
+    "visited": true
+  },
+  {
+    "country": "Seychelles",
+    "visited": false
+  },
+  {
+    "country": "Sierra Leone",
+    "visited": false
+  },
+  {
+    "country": "Singapore",
+    "visited": true
+  },
+  {
+    "country": "Slovakia",
+    "visited": true
+  },
+  {
+    "country": "Slovenia",
+    "visited": true
+  },
+  {
+    "country": "Solomon Islands",
+    "visited": false
+  },
+  {
+    "country": "Somalia",
+    "visited": false
+  },
+  {
+    "country": "South Africa",
+    "visited": true
+  },
+  {
+    "country": "South Korea",
+    "visited": true
+  },
+  {
+    "country": "South Sudan",
+    "visited": false
+  },
+  {
+    "country": "Spain",
+    "visited": true
+  },
+  {
+    "country": "Sri Lanka",
+    "visited": true
+  },
+  {
+    "country": "Sudan",
+    "visited": false
+  },
+  {
+    "country": "Suriname",
+    "visited": false
+  },
+  {
+    "country": "Sweden",
+    "visited": true
+  },
+  {
+    "country": "Switzerland",
+    "visited": true
+  },
+  {
+    "country": "Syria",
+    "visited": true
+  },
+  {
+    "country": "Tajikistan",
+    "visited": true
+  },
+  {
+    "country": "Tanzania",
+    "visited": false
+  },
+  {
+    "country": "Thailand",
+    "visited": true
+  },
+  {
+    "country": "Timor-Leste",
+    "visited": false
+  },
+  {
+    "country": "Togo",
+    "visited": false
+  },
+  {
+    "country": "Tonga",
+    "visited": true
+  },
+  {
+    "country": "Trinidad and Tobago",
+    "visited": true
+  },
+  {
+    "country": "Tunisia",
+    "visited": false
+  },
+  {
+    "country": "Turkey",
+    "visited": true
+  },
+  {
+    "country": "Turkmenistan",
+    "visited": false
+  },
+  {
+    "country": "Tuvalu",
+    "visited": false
+  },
+  {
+    "country": "Uganda",
+    "visited": false
+  },
+  {
+    "country": "Ukraine",
+    "visited": false
+  },
+  {
+    "country": "United Arab Emirates",
+    "visited": true
+  },
+  {
+    "country": "United Kingdom",
+    "visited": true
+  },
+  {
+    "country": "United States",
+    "visited": true
+  },
+  {
+    "country": "Uruguay",
+    "visited": false
+  },
+  {
+    "country": "Uzbekistan",
+    "visited": true
+  },
+  {
+    "country": "Vanuatu",
+    "visited": true
+  },
+  {
+    "country": "Vatican City",
+    "visited": true
+  },
+  {
+    "country": "Venezuela",
+    "visited": false
+  },
+  {
+    "country": "Vietnam",
+    "visited": true
+  },
+  {
+    "country": "Yemen",
+    "visited": false
+  },
+  {
+    "country": "Zambia",
+    "visited": false
+  },
+  {
+    "country": "Zimbabwe",
+    "visited": false
+  },
+  {
+    "country": "Cook Islands",
+    "visited": true
+  },
+  {
+    "country": "Niue",
+    "visited": true
+  },
+  {
+    "country": "Taiwan",
+    "visited": true
+  },
+  {
+    "country": "Kosovo",
+    "visited": true
+  },
+  {
+    "country": "Sahrawi Arab Democratic Republic (Western Sahara)",
+    "visited": false
+  }
+]
