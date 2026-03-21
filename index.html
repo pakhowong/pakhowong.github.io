@@ -308,9 +308,9 @@
   ============================================================================
 */
 
-// Data sources loaded from external JS files in the same folder.
-const ABSENCE_RANGES_DATA = ABSENCE_RANGES;
-const DAY_LINKS_DATA = DAY_LINKS;
+// Data sources loaded from JSON bootstrap (see initSiteData at the end of the file).
+let ABSENCE_RANGES_DATA = [];
+let DAY_LINKS_DATA = {};
 
 // Central rule configuration.
 const IMMIGRATION_RULES = {
@@ -632,10 +632,9 @@ function initAbsenceTracker() {
   });
 }
 
-initAbsenceTracker();
+
 </script>
 
-<script src="city_pins.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
@@ -1195,9 +1194,7 @@ initAbsenceTracker();
       routes: []
     };
 
-    const cityData = Array.isArray(window.CITY_PINS)
-      ? window.CITY_PINS
-      : (typeof CITY_PINS !== "undefined" && Array.isArray(CITY_PINS) ? CITY_PINS : []);
+    const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
 
     const cityCountryLookup = Object.fromEntries(
       cityData.map(city => [
@@ -1584,12 +1581,71 @@ initAbsenceTracker();
       });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initTravelMap);
-  } else {
-    initTravelMap();
-  }
 })();
 </script>
+
+<script>
+/*
+  ============================================================================
+  SITE DATA BOOTSTRAP
+  ----------------------------------------------------------------------------
+  Loads JSON data files from /data and only starts the page once all required
+  datasets are available.
+
+  Expected file structure:
+    /data/absence_ranges.json
+    /data/day_links.json
+    /data/city_pins.json
+  ============================================================================
+*/
+async function fetchLocalJson(path) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+  }
+  return response.json();
+}
+
+async function initSiteData() {
+  try {
+    const [absenceRanges, dayLinks, cityPins] = await Promise.all([
+      fetchLocalJson("./data/absence_ranges.json"),
+      fetchLocalJson("./data/day_links.json"),
+      fetchLocalJson("./data/city_pins.json")
+    ]);
+
+    ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
+    DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
+    window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
+
+    initAbsenceTracker();
+    initTravelMap();
+  } catch (error) {
+    console.error("Initial data load failed:", error);
+
+    const months = document.getElementById("months");
+    if (months) {
+      months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
+    }
+
+    const travelMapStatus = document.getElementById("travelMapStatusText");
+    if (travelMapStatus) {
+      travelMapStatus.textContent = "Unable to load the travel map right now.";
+    }
+
+    const travelMap = document.getElementById("travelMap");
+    if (travelMap) {
+      travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
+    }
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initSiteData);
+} else {
+  initSiteData();
+}
+</script>
+
 </body>
 </html>
