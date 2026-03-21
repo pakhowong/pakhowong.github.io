@@ -843,9 +843,52 @@ window.setHoveredTravelCountry = function () {};
       "Macau": "Macao S.A.R.",
       "Macao": "Macao S.A.R.",
       "Puerto Rico": "Puerto Rico",
-      "Guam": "Guam"
+      "Guam": "Guam",
+      "Svalbard and Jan Mayen": "Svalbard",
+      "Svalbard & Jan Mayen": "Svalbard"
     };
     return reverseAlias[raw] || raw;
+  }
+
+  function resolveTravelCountry(options) {
+    const city = String(options?.city || "").trim();
+    const iata = String(options?.iata || "").trim().toUpperCase();
+    const icao = String(options?.icao || "").trim().toUpperCase();
+    const country = String(options?.country || "").trim();
+
+    const codeOverrides = {
+      "HKG": "Hong Kong S.A.R.",
+      "VHHH": "Hong Kong S.A.R.",
+      "MFM": "Macao S.A.R.",
+      "VMMC": "Macao S.A.R.",
+      "SJU": "Puerto Rico",
+      "TJSJ": "Puerto Rico",
+      "BQN": "Puerto Rico",
+      "TJPS": "Puerto Rico",
+      "GUM": "Guam",
+      "PGUM": "Guam",
+      "LYR": "Svalbard",
+      "ENSB": "Svalbard",
+      "AKT": "Akrotiri Sovereign Base Area",
+      "LCRA": "Akrotiri Sovereign Base Area"
+    };
+
+    const cityOverrides = {
+      "Hong Kong": "Hong Kong S.A.R.",
+      "Macau": "Macao S.A.R.",
+      "Macao": "Macao S.A.R.",
+      "Longyearbyen": "Svalbard",
+      "San Juan": "Puerto Rico",
+      "Tamuning": "Guam",
+      "Hagatna": "Guam"
+    };
+
+    if (iata && codeOverrides[iata]) return codeOverrides[iata];
+    if (icao && codeOverrides[icao]) return codeOverrides[icao];
+    if (city && cityOverrides[city]) return cityOverrides[city];
+    if (country) return canonicaliseTravelCountryName(country);
+    if (city) return canonicaliseTravelCountryName(city);
+    return "";
   }
 
   function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
@@ -1072,7 +1115,7 @@ const visitedCitiesCount = cityData.length;
         .on("click", () => map.setView([city.lat, city.lng], 7));
 
         cityRegistry.push({
-          country: canonicaliseTravelCountryName(city.country || ""),
+          country: resolveTravelCountry({ country: city.country, city: city.name }),
           marker
         });
       });
@@ -1216,6 +1259,19 @@ const visitedCitiesCount = cityData.length;
         const toLat = Number(toAirport.lat), toLng = Number(toAirport.lon);
         if (![fromLat, fromLng, toLat, toLng].every(Number.isFinite)) return;
 
+        const fromResolvedCountry = resolveTravelCountry({
+          country: fromAirport.country,
+          city: flight.from_city,
+          iata: flight.from_iata,
+          icao: flight.from_icao
+        });
+        const toResolvedCountry = resolveTravelCountry({
+          country: toAirport.country,
+          city: flight.to_city,
+          iata: flight.to_iata,
+          icao: flight.to_icao
+        });
+
         flightsTaken += 1;
 
         const directionKey = `${flight.from_icao}__${flight.to_icao}`;
@@ -1226,8 +1282,8 @@ const visitedCitiesCount = cityData.length;
             fromLat, fromLng, toLat, toLng,
             directions: new Map(),
             countries: Array.from(new Set([
-              canonicaliseTravelCountryName(fromAirport.country || ""),
-              canonicaliseTravelCountryName(toAirport.country || "")
+              fromResolvedCountry,
+              toResolvedCountry
             ].filter(Boolean)))
           });
         }
@@ -1261,11 +1317,7 @@ const visitedCitiesCount = cityData.length;
             pane: "tooltipPane"
           });
           airportRegistry.push({
-            country: canonicaliseTravelCountryName(
-              (flight.from_icao === icao ? fromAirport.country : toAirport.country) ||
-              (flight.from_icao === icao ? flight.from_city : flight.to_city) ||
-              ""
-            ),
+            country: flight.from_icao === icao ? fromResolvedCountry : toResolvedCountry,
             marker
           });
           airportMarkers.set(icao, true);
