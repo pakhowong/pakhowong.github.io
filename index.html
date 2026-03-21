@@ -278,12 +278,7 @@
   .kpi-value{ font-size:18px; font-weight:800; color:var(--accent); }
   .kpi-label{ margin-top:2px; font-size:12px; color:#475569; }
 
-  .bottom-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
-  }
-  .mini-panel{
+    .mini-panel{
     padding:16px 14px 14px;
   }
   .mini-panel h3{
@@ -495,6 +490,42 @@
 
             <div id="months" class="months"></div>
           </section>
+
+          <section class="panel glass mini-panel" style="margin-top:14px;">
+            <h3>Absence Summary</h3>
+            <div class="summary-box">
+              <div class="kicker">ILR Window</div>
+              <div class="sub" id="summaryIlrWindow">1 October 2024 to 30 September 2029</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Citizenship Window</div>
+              <div class="sub" id="summaryCitWindow">1 October 2025 to 30 September 2030</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Total absent days in citizenship window</div>
+              <div class="big" id="summaryCitTotal">--</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Absent days in the final 12 months</div>
+              <div class="big" id="summaryCitFinal">--</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Remaining days under the 90-day rolling safety buffer</div>
+              <div class="big" id="summarySafetyRemaining">--</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Trips taken</div>
+              <div class="big" id="summaryTripsTaken">--</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Total number of absent days</div>
+              <div class="big" id="summaryTotalAbsent">--</div>
+            </div>
+            <div class="summary-box">
+              <div class="kicker">Days with supporting documents</div>
+              <div class="big" id="summarySupportingDocs">--</div>
+            </div>
+          </section>
         </div>
 </section>
 
@@ -539,28 +570,7 @@
       </div>
     </section>
 
-    <div class="bottom-grid">
-      <section class="panel glass mini-panel">
-        <h3>Absence Summary</h3>
-        <div class="summary-box">
-          <div class="kicker">ILR Safety Limit</div>
-          <div class="big" id="miniDaysRemaining">-- days remaining</div>
-          <div class="sub" id="miniDaysReference">--</div>
-        </div>
-
-        <div class="check-list">
-          <div class="check-row">
-            <div class="label"><span class="check-dot">✓</span>Compliant</div>
-            <div class="check-tick" id="miniIlrTick">✓</div>
-          </div>
-          <div class="check-row">
-            <div class="label"><span class="check-dot">✓</span>Citizenship</div>
-            <div class="check-tick" id="miniCitTick">✓</div>
-          </div>
-        </div>
-
-      </section>
-    </div>
+    <div class="bottom-grid">    </div>
 
     <div class="hidden-support">
       <div id="ilrPill"></div>
@@ -774,6 +784,30 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   }
 
   document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
+
+  const summaryIlrWindow = document.getElementById("summaryIlrWindow");
+  if (summaryIlrWindow) summaryIlrWindow.textContent = "1 October 2024 to 30 September 2029";
+
+  const summaryCitWindow = document.getElementById("summaryCitWindow");
+  if (summaryCitWindow) summaryCitWindow.textContent = "1 October 2025 to 30 September 2030";
+
+  const summaryCitTotal = document.getElementById("summaryCitTotal");
+  if (summaryCitTotal) summaryCitTotal.textContent = `${citizenshipTotal} / ${citizenship.totalLimit}`;
+
+  const summaryCitFinal = document.getElementById("summaryCitFinal");
+  if (summaryCitFinal) summaryCitFinal.textContent = `${citizenshipFinalYear} / ${citizenship.finalTwelveMonthsLimit}`;
+
+  const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
+  if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining} days`;
+
+  const summaryTripsTaken = document.getElementById("summaryTripsTaken");
+  if (summaryTripsTaken) summaryTripsTaken.textContent = String(ABSENCE_RANGES_DATA.length);
+
+  const summaryTotalAbsent = document.getElementById("summaryTotalAbsent");
+  if (summaryTotalAbsent) summaryTotalAbsent.textContent = String(totalAbsentDays);
+
+  const summarySupportingDocs = document.getElementById("summarySupportingDocs");
+  if (summarySupportingDocs) summarySupportingDocs.textContent = String(Object.keys(DAY_LINKS_DATA).length);
 
   const heroIlrIcon = document.getElementById("heroIlrIcon");
   const heroIlrValue = document.getElementById("heroIlrValue");
