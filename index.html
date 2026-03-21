@@ -61,11 +61,11 @@
   }
   .page-girl{
     position:absolute;
-    left:350px;
-    top:28px;
-    width:min(56vw, 430px);
+    right:-24px;
+    top:22px;
+    width:min(42vw, 320px);
     height:860px;
-    background:url("./images/travel-girl.png") left top / contain no-repeat;
+    background:url("./images/travel-girl.png") right top / contain no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
@@ -95,7 +95,7 @@
     border-color:rgba(255,255,255,.16);
     box-shadow:none;
   }
-  .hero-copy{ max-width:340px; }
+  .hero-copy{ max-width:420px; }
   .hero-title{
     margin:0;
     font-size:56px;
@@ -160,6 +160,13 @@
     color:#334155;
     font-weight:700;
   }
+  .stat-sub{
+    font-size:11px;
+    line-height:1.2;
+    color:#64748b;
+    margin-top:2px;
+  }
+
 
   .map-panel{ padding:14px; }
   .panel-header{
@@ -366,6 +373,61 @@
     background:linear-gradient(90deg, #60a5fa, #2563eb);
     width:0%;
   }
+
+  .summary-barometer{
+    position:relative;
+    margin-top:8px;
+    height:28px;
+    border-radius:999px;
+    background:rgba(191,219,254,.45);
+    overflow:hidden;
+    border:1px solid rgba(148,163,184,.12);
+  }
+  .summary-barometer-bar{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    border-radius:999px;
+    background:linear-gradient(90deg, #93c5fd, #2563eb);
+    width:0%;
+  }
+  .summary-barometer-text{
+    position:relative;
+    z-index:1;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:800;
+    color:#1d2942;
+  }
+  .summary-grid-four{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:8px;
+  }
+  .summary-mini-card{
+    padding:10px 8px;
+    border-radius:16px;
+    background:rgba(248,250,252,.48);
+    border:1px solid rgba(148,163,184,.10);
+    text-align:center;
+    backdrop-filter: blur(8px);
+  }
+  .summary-mini-card .mini-label{
+    font-size:11px;
+    font-weight:700;
+    color:#64748b;
+    line-height:1.2;
+  }
+  .summary-mini-card .mini-value{
+    margin-top:6px;
+    font-size:18px;
+    font-weight:800;
+    color:var(--accent);
+    line-height:1;
+  }
   .check-list{
     display:grid;
     gap:8px;
@@ -442,7 +504,7 @@
   .weekdays, .days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; width:100%; }
   .weekday { text-align:center; font-size:12px; font-weight:700; color:var(--muted); padding-bottom:4px; }
   .day, .empty {
-    min-height:54px;
+    min-height:48px;
     border:1px solid rgba(148,163,184,.12);
     border-radius:12px;
     background:rgba(255,255,255,.74);
@@ -476,11 +538,11 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      left:210px;
+      right:-18px;
       top:74px;
-      width:min(64vw, 320px);
+      width:min(54vw, 240px);
       height:620px;
-      background-position:left top;
+      background-position:right top;
       background-size:contain;
     }
     .hero-panel{ min-height:430px; padding:22px 14px 14px; }
@@ -511,12 +573,12 @@
           <div class="stat-card">
             <div class="stat-top"><span>ILR</span><span class="stat-icon" id="heroIlrIcon">…</span></div>
             <div class="stat-value" id="heroIlrValue">--</div>
-            <div class="stat-label">ILR Compliant</div>
+            <div class="stat-sub" id="heroIlrWindow">1 Oct 2024 – 30 Sep 2029</div>
           </div>
           <div class="stat-card">
             <div class="stat-top"><span>Citizenship</span><span class="stat-icon" id="heroCitIcon">…</span></div>
             <div class="stat-value" id="heroCitValue">--</div>
-            <div class="stat-label">Citizenship Compliant</div>
+            <div class="stat-sub" id="heroCitWindow">1 Oct 2025 – 30 Sep 2030</div>
           </div>
           <div class="stat-card">
             <div class="stat-top"><span>Days</span><span class="stat-icon">📅</span></div>
@@ -556,8 +618,7 @@
           </section>
 
           <section class="panel glass mini-panel" style="margin-top:14px;">
-            <h3>Absence Summary</h3>
-            <div class="summary-compact">
+            <h3>Absence Summary</h3><div class="summary-compact">
               <div class="summary-row">
                 <div>
                   <div class="label">ILR window</div>
@@ -575,33 +636,45 @@
               </div>
 
               <div class="summary-row">
-                <div>
+                <div style="width:100%;">
                   <div class="label">Citizenship days used</div>
-                  <div class="summary-meter"><div class="summary-meter-bar" id="summaryCitTotalBar"></div></div>
+                  <div class="summary-barometer">
+                    <div class="summary-barometer-bar" id="summaryCitTotalBar"></div>
+                    <div class="summary-barometer-text" id="summaryCitTotal">--</div>
+                  </div>
                 </div>
-                <div class="value" id="summaryCitTotal">--</div>
               </div>
 
               <div class="summary-row">
-                <div>
+                <div style="width:100%;">
                   <div class="label">Final 12 months used</div>
-                  <div class="summary-meter"><div class="summary-meter-bar" id="summaryCitFinalBar"></div></div>
+                  <div class="summary-barometer">
+                    <div class="summary-barometer-bar" id="summaryCitFinalBar"></div>
+                    <div class="summary-barometer-text" id="summaryCitFinal">--</div>
+                  </div>
                 </div>
-                <div class="value" id="summaryCitFinal">--</div>
               </div>
 
-              <div class="summary-row">
-                <div class="label">Safety buffer left</div>
-                <div class="value" id="summarySafetyRemaining">--</div>
-              </div>
-
-              <div class="summary-row">
-                <div class="label">Trips / Absent days / Docs</div>
-                <div class="value small"><span id="summaryTripsTaken">--</span> · <span id="summaryTotalAbsent">--</span> · <span id="summarySupportingDocs">--</span></div>
+              <div class="summary-grid-four">
+                <div class="summary-mini-card">
+                  <div class="mini-label">Safety buffer left</div>
+                  <div class="mini-value" id="summarySafetyRemaining">--</div>
+                </div>
+                <div class="summary-mini-card">
+                  <div class="mini-label">Trips</div>
+                  <div class="mini-value" id="summaryTripsTaken">--</div>
+                </div>
+                <div class="summary-mini-card">
+                  <div class="mini-label">Absent days</div>
+                  <div class="mini-value" id="summaryTotalAbsent">--</div>
+                </div>
+                <div class="summary-mini-card">
+                  <div class="mini-label">Docs</div>
+                  <div class="mini-value" id="summarySupportingDocs">--</div>
+                </div>
               </div>
             </div>
-          </section>
-        </div>
+          </section>        </div>
 </section>
 
     <section class="panel glass map-panel">
@@ -894,7 +967,7 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroIlrValue = document.getElementById("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "✓" : "✕";
+    heroIlrValue.textContent = isIlrCompliant ? "Pass" : "Risk";
     heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
     heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
@@ -904,11 +977,17 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroCitValue = document.getElementById("heroCitValue");
   if (heroCitIcon && heroCitValue) {
     heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
-    heroCitValue.textContent = isCitizenshipCompliant ? "✓" : "✕";
+    heroCitValue.textContent = isCitizenshipCompliant ? "Pass" : "Risk";
     heroCitValue.className = `stat-value ${isCitizenshipCompliant ? "bool-ok" : "bool-bad"}`;
     heroCitIcon.style.background = isCitizenshipCompliant ? "#dcfce7" : "#fee2e2";
     heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
   }
+
+  const heroIlrWindow = document.getElementById("heroIlrWindow");
+  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
+
+  const heroCitWindow = document.getElementById("heroCitWindow");
+  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
 
   const heroDaysValue = document.getElementById("heroDaysValue");
   if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
