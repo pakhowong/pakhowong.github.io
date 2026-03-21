@@ -843,6 +843,56 @@ window.setHoveredTravelCountry = function () {};
     return reverseAlias[raw] || raw;
   }
 
+  function resolveTravelCountryForHighlight(rawValue) {
+    const raw = String(rawValue || "").trim();
+    if (!raw) return "";
+    const norm = normaliseCountryName(raw);
+
+    const specialMap = {
+      "united states of america": "United States",
+      "united states": "United States",
+      "usa": "United States",
+      "us": "United States",
+      "united kingdom": "United Kingdom",
+      "uk": "United Kingdom",
+      "great britain": "United Kingdom",
+      "britain": "United Kingdom",
+      "hong kong": "Hong Kong S.A.R.",
+      "hong kong sar": "Hong Kong S.A.R.",
+      "hong kong sar china": "Hong Kong S.A.R.",
+      "macao": "Macao S.A.R.",
+      "macau": "Macao S.A.R.",
+      "macao sar": "Macao S.A.R.",
+      "macau sar": "Macao S.A.R.",
+      "svalbard and jan mayen": "Svalbard",
+      "state of palestine": "Palestine",
+      "palestinian territories": "Palestine",
+      "palestinian territory": "Palestine",
+      "korea republic of": "South Korea",
+      "republic of korea": "South Korea",
+      "korea democratic peoples republic of": "North Korea",
+      "democratic peoples republic of korea": "North Korea"
+    };
+    if (specialMap[norm]) return specialMap[norm];
+
+    for (const country of VISITED_COUNTRY_NAMES) {
+      if (normaliseCountryName(country) === norm) return country;
+    }
+
+    for (const [userName, aliasName] of Object.entries(COUNTRY_ALIAS)) {
+      if (normaliseCountryName(userName) === norm || normaliseCountryName(aliasName) === norm) {
+        return userName;
+      }
+    }
+
+    for (const [countryName, expansions] of Object.entries(COUNTRY_TO_COUNTRY_EXPANSION)) {
+      if (normaliseCountryName(countryName) === norm) return countryName;
+      if ((expansions || []).some(item => normaliseCountryName(item) === norm)) return countryName;
+    }
+
+    return canonicaliseTravelCountryName(raw);
+  }
+
   function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
     const toRad = deg => deg * Math.PI / 180;
     const toDeg = rad => rad * 180 / Math.PI;
@@ -998,30 +1048,39 @@ const visitedCitiesCount = cityData.length;
     function applyHighlightStyles(activeCountry) {
       currentHoveredCountry = activeCountry ? canonicaliseTravelCountryName(activeCountry) : null;
 
+      const hasRelatedRoutes = currentHoveredCountry && routeRegistry.some(entry => entry.countries.includes(currentHoveredCountry));
       routeRegistry.forEach(entry => {
         const related = currentHoveredCountry && entry.countries.includes(currentHoveredCountry);
         const style = currentHoveredCountry
-          ? (related ? { weight: 4.4, opacity: 1 } : { weight: 1.2, opacity: 0.18 })
+          ? (hasRelatedRoutes
+              ? (related ? { weight: 4.4, opacity: 1 } : { weight: 1.2, opacity: 0.18 })
+              : { weight: 2.3, opacity: 1 })
           : { weight: 2.3, opacity: 1 };
         entry.polylines.forEach(polyline => polyline.setStyle(style));
       });
 
+      const hasRelatedCities = currentHoveredCountry && cityRegistry.some(entry => entry.country === currentHoveredCountry);
       cityRegistry.forEach(entry => {
         const related = currentHoveredCountry && entry.country === currentHoveredCountry;
         const style = currentHoveredCountry
-          ? (related
-              ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
-              : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
+          ? (hasRelatedCities
+              ? (related
+                  ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
+                  : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
+              : getCityBaseStyle())
           : getCityBaseStyle();
         entry.marker.setStyle(style);
       });
 
+      const hasRelatedAirports = currentHoveredCountry && airportRegistry.some(entry => entry.country === currentHoveredCountry);
       airportRegistry.forEach(entry => {
         const related = currentHoveredCountry && entry.country === currentHoveredCountry;
         const style = currentHoveredCountry
-          ? (related
-              ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
-              : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
+          ? (hasRelatedAirports
+              ? (related
+                  ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
+                  : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
+              : getAirportBaseStyle())
           : getAirportBaseStyle();
         entry.marker.setStyle(style);
       });
@@ -1046,7 +1105,7 @@ const visitedCitiesCount = cityData.length;
         .on("click", () => map.setView([city.lat, city.lng], 7));
 
         cityRegistry.push({
-          country: canonicaliseTravelCountryName(city.country || ""),
+          country: resolveTravelCountryForHighlight(city.country || ""),
           marker
         });
       });
@@ -1205,8 +1264,8 @@ const visitedCitiesCount = cityData.length;
             fromLat, fromLng, toLat, toLng,
             directions: new Map(),
             countries: Array.from(new Set([
-              canonicaliseTravelCountryName(fromAirport.country || ""),
-              canonicaliseTravelCountryName(toAirport.country || "")
+              resolveTravelCountryForHighlight(fromAirport.country || ""),
+              resolveTravelCountryForHighlight(toAirport.country || "")
             ].filter(Boolean)))
           });
         }
@@ -1240,7 +1299,7 @@ const visitedCitiesCount = cityData.length;
             pane: "tooltipPane"
           });
           airportRegistry.push({
-            country: canonicaliseTravelCountryName((fromAirport && flight.from_icao === icao ? fromAirport.country : toAirport.country) || ""),
+            country: resolveTravelCountryForHighlight((fromAirport && flight.from_icao === icao ? fromAirport.country : toAirport.country) || ""),
             marker
           });
           airportMarkers.set(icao, true);
