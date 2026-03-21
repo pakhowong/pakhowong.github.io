@@ -968,7 +968,10 @@ window.setHoveredTravelCountry = function () {};
     let flightsTaken = 0;
     let routePairsCount = 0;
     let visitedCountriesCount = 0;
-    const visitedCitiesCount = (window.CITY_PINS && Array.isArray(window.CITY_PINS)) ? window.CITY_PINS.length : 0;
+    const cityData = (window.CITY_PINS && Array.isArray(window.CITY_PINS))
+  ? window.CITY_PINS
+  : (typeof CITY_PINS !== 'undefined' && Array.isArray(CITY_PINS) ? CITY_PINS : []);
+const visitedCitiesCount = cityData.length;
 
     function getCityBaseStyle() {
       return {
@@ -1031,7 +1034,7 @@ window.setHoveredTravelCountry = function () {};
     }
 
     function addCityPins() {
-      (Array.isArray(window.CITY_PINS) ? window.CITY_PINS : []).forEach(city => {
+      cityData.forEach(city => {
         const marker = L.circleMarker([city.lat, city.lng], Object.assign({ pane: "cityPane" }, getCityBaseStyle()))
         .addTo(cityLayer)
         .bindTooltip(`${city.name}, ${city.country}`, {
@@ -1313,7 +1316,9 @@ window.setHoveredTravelCountry = function () {};
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initTravelMap);
   } else {
-    initTravelMap();
+    window.addEventListener('load', function() {
+  initTravelMap();
+});
   }
 })();
 </script>
