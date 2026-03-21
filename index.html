@@ -656,7 +656,7 @@ function initAbsenceTracker() {
   // --------------------------------------------------------------------------
 
   window.VISITED_NATIONS_DATA = [];
-  const VISITED_TERRITORIES = [
+  window.VISITED_TERRITORIES_DATA = [
     "Akrotiri Sovereign Base Area",
     "Guam",
     "Hong Kong S.A.R.",
@@ -664,6 +664,7 @@ function initAbsenceTracker() {
     "Puerto Rico",
     "Svalbard"
   ];
+  const VISITED_TERRITORIES = window.VISITED_TERRITORIES_DATA;
   window.VISITED_COUNTRIES_DATA = [];
 
   const TRAVEL_MAP_CONFIG = {
@@ -1619,7 +1620,7 @@ async function initSiteData() {
     window.VISITED_NATIONS_DATA = visitedCountryRows
       .filter(row => row && row.visited === true)
       .map(row => row.country);
-    window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(VISITED_TERRITORIES);
+    window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(window.VISITED_TERRITORIES_DATA || []);
 
     try {
       initAbsenceTracker();
