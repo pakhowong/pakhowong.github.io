@@ -864,6 +864,7 @@ window.setHoveredTravelCountry = function () {};
 
   function resolveTravelCountry(options) {
     const city = String(options?.city || "").trim();
+    const airportName = String(options?.airportName || "").trim();
     const iata = String(options?.iata || "").trim().toUpperCase();
     const icao = String(options?.icao || "").trim().toUpperCase();
     const country = String(options?.country || "").trim();
@@ -882,7 +883,45 @@ window.setHoveredTravelCountry = function () {};
       "LYR": "Svalbard",
       "ENSB": "Svalbard",
       "AKT": "Akrotiri Sovereign Base Area",
-      "LCRA": "Akrotiri Sovereign Base Area"
+      "LCRA": "Akrotiri Sovereign Base Area",
+      "RAR": "Cook Islands",
+      "NCRG": "Cook Islands",
+      "IUE": "Niue",
+      "NIUE": "Niue",
+      "APW": "Samoa",
+      "NSFA": "Samoa",
+      "TBU": "Tonga",
+      "NFTF": "Tonga",
+      "BGI": "Barbados",
+      "TBPB": "Barbados",
+      "GND": "Grenada",
+      "TGPY": "Grenada",
+      "DOM": "Dominica",
+      "TDPD": "Dominica",
+      "ANU": "Antigua and Barbuda",
+      "TAPA": "Antigua and Barbuda",
+      "SKB": "Saint Kitts and Nevis",
+      "TKPK": "Saint Kitts and Nevis",
+      "UVF": "Saint Lucia",
+      "TLPL": "Saint Lucia",
+      "SLU": "Saint Lucia",
+      "TLPC": "Saint Lucia",
+      "MLE": "Maldives",
+      "VRMM": "Maldives",
+      "SIN": "Singapore",
+      "WSSS": "Singapore",
+      "XSP": "Singapore",
+      "WSSL": "Singapore",
+      "MLA": "Malta",
+      "LMML": "Malta",
+      "KEF": "Iceland",
+      "BIKF": "Iceland",
+      "RKV": "Iceland",
+      "BIRK": "Iceland",
+      "ARN": "Sweden",
+      "ESSA": "Sweden",
+      "BMA": "Sweden",
+      "ESSB": "Sweden"
     };
 
     const cityOverrides = {
@@ -892,7 +931,65 @@ window.setHoveredTravelCountry = function () {};
       "Longyearbyen": "Svalbard",
       "San Juan": "Puerto Rico",
       "Tamuning": "Guam",
-      "Hagatna": "Guam"
+      "Hagatna": "Guam",
+      "Rarotonga": "Cook Islands",
+      "Alofi": "Niue",
+      "Apia": "Samoa",
+      "Nuku'alofa": "Tonga",
+      "Bridgetown": "Barbados",
+      "St. George's": "Grenada",
+      "Saint George's": "Grenada",
+      "Roseau": "Dominica",
+      "St. John's": "Antigua and Barbuda",
+      "Saint John's": "Antigua and Barbuda",
+      "Basseterre": "Saint Kitts and Nevis",
+      "Castries": "Saint Lucia",
+      "Male": "Maldives",
+      "Malé": "Maldives",
+      "Singapore": "Singapore",
+      "Luqa": "Malta",
+      "Reykjavik": "Iceland",
+      "Stockholm": "Sweden"
+    };
+
+    const airportNameOverrides = {
+      "Antigua": "Antigua and Barbuda",
+      "Barbados": "Barbados",
+      "Grenada": "Grenada",
+      "Dominica": "Dominica",
+      "St Lucia": "Saint Lucia",
+      "Saint Lucia": "Saint Lucia",
+      "St Kitts": "Saint Kitts and Nevis",
+      "Saint Kitts": "Saint Kitts and Nevis",
+      "Cook Islands": "Cook Islands",
+      "Niue": "Niue",
+      "Samoa": "Samoa",
+      "Tonga": "Tonga",
+      "Maldives": "Maldives",
+      "Singapore": "Singapore",
+      "Malta": "Malta",
+      "Iceland": "Iceland",
+      "Sweden": "Sweden"
+    };
+
+    const countryOverrides = {
+      "St Lucia": "Saint Lucia",
+      "Saint Lucia": "Saint Lucia",
+      "Antigua": "Antigua and Barbuda",
+      "St Kitts": "Saint Kitts and Nevis",
+      "Saint Kitts": "Saint Kitts and Nevis",
+      "Cook Islands": "Cook Islands",
+      "Niue": "Niue",
+      "Samoa": "Samoa",
+      "Tonga": "Tonga",
+      "Barbados": "Barbados",
+      "Grenada": "Grenada",
+      "Dominica": "Dominica",
+      "Maldives": "Maldives",
+      "Singapore": "Singapore",
+      "Malta": "Malta",
+      "Iceland": "Iceland",
+      "Sweden": "Sweden"
     };
 
     const cityLookup = window.__cityCountryLookup || {};
@@ -901,8 +998,11 @@ window.setHoveredTravelCountry = function () {};
     if (iata && codeOverrides[iata]) return codeOverrides[iata];
     if (icao && codeOverrides[icao]) return codeOverrides[icao];
     if (city && cityOverrides[city]) return cityOverrides[city];
+    if (airportName && airportNameOverrides[airportName]) return airportNameOverrides[airportName];
+    if (country && countryOverrides[country]) return countryOverrides[country];
     if (country) return canonicaliseTravelCountryName(country);
     if (city) return canonicaliseTravelCountryName(city);
+    if (airportName) return canonicaliseTravelCountryName(airportName);
     return "";
   }
 
@@ -1284,12 +1384,14 @@ window.setHoveredTravelCountry = function () {};
         const fromResolvedCountry = resolveTravelCountry({
           country: fromAirport.country,
           city: flight.from_city,
+          airportName: flight.from_airport,
           iata: flight.from_iata,
           icao: flight.from_icao
         });
         const toResolvedCountry = resolveTravelCountry({
           country: toAirport.country,
           city: flight.to_city,
+          airportName: flight.to_airport,
           iata: flight.to_iata,
           icao: flight.to_icao
         });
