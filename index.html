@@ -293,165 +293,199 @@
 
   <script src="absence_ranges.js"></script>
   <script src="day_links.js"></script>
+
 <script>
-// ABSENCE_RANGES loaded from absence_ranges.js
+/*
+  ============================================================================
+  ABSENCE TRACKER
+  ----------------------------------------------------------------------------
+  This block powers the UK BN(O) immigration calendar and compliance summary.
 
-// DAY_LINKS loaded from day_links.js
+  Design goals:
+  - Keep all date rules in one place.
+  - Use small helper functions with clear responsibilities.
+  - Make calculations deterministic and easy to inspect.
+  ============================================================================
+*/
 
-const SITE_START = "2024-10-01";
-const SITE_END = "2031-12-31";
+// Data sources loaded from external JS files in the same folder.
+const ABSENCE_RANGES_DATA = ABSENCE_RANGES;
+const DAY_LINKS_DATA = DAY_LINKS;
 
-const ILR_START = "2024-10-01";
-const ILR_END = "2029-09-30";
-const CIT_START = "2025-10-01";
-const CIT_END = "2030-09-30";
-const CIT_FINAL_START = "2029-10-01";
-const CIT_FINAL_END = "2030-09-30";
+// Central rule configuration.
+const IMMIGRATION_RULES = {
+  siteStart: "2024-10-01",
+  siteEnd: "2031-12-31",
 
-const ILR_LIMIT = 180;
-const CIT_TOTAL_LIMIT = 450;
-const CIT_FINAL_12M_LIMIT = 90;
+  ilr: {
+    start: "2024-10-01",
+    end: "2029-09-30",
+    rollingLimit: 180
+  },
 
-const SAFETY_RULE_START = "2025-10-01";
-const SAFETY_RULE_LIMIT = 90;
+  citizenship: {
+    start: "2025-10-01",
+    end: "2030-09-30",
+    totalLimit: 450,
+    finalTwelveMonthsStart: "2029-10-01",
+    finalTwelveMonthsEnd: "2030-09-30",
+    finalTwelveMonthsLimit: 90
+  },
 
-function parseDateLocal(s) {
-  const [y, m, d] = s.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  safetyBuffer: {
+    start: "2025-10-01",
+    rollingLimit: 90
+  }
+};
+
+function parseDateLocal(isoDate) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function formatDate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function addDays(date, n) {
-  const dt = new Date(date);
-  dt.setDate(dt.getDate() + n);
-  return dt;
+function addDays(date, offsetDays) {
+  const copy = new Date(date);
+  copy.setDate(copy.getDate() + offsetDays);
+  return copy;
 }
 
 function buildAbsenceSet(ranges) {
-  const absent = new Set();
-  for (const [startStr, endStr] of ranges) {
-    let current = parseDateLocal(startStr);
-    const end = parseDateLocal(endStr);
-    while (current <= end) {
-      absent.add(formatDate(current));
-      current = addDays(current, 1);
+  const absentDays = new Set();
+
+  for (const [startDate, endDate] of ranges) {
+    let cursor = parseDateLocal(startDate);
+    const end = parseDateLocal(endDate);
+
+    while (cursor <= end) {
+      absentDays.add(formatDate(cursor));
+      cursor = addDays(cursor, 1);
     }
   }
-  return absent;
+
+  return absentDays;
 }
 
-function buildRollingCounts(siteStartStr, siteEndStr, absentSet, minCountDateStr = null) {
+function buildRollingCounts(siteStart, siteEnd, absentSet, minimumIncludedDate = null) {
   const counts = {};
-  let current = parseDateLocal(siteStartStr);
-  const siteEnd = parseDateLocal(siteEndStr);
-  const minCountDate = minCountDateStr ? parseDateLocal(minCountDateStr) : null;
+  let current = parseDateLocal(siteStart);
+  const end = parseDateLocal(siteEnd);
+  const threshold = minimumIncludedDate ? parseDateLocal(minimumIncludedDate) : null;
 
-  while (current <= siteEnd) {
+  while (current <= end) {
     const windowStart = addDays(current, -364);
-    let probe = new Date(windowStart);
     let count = 0;
 
-    while (probe <= current) {
+    for (let probe = new Date(windowStart); probe <= current; probe = addDays(probe, 1)) {
       const key = formatDate(probe);
-      if (absentSet.has(key) && (!minCountDate || probe >= minCountDate)) {
-        count++;
+      if (absentSet.has(key) && (!threshold || probe >= threshold)) {
+        count += 1;
       }
-      probe = addDays(probe, 1);
     }
 
     counts[formatDate(current)] = count;
     current = addDays(current, 1);
   }
+
   return counts;
 }
 
-function countAbsencesBetween(absentSet, startStr, endStr) {
-  let d = parseDateLocal(startStr);
-  const end = parseDateLocal(endStr);
-  let count = 0;
-  while (d <= end) {
-    if (absentSet.has(formatDate(d))) count++;
-    d = addDays(d, 1);
+function countAbsencesBetween(absentSet, startDate, endDate) {
+  let total = 0;
+  for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
+    if (absentSet.has(formatDate(cursor))) total += 1;
   }
-  return count;
+  return total;
 }
 
-function maxRollingInRange(rollingCounts, startStr, endStr) {
-  let d = parseDateLocal(startStr);
-  const end = parseDateLocal(endStr);
-  let max = -1;
+function getMaxRollingCount(rollingCounts, startDate, endDate) {
+  let maxCount = -1;
   let maxDate = "";
-  while (d <= end) {
-    const key = formatDate(d);
+
+  for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
+    const key = formatDate(cursor);
     const value = rollingCounts[key] || 0;
-    if (value > max) {
-      max = value;
+
+    if (value > maxCount) {
+      maxCount = value;
       maxDate = key;
     }
-    d = addDays(d, 1);
   }
-  return { max, maxDate };
+
+  return { maxCount, maxDate };
 }
 
 function monthTitle(year, monthIndex) {
-  return new Date(year, monthIndex, 1).toLocaleString("en-GB", { month: "long", year: "numeric" });
+  return new Date(year, monthIndex, 1).toLocaleString("en-GB", {
+    month: "long",
+    year: "numeric"
+  });
 }
 
-function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
-  const ilr = maxRollingInRange(rollingCounts, ILR_START, ILR_END);
-  const ilrCompliant = ilr.max <= ILR_LIMIT;
+function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
+  const { ilr, citizenship, safetyBuffer } = IMMIGRATION_RULES;
 
-  const citTotal = countAbsencesBetween(absentSet, CIT_START, CIT_END);
-  const citFinal12m = countAbsencesBetween(absentSet, CIT_FINAL_START, CIT_FINAL_END);
-  const citCompliant = citTotal <= CIT_TOTAL_LIMIT && citFinal12m <= CIT_FINAL_12M_LIMIT;
+  const ilrResult = getMaxRollingCount(rollingCounts, ilr.start, ilr.end);
+  const isIlrCompliant = ilrResult.maxCount <= ilr.rollingLimit;
+
+  const citizenshipTotal = countAbsencesBetween(absentSet, citizenship.start, citizenship.end);
+  const citizenshipFinalYear = countAbsencesBetween(
+    absentSet,
+    citizenship.finalTwelveMonthsStart,
+    citizenship.finalTwelveMonthsEnd
+  );
+  const isCitizenshipCompliant =
+    citizenshipTotal <= citizenship.totalLimit &&
+    citizenshipFinalYear <= citizenship.finalTwelveMonthsLimit;
 
   const today = new Date();
   const todayKey = formatDate(today);
+
   const todayRolling = rollingCounts[todayKey] || 0;
-  const todayRemaining180 = ILR_LIMIT - todayRolling;
+  const remainingIlrDays = ilr.rollingLimit - todayRolling;
 
-  const safetyStart = parseDateLocal(SAFETY_RULE_START);
-  const safetyRefDate = today < safetyStart ? safetyStart : today;
-  const safetyRefKey = formatDate(safetyRefDate);
-  const safetyUsed = safetyRollingCounts[safetyRefKey] || 0;
-  const safetyRemaining = SAFETY_RULE_LIMIT - safetyUsed;
+  const safetyStartDate = parseDateLocal(safetyBuffer.start);
+  const safetyReferenceDate = today < safetyStartDate ? safetyStartDate : today;
+  const safetyReferenceKey = formatDate(safetyReferenceDate);
+  const safetyUsed = safetyRollingCounts[safetyReferenceKey] || 0;
+  const safetyRemaining = safetyBuffer.rollingLimit - safetyUsed;
 
-  const totalAbsent = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
+  const totalAbsentDays = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
 
   const ilrPill = document.getElementById("ilrPill");
-  ilrPill.className = "pill " + (ilrCompliant ? "ok" : "bad");
-  ilrPill.textContent = ilrCompliant ? "ILR compliant" : "ILR not compliant";
+  ilrPill.className = `pill ${isIlrCompliant ? "ok" : "bad"}`;
+  ilrPill.textContent = isIlrCompliant ? "ILR compliant" : "ILR not compliant";
 
   document.getElementById("ilrText").innerHTML =
-    `Highest rolling 12-month absence count: <strong>${ilr.max}</strong> day(s), on <strong>${ilr.maxDate}</strong>. Limit: ${ILR_LIMIT}.`;
+    `Highest rolling 12-month absence count: <strong>${ilrResult.maxCount}</strong> day(s), on <strong>${ilrResult.maxDate}</strong>. Limit: ${ilr.rollingLimit}.`;
 
   const citPill = document.getElementById("citPill");
-  citPill.className = "pill " + (citCompliant ? "ok" : "bad");
-  citPill.textContent = citCompliant ? "Citizenship compliant" : "Citizenship not compliant";
+  citPill.className = `pill ${isCitizenshipCompliant ? "ok" : "bad"}`;
+  citPill.textContent = isCitizenshipCompliant ? "Citizenship compliant" : "Citizenship not compliant";
 
   document.getElementById("citText").innerHTML =
-    `Total absent days in citizenship window: <strong>${citTotal}</strong> / ${CIT_TOTAL_LIMIT}.<br>` +
-    `Absent days in final 12 months: <strong>${citFinal12m}</strong> / ${CIT_FINAL_12M_LIMIT}.`;
+    `Total absent days in citizenship window: <strong>${citizenshipTotal}</strong> / ${citizenship.totalLimit}.<br>` +
+    `Absent days in final 12 months: <strong>${citizenshipFinalYear}</strong> / ${citizenship.finalTwelveMonthsLimit}.`;
 
   document.getElementById("dataText").innerHTML =
-    `Trips taken: <strong>${ABSENCE_RANGES.length}</strong><br>` +
-    `Total number of absent days: <strong>${totalAbsent}</strong><br>` +
-    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS).length}</strong>`;
+    `Trips taken: <strong>${ABSENCE_RANGES_DATA.length}</strong><br>` +
+    `Total number of absent days: <strong>${totalAbsentDays}</strong><br>` +
+    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS_DATA).length}</strong>`;
 
   document.getElementById("today180Text").innerHTML =
     `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
-    `Remaining days available under the ILR 180-day rolling limit: <strong>${todayRemaining180}</strong> day(s).`;
+    `Remaining days available under the ILR 180-day rolling limit: <strong>${remainingIlrDays}</strong> day(s).`;
 
-  if (today < safetyStart) {
+  if (today < safetyStartDate) {
     document.getElementById("today90Text").innerHTML =
-      `Your self-imposed 90-day rolling rule starts on <strong>${SAFETY_RULE_START}</strong>.<br>` +
-      `Using <strong>${SAFETY_RULE_START}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Your self-imposed 90-day rolling rule starts on <strong>${safetyBuffer.start}</strong>.<br>` +
+      `Using <strong>${safetyBuffer.start}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
       `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
   } else {
     document.getElementById("today90Text").innerHTML =
@@ -459,13 +493,13 @@ function renderSummary(absentSet, rollingCounts, safetyRollingCounts) {
       `Remaining days available under the 90-day rolling safety buffer rule: <strong>${safetyRemaining}</strong> day(s).`;
   }
 
-  document.getElementById("currentDateText").innerHTML =
-    `Current date: <strong>${todayKey}</strong>`;
+  document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
 }
 
-function createDayCell(dateObj, absentSet, rollingCounts) {
-  const key = formatDate(dateObj);
-  const hasLink = Boolean(DAY_LINKS[key]);
+function createDayCell(date, absentSet, rollingCounts) {
+  const key = formatDate(date);
+  const linkMeta = DAY_LINKS_DATA[key];
+  const hasLink = Boolean(linkMeta);
   const isToday = key === formatDate(new Date());
 
   const cell = document.createElement("div");
@@ -476,26 +510,27 @@ function createDayCell(dateObj, absentSet, rollingCounts) {
 
   const wrapper = hasLink ? document.createElement("a") : document.createElement("div");
   wrapper.className = "day-link";
+
   if (hasLink) {
-    wrapper.href = DAY_LINKS[key].url;
+    wrapper.href = linkMeta.url;
     wrapper.target = "_blank";
     wrapper.rel = "noopener noreferrer";
-    wrapper.title = DAY_LINKS[key].name;
+    wrapper.title = linkMeta.name;
   } else {
     wrapper.title = key;
   }
 
-  const dayNum = document.createElement("div");
-  dayNum.className = "day-num";
-  dayNum.innerHTML = hasLink
-    ? `${dateObj.getDate()}<span class="star" title="${DAY_LINKS[key].name}">★</span>`
-    : `${dateObj.getDate()}`;
+  const number = document.createElement("div");
+  number.className = "day-num";
+  number.innerHTML = hasLink
+    ? `${date.getDate()}<span class="star" title="${linkMeta.name}">★</span>`
+    : `${date.getDate()}`;
 
   const rolling = document.createElement("div");
   rolling.className = "rolling";
   rolling.textContent = `(${rollingCounts[key] || 0})`;
 
-  wrapper.appendChild(dayNum);
+  wrapper.appendChild(number);
   wrapper.appendChild(rolling);
   cell.appendChild(wrapper);
   return cell;
@@ -505,50 +540,51 @@ function renderYearCalendar(year, absentSet, rollingCounts) {
   const monthsEl = document.getElementById("months");
   monthsEl.innerHTML = "";
 
-  for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
-    const month = document.createElement("div");
-    month.className = "month";
+  for (let monthIndex = 0; monthIndex < 12; monthIndex += 1) {
+    const monthEl = document.createElement("div");
+    monthEl.className = "month";
 
     const title = document.createElement("div");
     title.className = "month-title";
     title.textContent = monthTitle(year, monthIndex);
-    month.appendChild(title);
+    monthEl.appendChild(title);
 
     const weekdays = document.createElement("div");
     weekdays.className = "weekdays";
-    ["Sun", "Mon","Tue","Wed","Thu","Fri","Sat"].forEach(wd => {
+    ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(label => {
       const el = document.createElement("div");
       el.className = "weekday";
-      el.textContent = wd;
+      el.textContent = label;
       weekdays.appendChild(el);
     });
-    month.appendChild(weekdays);
+    monthEl.appendChild(weekdays);
 
     const days = document.createElement("div");
     days.className = "days";
 
     const firstOfMonth = new Date(year, monthIndex, 1);
-    const sundayIndex = firstOfMonth.getDay();
-    for (let i = 0; i < sundayIndex; i++) {
+    const firstDayIndex = firstOfMonth.getDay();
+
+    for (let i = 0; i < firstDayIndex; i += 1) {
       const empty = document.createElement("div");
       empty.className = "empty";
       days.appendChild(empty);
     }
 
     const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateObj = new Date(year, monthIndex, day);
-      days.appendChild(createDayCell(dateObj, absentSet, rollingCounts));
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      days.appendChild(createDayCell(new Date(year, monthIndex, day), absentSet, rollingCounts));
     }
 
-    month.appendChild(days);
-    monthsEl.appendChild(month);
+    monthEl.appendChild(days);
+    monthsEl.appendChild(monthEl);
   }
 }
 
 function populateYearPicker() {
   const picker = document.getElementById("yearPicker");
-  for (let year = 2024; year <= 2031; year++) {
+
+  for (let year = 2024; year <= 2031; year += 1) {
     const option = document.createElement("option");
     option.value = String(year);
     option.textContent = String(year);
@@ -556,29 +592,36 @@ function populateYearPicker() {
   }
 
   const currentYear = new Date().getFullYear();
-  picker.value = (currentYear >= 2024 && currentYear <= 2031) ? String(currentYear) : "2024";
+  picker.value = currentYear >= 2024 && currentYear <= 2031 ? String(currentYear) : "2024";
 }
 
 function openExternal(type) {
-  let url = "";
+  const URLS = {
+    flightradar: "https://my.flightradar24.com/pakhowong",
+    ukvi: "https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055",
+    tripadvisor: "https://www.tripadvisor.com/TravelMap-a_uid.F6C602C817208086EF58C16209420541"
+  };
 
-  if (type === "flightradar") {
-    url = "https://my.flightradar24.com/pakhowong";
-  } else if (type === "ukvi") {
-    url = "https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055";
-  } else if (type === "tripadvisor") {
-    url = "https://www.tripadvisor.com/TravelMap-a_uid.F6C602C817208086EF58C16209420541";
-  }
-
+  const url = URLS[type];
+  if (!url) return;
   window.open(url, "_blank", "noopener,noreferrer");
 }
-  
-function init() {
-  const absentSet = buildAbsenceSet(ABSENCE_RANGES);
-  const rollingCounts = buildRollingCounts(SITE_START, SITE_END, absentSet);
-  const safetyRollingCounts = buildRollingCounts(SITE_START, SITE_END, absentSet, SAFETY_RULE_START);
 
-  renderSummary(absentSet, rollingCounts, safetyRollingCounts);
+function initAbsenceTracker() {
+  const absentSet = buildAbsenceSet(ABSENCE_RANGES_DATA);
+  const rollingCounts = buildRollingCounts(
+    IMMIGRATION_RULES.siteStart,
+    IMMIGRATION_RULES.siteEnd,
+    absentSet
+  );
+  const safetyRollingCounts = buildRollingCounts(
+    IMMIGRATION_RULES.siteStart,
+    IMMIGRATION_RULES.siteEnd,
+    absentSet,
+    IMMIGRATION_RULES.safetyBuffer.start
+  );
+
+  setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts);
   populateYearPicker();
 
   const picker = document.getElementById("yearPicker");
@@ -589,34 +632,67 @@ function init() {
   });
 }
 
-init();
-</script>
-
-<script>
-window.TRAVEL_ROUTE_REGISTRY = [];
-window.setHoveredTravelCountry = function () {};
+initAbsenceTracker();
 </script>
 
 <script src="city_pins.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-(function () {
-  const ALL_REFERENCE_COUNTRY_NAMES = [
-    "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Côte D'Ivoire","Croatia","Cuba","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe","Cook Islands","Niue","Taiwan","Kosovo","Sahrawi Arab Democratic Republic (Western Sahara)"
-  ];
+/*
+  ============================================================================
+  TRAVEL MAP
+  ----------------------------------------------------------------------------
+  This block merges visited countries, cities, airports and flight routes into
+  one interactive Leaflet map.
 
-  const VISITED_NATIONS_NAMES = [
+  Design goals:
+  - Keep one canonical country model across all datasets.
+  - Make hover highlighting data-driven.
+  - Prefer your own city-country data when resolving country membership.
+  - Keep all special-case overrides in one place.
+  ============================================================================
+*/
+(function () {
+  // --------------------------------------------------------------------------
+  // 1) Source data used by the Travel Map
+  // --------------------------------------------------------------------------
+
+  const VISITED_NATIONS = [
     "Albania","Andorra","Antigua and Barbuda","Armenia","Australia","Austria","Azerbaijan","Bahamas","Barbados","Belgium","Belize","Bosnia and Herzegovina","Brunei","Cambodia","Canada","China","Cook Islands","Croatia","Cyprus","Czech Republic","Denmark","Dominica","Dominican Republic","Egypt","Estonia","Fiji","Finland","France","Georgia","Germany","Greece","Grenada","Guatemala","Hungary","Iceland","Indonesia","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kosovo","Kyrgyzstan","Laos","Latvia","Liechtenstein","Lithuania","Luxembourg","Malaysia","Maldives","Malta","Mexico","Monaco","Montenegro","Nepal","New Zealand","Niue","North Macedonia","Norway","Oman","Palestine","Philippines","Poland","Portugal","Romania","Samoa","San Marino","Saudi Arabia","Serbia","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Thailand","Netherlands","Tonga","Trinidad and Tobago","Turkey","United Arab Emirates","United Kingdom","United States","Uzbekistan","Vanuatu","Vatican City","Vietnam","Qatar"
   ];
 
-  const VISITED_TERRITORIES_NAMES = [
-    "Akrotiri Sovereign Base Area", "Guam", "Hong Kong S.A.R.", "Macao S.A.R.", "Puerto Rico", "Svalbard"
+  const VISITED_TERRITORIES = [
+    "Akrotiri Sovereign Base Area",
+    "Guam",
+    "Hong Kong S.A.R.",
+    "Macao S.A.R.",
+    "Puerto Rico",
+    "Svalbard"
   ];
 
-  const VISITED_COUNTRY_NAMES = VISITED_NATIONS_NAMES.concat(VISITED_TERRITORIES_NAMES);
+  const VISITED_COUNTRIES = VISITED_NATIONS.concat(VISITED_TERRITORIES);
 
-  const COUNTRY_ALIAS = {
+  const TRAVEL_MAP_CONFIG = {
+    countryGeoJsonUrls: [
+      "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
+      "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
+    ],
+    flightHistoryCsvUrl: "flight_history.csv",
+    openFlightsJsonUrl: "./flights/airports.json",
+    mwggAirportUrls: [
+      "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
+      "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
+    ]
+  };
+
+  // --------------------------------------------------------------------------
+  // 2) Canonical country model
+  // --------------------------------------------------------------------------
+  // Everything on the map must ultimately resolve to one consistent country
+  // name. This is the foundation that makes hover highlighting reliable.
+
+  const COUNTRY_ALIASES = {
     "Bahamas": "The Bahamas",
     "Congo (Congo-Brazzaville)": "Republic of the Congo",
     "Côte D'Ivoire": "Ivory Coast",
@@ -632,25 +708,135 @@ window.setHoveredTravelCountry = function () {};
     "Vatican City": "Vatican"
   };
 
-  const COUNTRY_TO_COUNTRY_EXPANSION = {
+  const REVERSE_COUNTRY_ALIASES = {
+    "The Bahamas": "Bahamas",
+    "Republic of the Congo": "Congo (Congo-Brazzaville)",
+    "Ivory Coast": "Côte D'Ivoire",
+    "Czechia": "Czech Republic",
+    "eSwatini": "Eswatini",
+    "Federated States of Micronesia": "Micronesia",
+    "São Tomé and Principe": "Sao Tome and Principe",
+    "Republic of Serbia": "Serbia",
+    "United Republic of Tanzania": "Tanzania",
+    "East Timor": "Timor-Leste",
+    "United States of America": "United States",
+    "Vatican": "Vatican City",
+    "Hong Kong": "Hong Kong S.A.R.",
+    "Macau": "Macao S.A.R.",
+    "Macao": "Macao S.A.R.",
+    "Svalbard and Jan Mayen": "Svalbard",
+    "Svalbard & Jan Mayen": "Svalbard"
+  };
+
+  const COUNTRY_EXPANSIONS = {
     "Cyprus": ["Cyprus", "Cyprus No Mans Area", "Northern Cyprus"],
     "Kazakhstan": ["Baykonur Cosmodrome", "Kazakhstan"],
     "Somalia": ["Somalia", "Somaliland"]
   };
 
-  const COUNTRY_GEOJSON_URLS = [
-    "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
-    "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
-  ];
+  // Airport and territory overrides. These are intentionally centralised here.
+  const AIRPORT_CODE_OVERRIDES = {
+    HKG: "Hong Kong S.A.R.", VHHH: "Hong Kong S.A.R.",
+    MFM: "Macao S.A.R.", VMMC: "Macao S.A.R.",
+    SJU: "Puerto Rico", TJSJ: "Puerto Rico",
+    BQN: "Puerto Rico", TJPS: "Puerto Rico",
+    GUM: "Guam", PGUM: "Guam",
+    LYR: "Svalbard", ENSB: "Svalbard",
+    AKT: "Akrotiri Sovereign Base Area", LCRA: "Akrotiri Sovereign Base Area",
+    RAR: "Cook Islands", NCRG: "Cook Islands",
+    IUE: "Niue", NIUE: "Niue",
+    APW: "Samoa", NSFA: "Samoa",
+    TBU: "Tonga", NFTF: "Tonga",
+    BGI: "Barbados", TBPB: "Barbados",
+    GND: "Grenada", TGPY: "Grenada",
+    DOM: "Dominica", TDPD: "Dominica",
+    ANU: "Antigua and Barbuda", TAPA: "Antigua and Barbuda",
+    SKB: "Saint Kitts and Nevis", TKPK: "Saint Kitts and Nevis",
+    UVF: "Saint Lucia", TLPL: "Saint Lucia",
+    SLU: "Saint Lucia", TLPC: "Saint Lucia",
+    MLE: "Maldives", VRMM: "Maldives",
+    SIN: "Singapore", WSSS: "Singapore",
+    XSP: "Singapore", WSSL: "Singapore",
+    MLA: "Malta", LMML: "Malta",
+    KEF: "Iceland", BIKF: "Iceland",
+    RKV: "Iceland", BIRK: "Iceland",
+    ARN: "Sweden", ESSA: "Sweden",
+    BMA: "Sweden", ESSB: "Sweden"
+  };
 
-  const FLIGHT_HISTORY_CSV_URL = "flight_history.csv";
-  const OPENFLIGHTS_JSON_URL = "./flights/airports.json";
-  const MWGG_AIRPORTS_URLS = [
-    "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
-    "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
-  ];
+  const CITY_OVERRIDES = {
+    "Hong Kong": "Hong Kong S.A.R.",
+    "Macau": "Macao S.A.R.",
+    "Macao": "Macao S.A.R.",
+    "Longyearbyen": "Svalbard",
+    "San Juan": "Puerto Rico",
+    "Tamuning": "Guam",
+    "Hagatna": "Guam",
+    "Rarotonga": "Cook Islands",
+    "Alofi": "Niue",
+    "Apia": "Samoa",
+    "Nuku'alofa": "Tonga",
+    "Bridgetown": "Barbados",
+    "St. George's": "Grenada",
+    "Saint George's": "Grenada",
+    "Roseau": "Dominica",
+    "St. John's": "Antigua and Barbuda",
+    "Saint John's": "Antigua and Barbuda",
+    "Basseterre": "Saint Kitts and Nevis",
+    "Castries": "Saint Lucia",
+    "Male": "Maldives",
+    "Malé": "Maldives",
+    "Singapore": "Singapore",
+    "Luqa": "Malta",
+    "Reykjavik": "Iceland",
+    "Stockholm": "Sweden"
+  };
 
-  function normaliseCountryName(value) {
+  const AIRPORT_NAME_OVERRIDES = {
+    "Antigua": "Antigua and Barbuda",
+    "Barbados": "Barbados",
+    "Grenada": "Grenada",
+    "Dominica": "Dominica",
+    "St Lucia": "Saint Lucia",
+    "Saint Lucia": "Saint Lucia",
+    "St Kitts": "Saint Kitts and Nevis",
+    "Saint Kitts": "Saint Kitts and Nevis",
+    "Cook Islands": "Cook Islands",
+    "Niue": "Niue",
+    "Samoa": "Samoa",
+    "Tonga": "Tonga",
+    "Maldives": "Maldives",
+    "Singapore": "Singapore",
+    "Malta": "Malta",
+    "Iceland": "Iceland",
+    "Sweden": "Sweden"
+  };
+
+  const COUNTRY_VALUE_OVERRIDES = {
+    "St Lucia": "Saint Lucia",
+    "Saint Lucia": "Saint Lucia",
+    "Antigua": "Antigua and Barbuda",
+    "St Kitts": "Saint Kitts and Nevis",
+    "Saint Kitts": "Saint Kitts and Nevis",
+    "Cook Islands": "Cook Islands",
+    "Niue": "Niue",
+    "Samoa": "Samoa",
+    "Tonga": "Tonga",
+    "Barbados": "Barbados",
+    "Grenada": "Grenada",
+    "Dominica": "Dominica",
+    "Maldives": "Maldives",
+    "Singapore": "Singapore",
+    "Malta": "Malta",
+    "Iceland": "Iceland",
+    "Sweden": "Sweden"
+  };
+
+  // --------------------------------------------------------------------------
+  // 3) Generic helpers
+  // --------------------------------------------------------------------------
+
+  function normaliseText(value) {
     return String(value || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -662,124 +848,165 @@ window.setHoveredTravelCountry = function () {};
       .toLowerCase();
   }
 
-  function getCanonicalCountryName(userCountryName) {
-    return COUNTRY_ALIAS[userCountryName] || userCountryName;
+  function canonicaliseCountryName(value) {
+    const raw = String(value || "").trim();
+    return REVERSE_COUNTRY_ALIASES[raw] || raw;
   }
 
-  function getExpansionTargets(canonicalCountryName) {
-    return COUNTRY_TO_COUNTRY_EXPANSION[canonicalCountryName] || [canonicalCountryName];
+  function getCanonicalVisitedCountry(name) {
+    return COUNTRY_ALIASES[name] || name;
+  }
+
+  function getExpansionTargets(countryName) {
+    return COUNTRY_EXPANSIONS[countryName] || [countryName];
   }
 
   function getFeatureDisplayName(feature) {
-    const p = feature.properties || {};
-    return p.ADMIN || p.NAME_LONG || p.NAME || p.GEOUNIT || p.BRK_NAME || p.FORMAL_EN || p.NAME_EN || "Unknown";
+    const props = feature.properties || {};
+    return props.ADMIN || props.NAME_LONG || props.NAME || props.GEOUNIT || props.BRK_NAME || props.FORMAL_EN || props.NAME_EN || "Unknown";
   }
 
-  function getCandidateNames(feature) {
-    const p = feature.properties || {};
-    return [p.ADMIN, p.NAME_LONG, p.NAME, p.GEOUNIT, p.BRK_NAME, p.FORMAL_EN, p.NAME_EN].filter(Boolean);
+  function getFeatureCandidateNames(feature) {
+    const props = feature.properties || {};
+    return [props.ADMIN, props.NAME_LONG, props.NAME, props.GEOUNIT, props.BRK_NAME, props.FORMAL_EN, props.NAME_EN].filter(Boolean);
   }
 
-  function matchesAny(feature, targetNames) {
-    const candidates = getCandidateNames(feature).map(normaliseCountryName);
-    return targetNames.some(name => candidates.includes(normaliseCountryName(name)));
+  function matchesVisitedCountry(feature, targetNames) {
+    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
+    return targetNames.some(name => candidateNames.includes(normaliseText(name)));
   }
 
-  function resolveDisplayName(feature, visitedList) {
-    const candidates = getCandidateNames(feature).map(normaliseCountryName);
-    for (const country of visitedList) {
-      const canonical = getCanonicalCountryName(country);
-      const expansion = getExpansionTargets(canonical);
-      const expandedNormalised = expansion.map(normaliseCountryName);
-      if (expandedNormalised.some(name => candidates.includes(name))) {
+  function resolvePolygonCountry(feature) {
+    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
+
+    for (const country of VISITED_COUNTRIES) {
+      const canonical = getCanonicalVisitedCountry(country);
+      const expandedNames = getExpansionTargets(canonical).map(normaliseText);
+      if (expandedNames.some(name => candidateNames.includes(name))) {
         return canonical;
       }
     }
+
     return getFeatureDisplayName(feature);
   }
 
-  async function fetchGeoJsonWithFallback(urls) {
+  async function fetchJsonWithFallback(urls) {
     let lastError = null;
+
     for (const url of urls) {
       try {
         const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        if (!data || !Array.isArray(data.features)) throw new Error("Invalid GeoJSON payload");
-        return { data, url };
+        return await response.json();
       } catch (error) {
         lastError = error;
       }
     }
-    throw lastError || new Error("Unable to load map data");
+
+    throw lastError || new Error("Unable to load JSON data.");
   }
+
+  async function fetchTextWithFallback(urls) {
+    let lastError = null;
+
+    for (const url of urls) {
+      try {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError || new Error("Unable to load text data.");
+  }
+
+  // --------------------------------------------------------------------------
+  // 4) Flight helpers
+  // --------------------------------------------------------------------------
 
   function parseCsv(text) {
     const rows = [];
     let row = [];
     let value = "";
     let inQuotes = false;
-    for (let i = 0; i < text.length; i++) {
+
+    for (let i = 0; i < text.length; i += 1) {
       const char = text[i];
       const next = text[i + 1];
+
       if (char === '"') {
-        if (inQuotes && next === '"') { value += '"'; i++; }
-        else { inQuotes = !inQuotes; }
+        if (inQuotes && next === '"') {
+          value += '"';
+          i += 1;
+        } else {
+          inQuotes = !inQuotes;
+        }
       } else if (char === "," && !inQuotes) {
-        row.push(value); value = "";
+        row.push(value);
+        value = "";
       } else if ((char === "\n" || char === "\r") && !inQuotes) {
-        if (char === "\r" && next === "\n") i++;
-        row.push(value); value = "";
+        if (char === "\r" && next === "\n") i += 1;
+        row.push(value);
+        value = "";
         if (row.some(cell => cell !== "")) rows.push(row);
         row = [];
       } else {
         value += char;
       }
     }
+
     row.push(value);
     if (row.some(cell => cell !== "")) rows.push(row);
+
     return rows;
   }
 
   function loadFlightHistoryFromCsv(csvText) {
     const rows = parseCsv(csvText);
     if (!rows.length) return [];
+
     const header = rows[0];
-    const index = Object.fromEntries(header.map((name, i) => [name, i]));
+    const indexByColumn = Object.fromEntries(header.map((name, index) => [name, index]));
     const fromToPattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
+
     return rows.slice(1).map(cells => {
-      const get = name => (cells[index[name]] || "").trim();
-      const fromRaw = get("From");
-      const toRaw = get("To");
-      const fromMatch = fromRaw.match(fromToPattern);
-      const toMatch = toRaw.match(fromToPattern);
+      const get = name => (cells[indexByColumn[name]] || "").trim();
+
+      const fromMatch = get("From").match(fromToPattern);
+      const toMatch = get("To").match(fromToPattern);
       if (!fromMatch || !toMatch) return null;
+
       const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
       const [, toCity, toAirport, toIata, toIcao] = toMatch;
+
       return {
         date: get("Date"),
-        flight_number: get("Flight number"),
-        from_city: fromCity.trim(),
-        from_airport: fromAirport.trim(),
-        from_iata: fromIata.trim(),
-        from_icao: fromIcao.trim(),
-        to_city: toCity.trim(),
-        to_airport: toAirport.trim(),
-        to_iata: toIata.trim(),
-        to_icao: toIcao.trim(),
-        airline: get("Airline")
+        airline: get("Airline"),
+        flightNumber: get("Flight number"),
+        fromCity: fromCity.trim(),
+        fromAirport: fromAirport.trim(),
+        fromIata: fromIata.trim(),
+        fromIcao: fromIcao.trim(),
+        toCity: toCity.trim(),
+        toAirport: toAirport.trim(),
+        toIata: toIata.trim(),
+        toIcao: toIcao.trim()
       };
     }).filter(Boolean);
   }
 
   function buildIataIndex(airportsByIcao) {
     const byIata = {};
+
     Object.values(airportsByIcao).forEach(airport => {
       const iata = String(airport.iata || "").trim();
-      if (!iata || iata === "\\N") return;
       const lat = Number(airport.lat);
       const lon = Number(airport.lon);
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+      if (!iata || iata === "\\N" || !Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
       if (!byIata[iata]) {
         byIata[iata] = {
           name: airport.name || "",
@@ -787,267 +1014,121 @@ window.setHoveredTravelCountry = function () {};
           country: airport.country || "",
           iata,
           icao: airport.icao || "",
-          lat, lon,
-          source: airport.source || "mwgg"
+          lat,
+          lon
         };
       }
     });
+
     return byIata;
   }
 
-  function normaliseAirportRecord(record, fallbackIcao, source) {
+  function normaliseAirportRecord(record, fallbackIcao = "") {
     if (!record) return null;
+
     const lat = Number(record.lat);
     const lon = Number(record.lon);
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
     return {
       name: record.name || "",
       city: record.city || "",
       country: record.country || "",
       iata: record.iata || "",
-      icao: record.icao || fallbackIcao || "",
-      lat, lon, source
+      icao: record.icao || fallbackIcao,
+      lat,
+      lon
     };
   }
 
-  function getHybridAirportSmart(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
-    const mwggByIcao = normaliseAirportRecord(mwggAirports[icao], icao, "mwgg");
-    if (mwggByIcao) return mwggByIcao;
-    const openByIcao = normaliseAirportRecord(openFlightsAirports[icao], icao, "openflights");
-    if (openByIcao) return openByIcao;
-    if (iata) {
-      const mwggByIata = normaliseAirportRecord(mwggIataIndex[iata], "", "mwgg");
-      if (mwggByIata) return mwggByIata;
-      const openByIata = normaliseAirportRecord(openFlightsIataIndex[iata], "", "openflights");
-      if (openByIata) return openByIata;
-    }
-    return null;
+  function getAirportRecord(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
+    return (
+      normaliseAirportRecord(mwggAirports[icao], icao) ||
+      normaliseAirportRecord(openFlightsAirports[icao], icao) ||
+      (iata ? normaliseAirportRecord(mwggIataIndex[iata]) : null) ||
+      (iata ? normaliseAirportRecord(openFlightsIataIndex[iata]) : null) ||
+      null
+    );
   }
 
-  function canonicaliseTravelCountryName(value) {
-    const raw = String(value || "").trim();
-    const reverseAlias = {
-      "The Bahamas": "Bahamas",
-      "Republic of the Congo": "Congo (Congo-Brazzaville)",
-      "Ivory Coast": "Côte D'Ivoire",
-      "Czechia": "Czech Republic",
-      "eSwatini": "Eswatini",
-      "Federated States of Micronesia": "Micronesia",
-      "São Tomé and Principe": "Sao Tome and Principe",
-      "Republic of Serbia": "Serbia",
-      "United Republic of Tanzania": "Tanzania",
-      "East Timor": "Timor-Leste",
-      "United States of America": "United States",
-      "Vatican": "Vatican City",
-      "Hong Kong": "Hong Kong S.A.R.",
-      "Macau": "Macao S.A.R.",
-      "Macao": "Macao S.A.R.",
-      "Puerto Rico": "Puerto Rico",
-      "Guam": "Guam",
-      "Svalbard and Jan Mayen": "Svalbard",
-      "Svalbard & Jan Mayen": "Svalbard"
-    };
-    return reverseAlias[raw] || raw;
-  }
+  function resolveTravelCountry({ country = "", city = "", airportName = "", iata = "", icao = "", cityCountryLookup = {} }) {
+    const cityKey = normaliseText(city);
+    const iataCode = String(iata).trim().toUpperCase();
+    const icaoCode = String(icao).trim().toUpperCase();
 
-  function normalisePlaceName(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[()'.,]/g, "")
-      .replace(/&/g, "and")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-  }
-
-  function resolveTravelCountry(options) {
-    const city = String(options?.city || "").trim();
-    const airportName = String(options?.airportName || "").trim();
-    const iata = String(options?.iata || "").trim().toUpperCase();
-    const icao = String(options?.icao || "").trim().toUpperCase();
-    const country = String(options?.country || "").trim();
-
-    const codeOverrides = {
-      "HKG": "Hong Kong S.A.R.",
-      "VHHH": "Hong Kong S.A.R.",
-      "MFM": "Macao S.A.R.",
-      "VMMC": "Macao S.A.R.",
-      "SJU": "Puerto Rico",
-      "TJSJ": "Puerto Rico",
-      "BQN": "Puerto Rico",
-      "TJPS": "Puerto Rico",
-      "GUM": "Guam",
-      "PGUM": "Guam",
-      "LYR": "Svalbard",
-      "ENSB": "Svalbard",
-      "AKT": "Akrotiri Sovereign Base Area",
-      "LCRA": "Akrotiri Sovereign Base Area",
-      "RAR": "Cook Islands",
-      "NCRG": "Cook Islands",
-      "IUE": "Niue",
-      "NIUE": "Niue",
-      "APW": "Samoa",
-      "NSFA": "Samoa",
-      "TBU": "Tonga",
-      "NFTF": "Tonga",
-      "BGI": "Barbados",
-      "TBPB": "Barbados",
-      "GND": "Grenada",
-      "TGPY": "Grenada",
-      "DOM": "Dominica",
-      "TDPD": "Dominica",
-      "ANU": "Antigua and Barbuda",
-      "TAPA": "Antigua and Barbuda",
-      "SKB": "Saint Kitts and Nevis",
-      "TKPK": "Saint Kitts and Nevis",
-      "UVF": "Saint Lucia",
-      "TLPL": "Saint Lucia",
-      "SLU": "Saint Lucia",
-      "TLPC": "Saint Lucia",
-      "MLE": "Maldives",
-      "VRMM": "Maldives",
-      "SIN": "Singapore",
-      "WSSS": "Singapore",
-      "XSP": "Singapore",
-      "WSSL": "Singapore",
-      "MLA": "Malta",
-      "LMML": "Malta",
-      "KEF": "Iceland",
-      "BIKF": "Iceland",
-      "RKV": "Iceland",
-      "BIRK": "Iceland",
-      "ARN": "Sweden",
-      "ESSA": "Sweden",
-      "BMA": "Sweden",
-      "ESSB": "Sweden"
-    };
-
-    const cityOverrides = {
-      "Hong Kong": "Hong Kong S.A.R.",
-      "Macau": "Macao S.A.R.",
-      "Macao": "Macao S.A.R.",
-      "Longyearbyen": "Svalbard",
-      "San Juan": "Puerto Rico",
-      "Tamuning": "Guam",
-      "Hagatna": "Guam",
-      "Rarotonga": "Cook Islands",
-      "Alofi": "Niue",
-      "Apia": "Samoa",
-      "Nuku'alofa": "Tonga",
-      "Bridgetown": "Barbados",
-      "St. George's": "Grenada",
-      "Saint George's": "Grenada",
-      "Roseau": "Dominica",
-      "St. John's": "Antigua and Barbuda",
-      "Saint John's": "Antigua and Barbuda",
-      "Basseterre": "Saint Kitts and Nevis",
-      "Castries": "Saint Lucia",
-      "Male": "Maldives",
-      "Malé": "Maldives",
-      "Singapore": "Singapore",
-      "Luqa": "Malta",
-      "Reykjavik": "Iceland",
-      "Stockholm": "Sweden"
-    };
-
-    const airportNameOverrides = {
-      "Antigua": "Antigua and Barbuda",
-      "Barbados": "Barbados",
-      "Grenada": "Grenada",
-      "Dominica": "Dominica",
-      "St Lucia": "Saint Lucia",
-      "Saint Lucia": "Saint Lucia",
-      "St Kitts": "Saint Kitts and Nevis",
-      "Saint Kitts": "Saint Kitts and Nevis",
-      "Cook Islands": "Cook Islands",
-      "Niue": "Niue",
-      "Samoa": "Samoa",
-      "Tonga": "Tonga",
-      "Maldives": "Maldives",
-      "Singapore": "Singapore",
-      "Malta": "Malta",
-      "Iceland": "Iceland",
-      "Sweden": "Sweden"
-    };
-
-    const countryOverrides = {
-      "St Lucia": "Saint Lucia",
-      "Saint Lucia": "Saint Lucia",
-      "Antigua": "Antigua and Barbuda",
-      "St Kitts": "Saint Kitts and Nevis",
-      "Saint Kitts": "Saint Kitts and Nevis",
-      "Cook Islands": "Cook Islands",
-      "Niue": "Niue",
-      "Samoa": "Samoa",
-      "Tonga": "Tonga",
-      "Barbados": "Barbados",
-      "Grenada": "Grenada",
-      "Dominica": "Dominica",
-      "Maldives": "Maldives",
-      "Singapore": "Singapore",
-      "Malta": "Malta",
-      "Iceland": "Iceland",
-      "Sweden": "Sweden"
-    };
-
-    const cityLookup = window.__cityCountryLookup || {};
-    const cityKey = normalisePlaceName(city);
-    if (cityKey && cityLookup[cityKey]) return cityLookup[cityKey];
-    if (iata && codeOverrides[iata]) return codeOverrides[iata];
-    if (icao && codeOverrides[icao]) return codeOverrides[icao];
-    if (city && cityOverrides[city]) return cityOverrides[city];
-    if (airportName && airportNameOverrides[airportName]) return airportNameOverrides[airportName];
-    if (country && countryOverrides[country]) return countryOverrides[country];
-    if (country) return canonicaliseTravelCountryName(country);
-    if (city) return canonicaliseTravelCountryName(city);
-    if (airportName) return canonicaliseTravelCountryName(airportName);
+    if (cityKey && cityCountryLookup[cityKey]) return cityCountryLookup[cityKey];
+    if (iataCode && AIRPORT_CODE_OVERRIDES[iataCode]) return AIRPORT_CODE_OVERRIDES[iataCode];
+    if (icaoCode && AIRPORT_CODE_OVERRIDES[icaoCode]) return AIRPORT_CODE_OVERRIDES[icaoCode];
+    if (city && CITY_OVERRIDES[city]) return CITY_OVERRIDES[city];
+    if (airportName && AIRPORT_NAME_OVERRIDES[airportName]) return AIRPORT_NAME_OVERRIDES[airportName];
+    if (country && COUNTRY_VALUE_OVERRIDES[country]) return COUNTRY_VALUE_OVERRIDES[country];
+    if (country) return canonicaliseCountryName(country);
+    if (city) return canonicaliseCountryName(city);
+    if (airportName) return canonicaliseCountryName(airportName);
     return "";
   }
 
   function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
-    const toRad = deg => deg * Math.PI / 180;
-    const toDeg = rad => rad * 180 / Math.PI;
-    const φ1 = toRad(lat1), λ1 = toRad(lon1);
-    const φ2 = toRad(lat2), λ2 = toRad(lon2);
-    const sinφ1 = Math.sin(φ1), cosφ1 = Math.cos(φ1);
-    const sinφ2 = Math.sin(φ2), cosφ2 = Math.cos(φ2);
-    const d = 2 * Math.asin(Math.sqrt(
-      Math.sin((φ2 - φ1) / 2) ** 2 +
-      cosφ1 * cosφ2 * Math.sin((λ2 - λ1) / 2) ** 2
+    const toRad = degrees => degrees * Math.PI / 180;
+    const toDeg = radians => radians * 180 / Math.PI;
+
+    const phi1 = toRad(lat1);
+    const lambda1 = toRad(lon1);
+    const phi2 = toRad(lat2);
+    const lambda2 = toRad(lon2);
+
+    const distance = 2 * Math.asin(Math.sqrt(
+      Math.sin((phi2 - phi1) / 2) ** 2 +
+      Math.cos(phi1) * Math.cos(phi2) * Math.sin((lambda2 - lambda1) / 2) ** 2
     ));
-    if (!isFinite(d) || d === 0) return [[lat1, lon1], [lat2, lon2]];
+
+    if (!isFinite(distance) || distance === 0) {
+      return [[lat1, lon1], [lat2, lon2]];
+    }
+
     const points = [];
     let previousLng = null;
-    for (let i = 0; i <= steps; i++) {
-      const f = i / steps;
-      const A = Math.sin((1 - f) * d) / Math.sin(d);
-      const B = Math.sin(f * d) / Math.sin(d);
-      const x = A * cosφ1 * Math.cos(λ1) + B * cosφ2 * Math.cos(λ2);
-      const y = A * cosφ1 * Math.sin(λ1) + B * cosφ2 * Math.sin(λ2);
-      const z = A * sinφ1 + B * sinφ2;
-      const φi = Math.atan2(z, Math.sqrt(x * x + y * y));
+
+    for (let i = 0; i <= steps; i += 1) {
+      const fraction = i / steps;
+      const a = Math.sin((1 - fraction) * distance) / Math.sin(distance);
+      const b = Math.sin(fraction * distance) / Math.sin(distance);
+
+      const x = a * Math.cos(phi1) * Math.cos(lambda1) + b * Math.cos(phi2) * Math.cos(lambda2);
+      const y = a * Math.cos(phi1) * Math.sin(lambda1) + b * Math.cos(phi2) * Math.sin(lambda2);
+      const z = a * Math.sin(phi1) + b * Math.sin(phi2);
+
+      const phi = Math.atan2(z, Math.sqrt(x * x + y * y));
       let lng = toDeg(Math.atan2(y, x));
+
       if (previousLng !== null) {
         while (lng - previousLng > 180) lng -= 360;
         while (lng - previousLng < -180) lng += 360;
       }
+
       previousLng = lng;
-      points.push([toDeg(φi), lng]);
+      points.push([toDeg(phi), lng]);
     }
+
     return points;
   }
 
-  function splitPolylineAtWrap(points) {
+  function splitPolylineAtDateLine(points) {
     if (!Array.isArray(points) || points.length === 0) return [];
+
     const segments = [[points[0]]];
-    for (let i = 1; i < points.length; i++) {
-      const prev = points[i - 1];
-      const curr = points[i];
-      if (Math.abs(curr[1] - prev[1]) > 180) segments.push([curr]);
-      else segments[segments.length - 1].push(curr);
+
+    for (let i = 1; i < points.length; i += 1) {
+      const previous = points[i - 1];
+      const current = points[i];
+
+      if (Math.abs(current[1] - previous[1]) > 180) {
+        segments.push([current]);
+      } else {
+        segments[segments.length - 1].push(current);
+      }
     }
+
     return segments.filter(segment => segment.length >= 2);
   }
 
@@ -1059,33 +1140,9 @@ window.setHoveredTravelCountry = function () {};
     return "#7b2cff";
   }
 
-  async function fetchJsonWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw lastError || new Error("Unable to load JSON data");
-  }
-
-  async function fetchTextWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.text();
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw lastError || new Error("Unable to load text data");
-  }
+  // --------------------------------------------------------------------------
+  // 5) Travel map bootstrap
+  // --------------------------------------------------------------------------
 
   function initTravelMap() {
     const mapContainer = document.getElementById("travelMap");
@@ -1098,195 +1155,190 @@ window.setHoveredTravelCountry = function () {};
       zoomControl: true
     }).setView([20, 0], 2);
 
-    map.createPane("countryPane"); map.getPane("countryPane").style.zIndex = 400;
-    map.createPane("routePane"); map.getPane("routePane").style.zIndex = 430;
-    map.createPane("labelPane"); map.getPane("labelPane").style.zIndex = 500;
-    map.createPane("cityPane"); map.getPane("cityPane").style.zIndex = 650;
-    map.createPane("airportPane"); map.getPane("airportPane").style.zIndex = 670;
-    map.createPane("tooltipPane"); map.getPane("tooltipPane").style.zIndex = 700;
+    map.createPane("countryPane");
+    map.getPane("countryPane").style.zIndex = 400;
+    map.createPane("routePane");
+    map.getPane("routePane").style.zIndex = 430;
+    map.createPane("labelPane");
+    map.getPane("labelPane").style.zIndex = 500;
+    map.createPane("cityPane");
+    map.getPane("cityPane").style.zIndex = 650;
+    map.createPane("airportPane");
+    map.getPane("airportPane").style.zIndex = 670;
+    map.createPane("tooltipPane");
+    map.getPane("tooltipPane").style.zIndex = 700;
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       subdomains: "abcd",
       maxZoom: 8
     }).addTo(map);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       subdomains: "abcd",
       maxZoom: 8,
       pane: "labelPane"
     }).addTo(map);
 
-    const countryLayer = L.layerGroup().addTo(map);
-    const cityLayer = L.layerGroup();
-    const airportLayer = L.layerGroup();
-    const routeLayer = L.layerGroup();
+    const layers = {
+      country: L.layerGroup().addTo(map),
+      city: L.layerGroup(),
+      airport: L.layerGroup(),
+      route: L.layerGroup()
+    };
 
-    const routeRegistry = [];
-    const cityRegistry = [];
-    const airportRegistry = [];
-    const countryRegistry = [];
-    let currentHoveredCountry = null;
-    let airportCount = 0;
-    let flightsTaken = 0;
-    let routePairsCount = 0;
-    let visitedCountriesCount = 0;
-    const cityData = (window.CITY_PINS && Array.isArray(window.CITY_PINS))
-  ? window.CITY_PINS
-  : (typeof CITY_PINS !== 'undefined' && Array.isArray(CITY_PINS) ? CITY_PINS : []);
-    const visitedCitiesCount = cityData.length;
+    const registries = {
+      countries: [],
+      cities: [],
+      airports: [],
+      routes: []
+    };
 
-    window.__cityCountryLookup = Object.fromEntries(
+    const cityData = Array.isArray(window.CITY_PINS)
+      ? window.CITY_PINS
+      : (typeof CITY_PINS !== "undefined" && Array.isArray(CITY_PINS) ? CITY_PINS : []);
+
+    const cityCountryLookup = Object.fromEntries(
       cityData.map(city => [
-        normalisePlaceName(city.name),
-        canonicaliseTravelCountryName(city.country || "")
+        normaliseText(city.name),
+        canonicaliseCountryName(city.country || "")
       ])
     );
 
-    function getCountryBaseStyle() {
-      return {
-        color: "#1d4ed8",
-        weight: 1.5,
-        fillColor: "#93c5fd",
-        fillOpacity: 0.6,
-        opacity: 1
-      };
+    const counters = {
+      visitedCountries: VISITED_NATIONS.length,
+      visitedCities: cityData.length,
+      visitedAirports: 0,
+      flightsTaken: 0,
+      routePairs: 0
+    };
+
+    // Base layer styles. These are reused when hover state is cleared.
+    const styles = {
+      countryBase() {
+        return { color: "#1d4ed8", weight: 1.5, fillColor: "#93c5fd", fillOpacity: 0.6, opacity: 1 };
+      },
+      cityBase() {
+        return { radius: 3, color: "#b45309", weight: 1.5, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
+      },
+      airportBase() {
+        return { radius: 2.2, color: "#1e3a8a", weight: 1.2, fillColor: "#1d4ed8", fillOpacity: 0.8, opacity: 1 };
+      }
+    };
+
+    function updateStatusText() {
+      statusText.textContent =
+        `Visited countries: ${counters.visitedCountries} | ` +
+        `Visited cities: ${counters.visitedCities} | ` +
+        `Visited airports: ${counters.visitedAirports} | ` +
+        `Flights taken: ${counters.flightsTaken} | ` +
+        `Routes (pairs) flown: ${counters.routePairs}`;
     }
 
-    function getCityBaseStyle() {
-      return {
-        radius: 3,
-        color: "#b45309",
-        weight: 1.5,
-        fillColor: "#fbbf24",
-        fillOpacity: 1,
-        opacity: 1
-      };
-    }
+    function applyHoverHighlight(activeCountry) {
+      const hoveredCountry = activeCountry ? canonicaliseCountryName(activeCountry) : null;
 
-    function getAirportBaseStyle() {
-      return {
-        radius: 2.2,
-        color: "#1e3a8a",
-        weight: 1.2,
-        fillColor: "#1d4ed8",
-        fillOpacity: 0.8,
-        opacity: 1
-      };
-    }
-
-    function applyHighlightStyles(activeCountry) {
-      currentHoveredCountry = activeCountry ? canonicaliseTravelCountryName(activeCountry) : null;
-
-      countryRegistry.forEach(entry => {
-        const related = currentHoveredCountry && entry.country === currentHoveredCountry;
-        const style = currentHoveredCountry
-          ? (related
-              ? { color: "#1d4ed8", weight: 2.4, fillColor: "#60a5fa", fillOpacity: 0.82, opacity: 1 }
-              : { color: "#1d4ed8", weight: 1, fillColor: "#93c5fd", fillOpacity: 0.18, opacity: 0.22 })
-          : getCountryBaseStyle();
-        entry.layer.setStyle(style);
+      registries.countries.forEach(entry => {
+        const related = hoveredCountry && entry.country === hoveredCountry;
+        entry.layer.setStyle(
+          hoveredCountry
+            ? (related
+                ? { color: "#1d4ed8", weight: 2.4, fillColor: "#60a5fa", fillOpacity: 0.82, opacity: 1 }
+                : { color: "#1d4ed8", weight: 1, fillColor: "#93c5fd", fillOpacity: 0.18, opacity: 0.22 })
+            : styles.countryBase()
+        );
       });
 
-      routeRegistry.forEach(entry => {
-        const related = currentHoveredCountry && entry.countries.includes(currentHoveredCountry);
-        const style = currentHoveredCountry
+      registries.cities.forEach(entry => {
+        const related = hoveredCountry && entry.country === hoveredCountry;
+        entry.marker.setStyle(
+          hoveredCountry
+            ? (related
+                ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
+                : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
+            : styles.cityBase()
+        );
+      });
+
+      registries.airports.forEach(entry => {
+        const related = hoveredCountry && entry.country === hoveredCountry;
+        entry.marker.setStyle(
+          hoveredCountry
+            ? (related
+                ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
+                : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
+            : styles.airportBase()
+        );
+      });
+
+      registries.routes.forEach(entry => {
+        const related = hoveredCountry && entry.countries.includes(hoveredCountry);
+        const routeStyle = hoveredCountry
           ? (related ? { weight: 4.4, opacity: 1 } : { weight: 1.2, opacity: 0.18 })
           : { weight: 2.3, opacity: 1 };
-        entry.polylines.forEach(polyline => polyline.setStyle(style));
-      });
 
-      cityRegistry.forEach(entry => {
-        const related = currentHoveredCountry && entry.country === currentHoveredCountry;
-        const style = currentHoveredCountry
-          ? (related
-              ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
-              : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
-          : getCityBaseStyle();
-        entry.marker.setStyle(style);
-      });
-
-      airportRegistry.forEach(entry => {
-        const related = currentHoveredCountry && entry.country === currentHoveredCountry;
-        const style = currentHoveredCountry
-          ? (related
-              ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
-              : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
-          : getAirportBaseStyle();
-        entry.marker.setStyle(style);
+        entry.polylines.forEach(polyline => polyline.setStyle(routeStyle));
       });
     }
 
-    function updateStatus() {
-      if (!statusText) return;
-      statusText.textContent =
-        `Visited countries: ${visitedCountriesCount} | Visited cities: ${visitedCitiesCount} | Visited airports: ${airportCount} | Flights taken: ${flightsTaken} | Routes (pairs) flown: ${routePairsCount}`;
-    }
-
-    function addCityPins() {
-      cityData.forEach(city => {
-        const marker = L.circleMarker([city.lat, city.lng], Object.assign({ pane: "cityPane" }, getCityBaseStyle()))
-        .addTo(cityLayer)
-        .bindTooltip(`${city.name}, ${city.country}`, {
-          sticky: true,
-          direction: "top",
-          className: "country-tooltip",
-          pane: "tooltipPane"
-        })
-        .on("click", () => map.setView([city.lat, city.lng], 7));
-
-        cityRegistry.push({
-          country: resolveTravelCountry({ country: city.country, city: city.name }),
-          marker
-        });
-      });
-    }
-
-    function wireToggles() {
-      const layerMap = {
-        country: countryLayer,
-        city: cityLayer,
-        airport: airportLayer,
-        route: routeLayer
-      };
-      document.querySelectorAll(".map-toggle-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const key = btn.dataset.layer;
-          const layer = layerMap[key];
+    function bindToggleButtons() {
+      document.querySelectorAll(".map-toggle-btn").forEach(button => {
+        button.addEventListener("click", () => {
+          const key = button.dataset.layer;
+          const layer = layers[key];
           if (!layer) return;
+
           if (map.hasLayer(layer)) {
             map.removeLayer(layer);
-            btn.classList.remove("active");
+            button.classList.remove("active");
           } else {
             map.addLayer(layer);
-            btn.classList.add("active");
+            button.classList.add("active");
           }
         });
       });
     }
 
-    async function loadCountries() {
-      const countryResult = await fetchGeoJsonWithFallback(COUNTRY_GEOJSON_URLS);
-      const standardCountryTargets = VISITED_COUNTRY_NAMES.flatMap(name => {
-        const canonical = getCanonicalCountryName(name);
+    function addCityMarkers() {
+      cityData.forEach(city => {
+        const marker = L.circleMarker([city.lat, city.lng], { ...styles.cityBase(), pane: "cityPane" })
+          .addTo(layers.city)
+          .bindTooltip(`${city.name}, ${city.country}`, {
+            sticky: true,
+            direction: "top",
+            className: "country-tooltip",
+            pane: "tooltipPane"
+          })
+          .on("click", () => map.setView([city.lat, city.lng], 7));
+
+        registries.cities.push({
+          country: resolveTravelCountry({
+            city: city.name,
+            country: city.country,
+            cityCountryLookup
+          }),
+          marker
+        });
+      });
+    }
+
+    async function loadVisitedCountries() {
+      const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
+      const targetNames = VISITED_COUNTRIES.flatMap(country => {
+        const canonical = getCanonicalVisitedCountry(country);
         return getExpansionTargets(canonical);
       });
 
-      const allVisitedFeatures = countryResult.data.features.filter(feature =>
-        matchesAny(feature, standardCountryTargets)
-      );
-      visitedCountriesCount = VISITED_NATIONS_NAMES.length;
+      const features = geoJson.features.filter(feature => matchesVisitedCountry(feature, targetNames));
 
       const visitedLayer = L.geoJSON(
-        { type: "FeatureCollection", features: allVisitedFeatures },
+        { type: "FeatureCollection", features },
         {
           pane: "countryPane",
-          style: function () {
-            return getCountryBaseStyle();
-          },
-          onEachFeature: function (feature, layer) {
-            const displayName = resolveDisplayName(feature, VISITED_COUNTRY_NAMES);
+          style: styles.countryBase,
+          onEachFeature(feature, layer) {
+            const displayName = resolvePolygonCountry(feature);
 
             layer.bindTooltip(displayName, {
               sticky: true,
@@ -1295,54 +1347,38 @@ window.setHoveredTravelCountry = function () {};
               pane: "tooltipPane"
             });
 
-            countryRegistry.push({
-              country: canonicaliseTravelCountryName(displayName),
+            registries.countries.push({
+              country: canonicaliseCountryName(displayName),
               layer
             });
 
-            layer.on("mouseover", function () {
-              this.setStyle({ weight: 2.2, fillOpacity: 0.78 });
-              applyHighlightStyles(displayName);
-            });
-
-            layer.on("mouseout", function () {
-              this.setStyle(getCountryBaseStyle());
-              applyHighlightStyles(null);
-            });
-
-            layer.on("click", function () {
-              const bounds = this.getBounds();
+            layer.on("mouseover", () => applyHoverHighlight(displayName));
+            layer.on("mouseout", () => applyHoverHighlight(null));
+            layer.on("click", () => {
+              const bounds = layer.getBounds();
               if (bounds.isValid()) map.fitBounds(bounds.pad(0.5));
             });
           }
         }
-      ).addTo(countryLayer);
+      ).addTo(layers.country);
 
-      addCityPins();
+      addCityMarkers();
 
-      if (allVisitedFeatures.length > 0) {
-        const bounds = visitedLayer.getBounds();
-        if (bounds.isValid()) {
-          map.fitBounds(bounds.pad(0.12));
-          map.setZoom(2);
-        }
+      const bounds = visitedLayer.getBounds();
+      if (bounds.isValid()) {
+        map.fitBounds(bounds.pad(0.12));
+        map.setZoom(2);
       }
     }
 
-    async function loadFlights() {
-      const [csvText, mwggAirports] = await Promise.all([
-        fetchTextWithFallback([FLIGHT_HISTORY_CSV_URL]),
-        fetchJsonWithFallback(MWGG_AIRPORTS_URLS)
+    async function loadFlightHistory() {
+      const [csvText, mwggAirports, openFlightsData] = await Promise.all([
+        fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
+        fetchJsonWithFallback(TRAVEL_MAP_CONFIG.mwggAirportUrls),
+        fetchJsonWithFallback([TRAVEL_MAP_CONFIG.openFlightsJsonUrl]).catch(() => ({ by_icao: {}, by_iata: {} }))
       ]);
 
-      let openFlightsData = { by_icao: {}, by_iata: {} };
-      try {
-        const candidate = await fetchJsonWithFallback([OPENFLIGHTS_JSON_URL]);
-        if (candidate && typeof candidate === "object") openFlightsData = candidate;
-      } catch (error) {
-        console.warn("OpenFlights JSON unavailable; continuing with mwgg only.", error);
-      }
-
+      const flights = loadFlightHistoryFromCsv(csvText);
       const openFlightsAirports = openFlightsData.by_icao || {};
       const openFlightsIataIndex = openFlightsData.by_iata || {};
       const mwggIataIndex = buildIataIndex(
@@ -1356,117 +1392,158 @@ window.setHoveredTravelCountry = function () {};
               iata: airport.iata || "",
               icao: airport.icao || icao,
               lat: Number(airport.lat),
-              lon: Number(airport.lon),
-              source: "mwgg"
+              lon: Number(airport.lon)
             }
           ])
         )
       );
 
-      const FLIGHT_HISTORY = loadFlightHistoryFromCsv(csvText);
-      const airportMarkers = new Map();
+      const uniqueAirportMarkers = new Map();
       const routePairs = new Map();
-      flightsTaken = 0;
 
-      FLIGHT_HISTORY.forEach(flight => {
-        const fromAirport = getHybridAirportSmart(
-          flight.from_icao, flight.from_iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
+      flights.forEach(flight => {
+        const originAirport = getAirportRecord(
+          flight.fromIcao,
+          flight.fromIata,
+          mwggAirports,
+          openFlightsAirports,
+          mwggIataIndex,
+          openFlightsIataIndex
         );
-        const toAirport = getHybridAirportSmart(
-          flight.to_icao, flight.to_iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
+        const destinationAirport = getAirportRecord(
+          flight.toIcao,
+          flight.toIata,
+          mwggAirports,
+          openFlightsAirports,
+          mwggIataIndex,
+          openFlightsIataIndex
         );
-        if (!fromAirport || !toAirport) return;
 
-        const fromLat = Number(fromAirport.lat), fromLng = Number(fromAirport.lon);
-        const toLat = Number(toAirport.lat), toLng = Number(toAirport.lon);
-        if (![fromLat, fromLng, toLat, toLng].every(Number.isFinite)) return;
+        if (!originAirport || !destinationAirport) return;
 
-        const fromResolvedCountry = resolveTravelCountry({
-          country: fromAirport.country,
-          city: flight.from_city,
-          airportName: flight.from_airport,
-          iata: flight.from_iata,
-          icao: flight.from_icao
-        });
-        const toResolvedCountry = resolveTravelCountry({
-          country: toAirport.country,
-          city: flight.to_city,
-          airportName: flight.to_airport,
-          iata: flight.to_iata,
-          icao: flight.to_icao
+        const originCountry = resolveTravelCountry({
+          country: originAirport.country,
+          city: flight.fromCity,
+          airportName: flight.fromAirport,
+          iata: flight.fromIata,
+          icao: flight.fromIcao,
+          cityCountryLookup
         });
 
-        flightsTaken += 1;
+        const destinationCountry = resolveTravelCountry({
+          country: destinationAirport.country,
+          city: flight.toCity,
+          airportName: flight.toAirport,
+          iata: flight.toIata,
+          icao: flight.toIcao,
+          cityCountryLookup
+        });
 
-        const directionKey = `${flight.from_icao}__${flight.to_icao}`;
-        const pairKey = [flight.from_icao, flight.to_icao].sort().join("__");
+        counters.flightsTaken += 1;
+
+        const pairKey = [flight.fromIcao, flight.toIcao].sort().join("__");
+        const directionKey = `${flight.fromIcao}__${flight.toIcao}`;
 
         if (!routePairs.has(pairKey)) {
           routePairs.set(pairKey, {
-            fromLat, fromLng, toLat, toLng,
+            fromLat: Number(originAirport.lat),
+            fromLng: Number(originAirport.lon),
+            toLat: Number(destinationAirport.lat),
+            toLng: Number(destinationAirport.lon),
             directions: new Map(),
-            countries: Array.from(new Set([
-              fromResolvedCountry,
-              toResolvedCountry
-            ].filter(Boolean)))
+            countries: Array.from(new Set([originCountry, destinationCountry].filter(Boolean)))
           });
         }
 
-        const pairGroup = routePairs.get(pairKey);
-        if (!pairGroup.directions.has(directionKey)) {
-          pairGroup.directions.set(directionKey, {
-            from_airport: flight.from_airport,
-            from_iata: flight.from_iata,
-            to_airport: flight.to_airport,
-            to_iata: flight.to_iata,
+        const pair = routePairs.get(pairKey);
+
+        if (!pair.directions.has(directionKey)) {
+          pair.directions.set(directionKey, {
+            fromAirport: flight.fromAirport,
+            fromIata: flight.fromIata,
+            toAirport: flight.toAirport,
+            toIata: flight.toIata,
             flights: []
           });
         }
-        pairGroup.directions.get(directionKey).flights.push({
+
+        pair.directions.get(directionKey).flights.push({
           date: flight.date,
           airline: flight.airline
         });
 
-        [
-          [flight.from_icao, fromLat, fromLng, flight.from_city, flight.from_iata, flight.from_airport],
-          [flight.to_icao, toLat, toLng, flight.to_city, flight.to_iata, flight.to_airport]
-        ].forEach(([icao, lat, lng, city, iata, airportName]) => {
-          if (airportMarkers.has(icao)) return;
-          const marker = L.circleMarker([lat, lng], Object.assign({ pane: "airportPane" }, getAirportBaseStyle()))
-          .addTo(airportLayer)
-          .bindTooltip(`${city} · ${iata}<br>${airportName}`, {
+        const airportEndpoints = [
+          {
+            key: flight.fromIcao,
+            lat: Number(originAirport.lat),
+            lng: Number(originAirport.lon),
+            city: flight.fromCity,
+            iata: flight.fromIata,
+            airportName: flight.fromAirport,
+            country: originCountry
+          },
+          {
+            key: flight.toIcao,
+            lat: Number(destinationAirport.lat),
+            lng: Number(destinationAirport.lon),
+            city: flight.toCity,
+            iata: flight.toIata,
+            airportName: flight.toAirport,
+            country: destinationCountry
+          }
+        ];
+
+        airportEndpoints.forEach(endpoint => {
+          if (uniqueAirportMarkers.has(endpoint.key)) return;
+
+          const marker = L.circleMarker([endpoint.lat, endpoint.lng], {
+            ...styles.airportBase(),
+            pane: "airportPane"
+          })
+          .addTo(layers.airport)
+          .bindTooltip(`${endpoint.city} · ${endpoint.iata}<br>${endpoint.airportName}`, {
             sticky: true,
             direction: "top",
             className: "country-tooltip",
             pane: "tooltipPane"
           });
-          airportRegistry.push({
-            country: flight.from_icao === icao ? fromResolvedCountry : toResolvedCountry,
+
+          registries.airports.push({
+            country: endpoint.country,
             marker
           });
-          airportMarkers.set(icao, true);
+
+          uniqueAirportMarkers.set(endpoint.key, marker);
         });
       });
 
-      airportCount = airportMarkers.size;
-      routePairsCount = routePairs.size;
+      counters.visitedAirports = uniqueAirportMarkers.size;
+      counters.routePairs = routePairs.size;
 
-      routePairs.forEach(pairGroup => {
-        const points = interpolateGreatCircle(pairGroup.fromLat, pairGroup.fromLng, pairGroup.toLat, pairGroup.toLng, 72);
-        const segments = splitPolylineAtWrap(points);
-        const totalFlightsOnPair = Array.from(pairGroup.directions.values()).reduce((sum, direction) => sum + direction.flights.length, 0);
+      routePairs.forEach(routePair => {
+        const points = interpolateGreatCircle(
+          routePair.fromLat,
+          routePair.fromLng,
+          routePair.toLat,
+          routePair.toLng,
+          72
+        );
+
+        const routeSegments = splitPolylineAtDateLine(points);
+        const totalFlightsOnPair = Array.from(routePair.directions.values())
+          .reduce((sum, direction) => sum + direction.flights.length, 0);
+
         const routeColor = getRouteColor(totalFlightsOnPair);
-
-        const tooltipHtml = Array.from(pairGroup.directions.values())
+        const tooltipHtml = Array.from(routePair.directions.values())
           .map(direction =>
-            `${direction.from_airport} (${direction.from_iata}) → ${direction.to_airport} (${direction.to_iata})` +
-            "<br>" +
-            direction.flights.map((instance, index) => `#${index + 1} ${instance.date}` + (instance.airline ? ` | ${instance.airline}` : "")).join("<br>")
+            `${direction.fromAirport} (${direction.fromIata}) → ${direction.toAirport} (${direction.toIata})<br>` +
+            direction.flights
+              .map((flight, index) => `#${index + 1} ${flight.date}${flight.airline ? ` | ${flight.airline}` : ""}`)
+              .join("<br>")
           )
           .join("<br>──────────<br>");
 
-        const registeredPolylines = [];
-        segments.forEach(segment => {
+        const polylines = routeSegments.map(segment => {
           const polyline = L.polyline(segment, {
             pane: "routePane",
             color: routeColor,
@@ -1475,7 +1552,7 @@ window.setHoveredTravelCountry = function () {};
             smoothFactor: 1,
             noClip: true
           })
-          .addTo(routeLayer)
+          .addTo(layers.route)
           .bindTooltip(tooltipHtml, {
             sticky: true,
             direction: "top",
@@ -1483,32 +1560,25 @@ window.setHoveredTravelCountry = function () {};
             pane: "tooltipPane"
           });
 
-          polyline.on("mouseover", function () {
-            this.setStyle({ weight: 3.1, opacity: 1 });
-          });
+          polyline.on("mouseover", () => polyline.setStyle({ weight: 3.1, opacity: 1 }));
+          polyline.on("mouseout", () => applyHoverHighlight(null));
 
-          polyline.on("mouseout", function () {
-            applyHighlightStyles(currentHoveredCountry);
-          });
-
-          registeredPolylines.push(polyline);
+          return polyline;
         });
 
-        routeRegistry.push({
-          countries: pairGroup.countries || [],
-          polylines: registeredPolylines
+        registries.routes.push({
+          countries: routePair.countries,
+          polylines
         });
       });
     }
 
-    wireToggles();
+    bindToggleButtons();
 
-    Promise.all([loadCountries(), loadFlights()])
-      .then(() => {
-        updateStatus();
-      })
+    Promise.all([loadVisitedCountries(), loadFlightHistory()])
+      .then(updateStatusText)
       .catch(error => {
-        if (statusText) statusText.textContent = "Unable to load the travel map right now.";
+        statusText.textContent = "Unable to load the travel map right now.";
         mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
         console.error("Travel map load failed:", error);
       });
@@ -1517,13 +1587,9 @@ window.setHoveredTravelCountry = function () {};
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initTravelMap);
   } else {
-    window.addEventListener('load', function() {
-  initTravelMap();
-});
+    initTravelMap();
   }
 })();
 </script>
-
-
 </body>
 </html>
