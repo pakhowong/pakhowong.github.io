@@ -92,7 +92,7 @@
     border-color:rgba(255,255,255,.16);
     box-shadow:none;
   }
-  .hero-copy{ max-width:420px; }
+  .hero-copy{ max-width:320px; margin-left:18px; }
   .hero-title{
     margin:0;
     font-size:56px;
@@ -114,8 +114,9 @@
     max-width:340px;
   }
   .hero-calendar-wrap{
-    margin-top:14px;
+    margin-top:12px;
     max-width:340px;
+    margin-left:18px;
   }
   .stat-card{
     min-height:102px;
@@ -245,6 +246,37 @@
     color:var(--accent);
     border-color:rgba(59,130,246,.28);
   }
+  .travel-map-controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:10px;
+    margin-bottom:10px;
+  }
+  .travel-map-controls .legend-row{
+    margin-top:0;
+    flex:1 1 auto;
+  }
+  .travel-map-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .map-toggle-btn, .external-links button{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+  }
+  .map-toggle-btn:hover, .external-links button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 10px 20px rgba(37,99,235,.12);
+    background:rgba(219,234,254,.92);
+  }
+  .map-toggle-btn:active, .external-links button:active{
+    transform:translateY(0) scale(.97);
+    box-shadow:0 4px 10px rgba(37,99,235,.10);
+  }
   .swatch { display:inline-block; width:16px; height:16px; border:1px solid rgba(148,163,184,.5); border-radius:4px; vertical-align:middle; }
   .country-swatch-visited { background:#93c5fd; border-color:#1d4ed8; }
   .country-swatch-city { background:#fbbf24; border-color:#b45309; border-radius:50%; }
@@ -286,7 +318,7 @@
   .kpi-label{ margin-top:2px; font-size:12px; color:#475569; }
 
     .mini-panel{
-    padding:16px 14px 14px;
+    padding:12px 12px 10px;
   }
   .mini-panel h3{
     margin:0 0 12px;
@@ -402,7 +434,8 @@
   .summary-grid-four{
     display:grid;
     grid-template-columns:repeat(4, minmax(0,1fr));
-    gap:8px;
+    gap:10px;
+    width:100%;
   }
 
   .summary-gauge-grid{
@@ -522,9 +555,9 @@
   }
   .controls-row{
     display:flex;
-    justify-content:space-between;
-    gap:8px;
-    flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
+    flex-wrap:nowrap;
     align-items:center;
   }
   .month-nav{
@@ -533,8 +566,8 @@
     gap:8px;
   }
   .month-nav-btn{
-    width:34px;
-    height:34px;
+    width:28px;
+    height:28px;
     border:none;
     border-radius:10px;
     background:rgba(255,255,255,.74);
@@ -554,16 +587,17 @@
     border:1px solid rgba(148,163,184,.16);
     border-radius:10px;
     background:rgba(255,255,255,.74);
-    padding:8px 10px;
-    font-size:13px;
+    padding:5px 8px;
+    font-size:12px;
+    min-width:66px;
   }
   .months { display:grid; grid-template-columns:1fr; gap:0; }
   .month { background:transparent; border:none; padding:0; box-shadow:none; }
   .month-title{ display:none; }
   .weekdays, .days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; width:100%; }
-  .weekday { text-align:center; font-size:12px; font-weight:700; color:var(--muted); padding-bottom:4px; }
+  .weekday { text-align:center; font-size:11px; font-weight:700; color:var(--muted); padding-bottom:4px; }
   .day, .empty {
-    min-height:48px;
+    min-height:40px;
     border:1px solid rgba(148,163,184,.12);
     border-radius:12px;
     background:rgba(255,255,255,.74);
@@ -578,8 +612,8 @@
   .day.has-link .day-num { color:#7c3aed; font-weight:700; }
   .day.absent.has-link { background: linear-gradient(135deg, #fee2e2 50%, #f3e8ff 50%); border-color:#7c3aed; }
   .day-link { display:block; color:inherit; text-decoration:none; width:100%; height:100%; }
-  .day-num { font-size:11px; font-weight:700; line-height:1.2; margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .rolling { font-size:10px; line-height:1.2; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .day-num { font-size:10px; font-weight:700; line-height:1.2; margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rolling { font-size:9px; line-height:1.2; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .star { color:var(--link); font-weight:700; margin-left:2px; }
 
   .leaflet-tooltip.country-tooltip {
@@ -653,14 +687,12 @@
               <h3 style="margin:0; font-size:20px; font-weight:800;">Immigration Calendar</h3>
               <div class="controls" style="margin:0;">
                 <div class="controls-row">
-                  <div class="month-nav">
-                    <button type="button" class="month-nav-btn" id="prevMonthBtn" aria-label="Previous month">‹</button>
-                    <button type="button" class="month-nav-btn" id="nextMonthBtn" aria-label="Next month">›</button>
-                  </div>
+                  <button type="button" class="month-nav-btn" id="prevMonthBtn" aria-label="Previous month">‹</button>
                   <div class="month-selectors">
                     <select id="monthPicker"></select>
                     <select id="yearPicker"></select>
                   </div>
+                  <button type="button" class="month-nav-btn" id="nextMonthBtn" aria-label="Next month">›</button>
                 </div>
               </div>
             </div>
@@ -732,37 +764,44 @@
         </div>
       </div>
 
-      <div class="country-visited-legend">
-        <div class="legend-row">
-          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Visited</button>
-          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>City</button>
-          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airport</button>
-          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flight Route</button>
-        </div>
-      </div>
-
-      <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
-      <div id="travelMap" class="country-visited-map"></div>
-
-      <div class="kpi-strip">
+      <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
         <div class="kpi-item">
           <div class="kpi-value" id="heroCountryCount">--</div>
           <div class="kpi-label">Countries</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-value" id="heroCityCount">--</div>
+          <div class="kpi-label">Cities</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-value" id="heroAirportCount">--</div>
+          <div class="kpi-label">Airports</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroFlightCount">--</div>
           <div class="kpi-label">Flights</div>
         </div>
         <div class="kpi-item">
-          <div class="kpi-value" id="heroDaysBottomValue">--</div>
-          <div class="kpi-label">Days Remaining</div>
+          <div class="kpi-value" id="heroRouteCount">--</div>
+          <div class="kpi-label">Routes</div>
         </div>
       </div>
 
-      <div class="external-links">
-        <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
-        <button onclick="openExternal('flightradar')">myFlightradar24</button>
+      <div class="travel-map-controls">
+        <div class="legend-row">
+          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Visited</button>
+          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>City</button>
+          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airport</button>
+          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flight Route</button>
+        </div>
+        <div class="travel-map-actions external-links" style="margin-top:0;">
+          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
+          <button onclick="openExternal('flightradar')">myFlightradar24</button>
+        </div>
       </div>
+
+      <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
+      <div id="travelMap" class="country-visited-map"></div>
     </section>
 
     <div class="bottom-grid">    </div>
@@ -1813,18 +1852,22 @@ function initAbsenceTracker() {
     };
 
     function updateStatusText() {
-      statusText.textContent =
-        `Visited countries: ${counters.visitedCountries} | ` +
-        `Visited cities: ${counters.visitedCities} | ` +
-        `Visited airports: ${counters.visitedAirports} | ` +
-        `Flights taken: ${counters.flightsTaken} | ` +
-        `Routes (pairs) flown: ${counters.routePairs}`;
+      if (statusText) statusText.textContent = "";
 
       const heroCountryCount = document.getElementById("heroCountryCount");
       if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
 
+      const heroCityCount = document.getElementById("heroCityCount");
+      if (heroCityCount) heroCityCount.textContent = String(counters.visitedCities);
+
+      const heroAirportCount = document.getElementById("heroAirportCount");
+      if (heroAirportCount) heroAirportCount.textContent = String(counters.visitedAirports);
+
       const heroFlightCount = document.getElementById("heroFlightCount");
       if (heroFlightCount) heroFlightCount.textContent = String(counters.flightsTaken);
+
+      const heroRouteCount = document.getElementById("heroRouteCount");
+      if (heroRouteCount) heroRouteCount.textContent = String(counters.routePairs);
     }
 
     function applyHoverHighlight(activeCountry) {
