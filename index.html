@@ -291,8 +291,6 @@
   </div>
 
 
-  <script src="absence_ranges.js"></script>
-  <script src="day_links.js"></script>
 
 <script>
 /*
@@ -1143,7 +1141,7 @@ function initAbsenceTracker() {
   // 5) Travel map bootstrap
   // --------------------------------------------------------------------------
 
-  function initTravelMap() {
+  window.initTravelMap = function initTravelMap() {
     const mapContainer = document.getElementById("travelMap");
     const statusText = document.getElementById("travelMapStatusText");
     if (!mapContainer || typeof L === "undefined") return;
@@ -1618,8 +1616,33 @@ async function initSiteData() {
     DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
     window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
 
-    initAbsenceTracker();
-    initTravelMap();
+    try {
+      initAbsenceTracker();
+    } catch (error) {
+      console.error("Absence tracker init failed:", error);
+      const months = document.getElementById("months");
+      if (months) {
+        months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
+      }
+    }
+
+    try {
+      if (typeof window.initTravelMap === "function") {
+        window.initTravelMap();
+      } else {
+        throw new Error("initTravelMap is not available");
+      }
+    } catch (error) {
+      console.error("Travel map init failed:", error);
+      const travelMapStatus = document.getElementById("travelMapStatusText");
+      if (travelMapStatus) {
+        travelMapStatus.textContent = "Unable to load the travel map right now.";
+      }
+      const travelMap = document.getElementById("travelMap");
+      if (travelMap) {
+        travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
+      }
+    }
   } catch (error) {
     console.error("Initial data load failed:", error);
 
