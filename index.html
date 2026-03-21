@@ -113,6 +113,10 @@
     margin-top:16px;
     max-width:340px;
   }
+  .hero-calendar-wrap{
+    margin-top:14px;
+    max-width:340px;
+  }
   .stat-card{
     min-height:102px;
     padding:12px 10px;
@@ -342,10 +346,33 @@
   }
   .controls-row{
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-between;
     gap:8px;
     flex-wrap:wrap;
     align-items:center;
+  }
+  .month-nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .month-nav-btn{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:10px;
+    background:rgba(255,255,255,.74);
+    color:var(--text);
+    font-size:18px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(15,23,42,.05);
+  }
+  .month-selectors{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
   }
   select{
     border:1px solid rgba(148,163,184,.16);
@@ -439,7 +466,37 @@
           </div>
         </div>
       </div>
-    </section>
+    
+        <div class="hero-calendar-wrap">
+          <section class="panel glass mini-panel">
+            <div class="panel-header" style="margin-bottom:12px;">
+              <h3 style="margin:0; font-size:20px; font-weight:800;">Immigration Calendar</h3>
+              <div class="controls" style="margin:0;">
+                <div class="controls-row">
+                  <div class="month-nav">
+                    <button type="button" class="month-nav-btn" id="prevMonthBtn" aria-label="Previous month">‹</button>
+                    <button type="button" class="month-nav-btn" id="nextMonthBtn" aria-label="Next month">›</button>
+                  </div>
+                  <div class="month-selectors">
+                    <select id="monthPicker"></select>
+                    <select id="yearPicker"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="legend" style="margin-bottom:12px;">
+              <div class="legend-row">
+                <span><span class="swatch absent"></span>Absent</span>
+                <span><span class="swatch today"></span>Today</span>
+                <span><span class="swatch linked"></span>Travel</span>
+              </div>
+            </div>
+
+            <div id="months" class="months"></div>
+          </section>
+        </div>
+</section>
 
     <section class="panel glass map-panel">
       <div class="panel-header">
@@ -447,7 +504,6 @@
           <h2 class="panel-title">Travel Map</h2>
           <div class="panel-subtitle">Your explored world</div>
         </div>
-        <button class="action-btn" onclick="document.getElementById('travelMap').scrollIntoView({behavior:'smooth', block:'center'})">Open Full Map</button>
       </div>
 
       <div class="country-visited-legend">
@@ -503,29 +559,6 @@
           </div>
         </div>
 
-        <button class="ghost-btn" style="width:100%;" onclick="document.getElementById('months').scrollIntoView({behavior:'smooth', block:'center'})">View Full Calendar</button>
-      </section>
-
-      <section class="panel glass mini-panel">
-        <div class="panel-header" style="margin-bottom:12px;">
-          <h3 style="margin:0; font-size:20px; font-weight:800;">This Month</h3>
-          <div class="controls">
-            <div class="controls-row">
-              <select id="monthPicker"></select>
-              <select id="yearPicker"></select>
-            </div>
-          </div>
-        </div>
-
-        <div class="legend" style="margin-bottom:12px;">
-          <div class="legend-row">
-            <span><span class="swatch absent"></span>Absent</span>
-            <span><span class="swatch today"></span>Today</span>
-            <span><span class="swatch linked"></span>Travel</span>
-          </div>
-        </div>
-
-        <div id="months" class="months"></div>
       </section>
     </div>
 
@@ -924,14 +957,35 @@ function initAbsenceTracker() {
 
   const yearPicker = document.getElementById("yearPicker");
   const monthPicker = document.getElementById("monthPicker");
+  const prevMonthBtn = document.getElementById("prevMonthBtn");
+  const nextMonthBtn = document.getElementById("nextMonthBtn");
 
   const renderSelectedMonth = () => {
     renderMonthCalendar(Number(yearPicker.value), Number(monthPicker.value), absentSet, rollingCounts);
   };
 
+  const shiftMonth = (delta) => {
+    let year = Number(yearPicker.value);
+    let month = Number(monthPicker.value) + delta;
+    while (month < 0) {
+      month += 12;
+      year -= 1;
+    }
+    while (month > 11) {
+      month -= 12;
+      year += 1;
+    }
+    year = Math.max(2024, Math.min(2031, year));
+    yearPicker.value = String(year);
+    monthPicker.value = String(month);
+    renderSelectedMonth();
+  };
+
   renderSelectedMonth();
   yearPicker.addEventListener("change", renderSelectedMonth);
   monthPicker.addEventListener("change", renderSelectedMonth);
+  if (prevMonthBtn) prevMonthBtn.addEventListener("click", () => shiftMonth(-1));
+  if (nextMonthBtn) nextMonthBtn.addEventListener("click", () => shiftMonth(1));
 }
 
 
