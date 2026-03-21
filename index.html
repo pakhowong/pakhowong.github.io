@@ -607,29 +607,28 @@ init();
   const VISITED_COUNTRY_NAMES = VISITED_NATIONS_NAMES.concat(VISITED_TERRITORIES_NAMES);
 
   const COUNTRY_ALIAS = {
-    "Myanmar": "Burma",
-    "Cabo Verde": "Cape Verde",
-    "Congo (Congo-Brazzaville)": "Congo (Brazzaville)",
-    "Democratic Republic of the Congo": "Congo (Kinshasa)",
-    "Côte D'Ivoire": "Cote D’Ivoire",
+    "Bahamas": "The Bahamas",
+    "Congo (Congo-Brazzaville)": "Republic of the Congo",
+    "Côte D'Ivoire": "Ivory Coast",
+    "Czech Republic": "Czechia",
+    "Eswatini": "eSwatini",
     "Micronesia": "Federated States of Micronesia",
-    "Gambia": "Gambia, The",
     "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara",
-    "Eswatini": "Swaziland",
+    "Sao Tome and Principe": "São Tomé and Principe",
+    "Serbia": "Republic of Serbia",
+    "Tanzania": "United Republic of Tanzania",
+    "Timor-Leste": "East Timor",
     "United States": "United States of America",
     "Vatican City": "Vatican"
   };
 
   const COUNTRY_TO_MAP_UNIT_EXPANSION = {
-    "Cyprus": ["Cyprus", "Northern Cyprus"],
+    "Cyprus": ["Cyprus", "Cyprus No Mans Area", "Northern Cyprus"],
+    "Kazakhstan": ["Baykonur Cosmodrome", "Kazakhstan"],
     "Somalia": ["Somalia", "Somaliland"]
   };
 
-  const COUNTRY_TO_MAP_UNIT_OVERRIDE = {
-    "Niue": ["Niue"],
-    "South Sudan": ["South Sudan"],
-    "Antigua and Barbuda": ["Antigua", "Barbuda"]
-  };
+  const COUNTRY_TO_MAP_UNIT_OVERRIDE = {};
 
   const COUNTRY_GEOJSON_URLS = [
     "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
