@@ -961,20 +961,66 @@ window.setHoveredTravelCountry = function () {};
     const routeLayer = L.layerGroup();
 
     const routeRegistry = [];
+    const cityRegistry = [];
+    const airportRegistry = [];
+    let currentHoveredCountry = null;
     let airportCount = 0;
     let flightsTaken = 0;
     let routePairsCount = 0;
     let visitedCountriesCount = 0;
     const visitedCitiesCount = (window.CITY_PINS && Array.isArray(window.CITY_PINS)) ? window.CITY_PINS.length : 0;
 
-    function applyRouteRegistryStyles(activeCountry) {
-      const active = activeCountry ? canonicaliseTravelCountryName(activeCountry) : null;
+    function getCityBaseStyle() {
+      return {
+        radius: 3,
+        color: "#b45309",
+        weight: 1.5,
+        fillColor: "#fbbf24",
+        fillOpacity: 1,
+        opacity: 1
+      };
+    }
+
+    function getAirportBaseStyle() {
+      return {
+        radius: 2.2,
+        color: "#1e3a8a",
+        weight: 1.2,
+        fillColor: "#1d4ed8",
+        fillOpacity: 0.8,
+        opacity: 1
+      };
+    }
+
+    function applyHighlightStyles(activeCountry) {
+      currentHoveredCountry = activeCountry ? canonicaliseTravelCountryName(activeCountry) : null;
+
       routeRegistry.forEach(entry => {
-        const related = active && entry.countries.includes(active);
-        const style = active
+        const related = currentHoveredCountry && entry.countries.includes(currentHoveredCountry);
+        const style = currentHoveredCountry
           ? (related ? { weight: 4.4, opacity: 1 } : { weight: 1.2, opacity: 0.18 })
           : { weight: 2.3, opacity: 1 };
         entry.polylines.forEach(polyline => polyline.setStyle(style));
+      });
+
+      cityRegistry.forEach(entry => {
+        const related = currentHoveredCountry && entry.country === currentHoveredCountry;
+        const style = currentHoveredCountry
+          ? (related
+              ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
+              : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
+          : getCityBaseStyle();
+        entry.marker.setStyle(style);
+      });
+
+      airportRegistry.forEach(entry => {
+        const related = currentHoveredCountry && entry.country === currentHoveredCountry;
+        const style = currentHoveredCountry
+          ? (related
+              ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
+              : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
+          : getAirportBaseStyle();
+        entry.marker.setStyle(style);
       });
     }
 
@@ -986,14 +1032,7 @@ window.setHoveredTravelCountry = function () {};
 
     function addCityPins() {
       (Array.isArray(window.CITY_PINS) ? window.CITY_PINS : []).forEach(city => {
-        L.circleMarker([city.lat, city.lng], {
-          pane: "cityPane",
-          radius: 3,
-          color: "#b45309",
-          weight: 1.5,
-          fillColor: "#fbbf24",
-          fillOpacity: 1
-        })
+        const marker = L.circleMarker([city.lat, city.lng], Object.assign({ pane: "cityPane" }, getCityBaseStyle()))
         .addTo(cityLayer)
         .bindTooltip(`${city.name}, ${city.country}`, {
           sticky: true,
@@ -1002,6 +1041,11 @@ window.setHoveredTravelCountry = function () {};
           pane: "tooltipPane"
         })
         .on("click", () => map.setView([city.lat, city.lng], 7));
+
+        cityRegistry.push({
+          country: canonicaliseTravelCountryName(city.country || ""),
+          marker
+        });
       });
     }
 
@@ -1064,7 +1108,7 @@ window.setHoveredTravelCountry = function () {};
 
             layer.on("mouseover", function () {
               this.setStyle({ weight: 2.2, fillOpacity: 0.78 });
-              applyRouteRegistryStyles(displayName);
+              applyHighlightStyles(displayName);
             });
 
             layer.on("mouseout", function () {
@@ -1074,7 +1118,7 @@ window.setHoveredTravelCountry = function () {};
                 fillColor: "#93c5fd",
                 fillOpacity: 0.6
               });
-              applyRouteRegistryStyles(null);
+              applyHighlightStyles(null);
             });
 
             layer.on("click", function () {
@@ -1184,20 +1228,17 @@ window.setHoveredTravelCountry = function () {};
           [flight.to_icao, toLat, toLng, flight.to_city, flight.to_iata, flight.to_airport]
         ].forEach(([icao, lat, lng, city, iata, airportName]) => {
           if (airportMarkers.has(icao)) return;
-          L.circleMarker([lat, lng], {
-            pane: "airportPane",
-            radius: 2.2,
-            color: "#1e3a8a",
-            weight: 1.2,
-            fillColor: "#1d4ed8",
-            fillOpacity: 0.8
-          })
+          const marker = L.circleMarker([lat, lng], Object.assign({ pane: "airportPane" }, getAirportBaseStyle()))
           .addTo(airportLayer)
           .bindTooltip(`${city} · ${iata}<br>${airportName}`, {
             sticky: true,
             direction: "top",
             className: "country-tooltip",
             pane: "tooltipPane"
+          });
+          airportRegistry.push({
+            country: canonicaliseTravelCountryName((fromAirport && flight.from_icao === icao ? fromAirport.country : toAirport.country) || ""),
+            marker
           });
           airportMarkers.set(icao, true);
         });
@@ -1243,7 +1284,7 @@ window.setHoveredTravelCountry = function () {};
           });
 
           polyline.on("mouseout", function () {
-            applyRouteRegistryStyles(null);
+            applyHighlightStyles(currentHoveredCountry);
           });
 
           registeredPolylines.push(polyline);
