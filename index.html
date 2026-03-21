@@ -655,10 +655,7 @@ function initAbsenceTracker() {
   // 1) Source data used by the Travel Map
   // --------------------------------------------------------------------------
 
-  const VISITED_NATIONS = [
-    "Albania","Andorra","Antigua and Barbuda","Armenia","Australia","Austria","Azerbaijan","Bahamas","Barbados","Belgium","Belize","Bosnia and Herzegovina","Brunei","Cambodia","Canada","China","Cook Islands","Croatia","Cyprus","Czech Republic","Denmark","Dominica","Dominican Republic","Egypt","Estonia","Fiji","Finland","France","Georgia","Germany","Greece","Grenada","Guatemala","Hungary","Iceland","Indonesia","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kosovo","Kyrgyzstan","Laos","Latvia","Liechtenstein","Lithuania","Luxembourg","Malaysia","Maldives","Malta","Mexico","Monaco","Montenegro","Nepal","New Zealand","Niue","North Macedonia","Norway","Oman","Palestine","Philippines","Poland","Portugal","Romania","Samoa","San Marino","Saudi Arabia","Serbia","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Thailand","Netherlands","Tonga","Trinidad and Tobago","Turkey","United Arab Emirates","United Kingdom","United States","Uzbekistan","Vanuatu","Vatican City","Vietnam","Qatar"
-  ];
-
+  let VISITED_NATIONS = [];
   const VISITED_TERRITORIES = [
     "Akrotiri Sovereign Base Area",
     "Guam",
@@ -667,8 +664,7 @@ function initAbsenceTracker() {
     "Puerto Rico",
     "Svalbard"
   ];
-
-  const VISITED_COUNTRIES = VISITED_NATIONS.concat(VISITED_TERRITORIES);
+  let VISITED_COUNTRIES = [];
 
   const TRAVEL_MAP_CONFIG = {
     countryGeoJsonUrls: [
@@ -1606,15 +1602,22 @@ async function fetchLocalJson(path) {
 
 async function initSiteData() {
   try {
-    const [absenceRanges, dayLinks, cityPins] = await Promise.all([
+    const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
       fetchLocalJson("./data/absence_ranges.json"),
       fetchLocalJson("./data/day_links.json"),
-      fetchLocalJson("./data/city_pins.json")
+      fetchLocalJson("./data/city_pins.json"),
+      fetchLocalJson("./data/visited_countries.json")
     ]);
 
     ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
     DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
     window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
+
+    const visitedCountryRows = Array.isArray(visitedCountries) ? visitedCountries : [];
+    VISITED_NATIONS = visitedCountryRows
+      .filter(row => row && row.visited === true)
+      .map(row => row.country);
+    VISITED_COUNTRIES = VISITED_NATIONS.concat(VISITED_TERRITORIES);
 
     try {
       initAbsenceTracker();
