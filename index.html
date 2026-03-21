@@ -60,12 +60,9 @@
     padding:18px 14px 28px;
   }
   .page-girl{
-    position:absolute;
-    left:120px;
-    top:34px;
-    width:min(34vw, 210px);
-    height:520px;
-    background:url("./images/travel-girl.png") left top / contain no-repeat;
+    position:fixed;
+    inset:0;
+    background:url("./images/travel-girl.png") calc(50% + 160px) 30px / min(56vw, 430px) auto no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
