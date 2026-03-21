@@ -61,11 +61,11 @@
   }
   .page-girl{
     position:absolute;
-    right:-24px;
-    top:22px;
+    left:255px;
+    top:18px;
     width:min(42vw, 320px);
     height:860px;
-    background:url("./images/travel-girl.png") right top / contain no-repeat;
+    background:url("./images/travel-girl.png") left top / contain no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
@@ -407,6 +407,68 @@
     grid-template-columns:repeat(4, minmax(0,1fr));
     gap:8px;
   }
+
+  .summary-gauge-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .summary-gauge-card{
+    padding:12px 10px;
+    border-radius:18px;
+    background:rgba(248,250,252,.48);
+    border:1px solid rgba(148,163,184,.10);
+    text-align:center;
+    backdrop-filter: blur(8px);
+  }
+  .summary-gauge-label{
+    font-size:12px;
+    font-weight:700;
+    color:#475569;
+    line-height:1.25;
+    margin-bottom:8px;
+  }
+  .gauge{
+    --pct: 0;
+    --gauge-color: #2563eb;
+    width:120px;
+    height:120px;
+    margin:0 auto;
+    border-radius:50%;
+    position:relative;
+    background:
+      radial-gradient(closest-side, rgba(255,255,255,.82) 68%, transparent 69% 100%),
+      conic-gradient(var(--gauge-color) calc(var(--pct) * 1%), rgba(191,219,254,.45) 0);
+  }
+  .gauge::after{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border-radius:50%;
+    background:rgba(255,255,255,.82);
+    box-shadow: inset 0 0 0 1px rgba(148,163,184,.10);
+  }
+  .gauge-text{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    line-height:1.05;
+  }
+  .gauge-number{
+    font-size:18px;
+    font-weight:800;
+    color:var(--accent);
+  }
+  .gauge-sub{
+    margin-top:4px;
+    font-size:11px;
+    color:#64748b;
+    font-weight:700;
+  }
   .summary-mini-card{
     padding:10px 8px;
     border-radius:16px;
@@ -538,11 +600,11 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      right:-18px;
+      left:210px;
       top:74px;
       width:min(54vw, 240px);
       height:620px;
-      background-position:right top;
+      background-position:left top;
       background-size:contain;
     }
     .hero-panel{ min-height:430px; padding:22px 14px 14px; }
@@ -617,40 +679,27 @@
             <div id="months" class="months"></div>
           </section>
 
+          
           <section class="panel glass mini-panel" style="margin-top:14px;">
-            <h3>Absence Summary</h3><div class="summary-compact">
-              <div class="summary-row">
-                <div>
-                  <div class="label">ILR window</div>
-                  <div class="sub" id="summaryIlrWindow">1 Oct 2024 – 30 Sep 2029</div>
-                </div>
-                <div class="summary-badge">ILR</div>
-              </div>
-
-              <div class="summary-row">
-                <div>
-                  <div class="label">Citizenship window</div>
-                  <div class="sub" id="summaryCitWindow">1 Oct 2025 – 30 Sep 2030</div>
-                </div>
-                <div class="summary-badge">CIT</div>
-              </div>
-
-              <div class="summary-row">
-                <div style="width:100%;">
-                  <div class="label">Citizenship days used</div>
-                  <div class="summary-barometer">
-                    <div class="summary-barometer-bar" id="summaryCitTotalBar"></div>
-                    <div class="summary-barometer-text" id="summaryCitTotal">--</div>
+            <h3>Absence Summary</h3>
+            <div class="summary-compact">
+              <div class="summary-gauge-grid">
+                <div class="summary-gauge-card">
+                  <div class="summary-gauge-label">Citizenship days used</div>
+                  <div class="gauge" id="summaryCitGauge">
+                    <div class="gauge-text">
+                      <div class="gauge-number" id="summaryCitTotal">--</div>
+                      <div class="gauge-sub">of 450</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="summary-row">
-                <div style="width:100%;">
-                  <div class="label">Final 12 months used</div>
-                  <div class="summary-barometer">
-                    <div class="summary-barometer-bar" id="summaryCitFinalBar"></div>
-                    <div class="summary-barometer-text" id="summaryCitFinal">--</div>
+                <div class="summary-gauge-card">
+                  <div class="summary-gauge-label">Final 12 months used</div>
+                  <div class="gauge" id="summaryCitFinalGauge">
+                    <div class="gauge-text">
+                      <div class="gauge-number" id="summaryCitFinal">--</div>
+                      <div class="gauge-sub">of 90</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -674,7 +723,8 @@
                 </div>
               </div>
             </div>
-          </section>        </div>
+          </section>
+        </div>
 </section>
 
     <section class="panel glass map-panel">
@@ -933,23 +983,17 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
 
   document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
 
-  const summaryIlrWindow = document.getElementById("summaryIlrWindow");
-  if (summaryIlrWindow) summaryIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
-
-  const summaryCitWindow = document.getElementById("summaryCitWindow");
-  if (summaryCitWindow) summaryCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
-
   const summaryCitTotal = document.getElementById("summaryCitTotal");
-  if (summaryCitTotal) summaryCitTotal.textContent = `${citizenshipTotal}/${citizenship.totalLimit}`;
+  if (summaryCitTotal) summaryCitTotal.textContent = String(citizenshipTotal);
 
-  const summaryCitTotalBar = document.getElementById("summaryCitTotalBar");
-  if (summaryCitTotalBar) summaryCitTotalBar.style.width = `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}%`;
+  const summaryCitGauge = document.getElementById("summaryCitGauge");
+  if (summaryCitGauge) summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
 
   const summaryCitFinal = document.getElementById("summaryCitFinal");
-  if (summaryCitFinal) summaryCitFinal.textContent = `${citizenshipFinalYear}/${citizenship.finalTwelveMonthsLimit}`;
+  if (summaryCitFinal) summaryCitFinal.textContent = String(citizenshipFinalYear);
 
-  const summaryCitFinalBar = document.getElementById("summaryCitFinalBar");
-  if (summaryCitFinalBar) summaryCitFinalBar.style.width = `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}%`;
+  const summaryCitFinalGauge = document.getElementById("summaryCitFinalGauge");
+  if (summaryCitFinalGauge) summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
 
   const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
   if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining}d`;
