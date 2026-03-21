@@ -597,6 +597,7 @@ window.setHoveredTravelCountry = function () {};
 </script>
 
 <script src="city_pins.js"></script>
+<script src="city_pins.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
@@ -964,7 +965,7 @@ window.setHoveredTravelCountry = function () {};
     let flightsTaken = 0;
     let routePairsCount = 0;
     let visitedCountriesCount = 0;
-    const visitedCitiesCount = Array.isArray(window.CITY_PINS) ? window.CITY_PINS.length : 0;
+    const visitedCitiesCount = (window.CITY_PINS && Array.isArray(window.CITY_PINS)) ? window.CITY_PINS.length : 0;
 
     function applyRouteRegistryStyles(activeCountry) {
       const active = activeCountry ? canonicaliseTravelCountryName(activeCountry) : null;
@@ -984,7 +985,7 @@ window.setHoveredTravelCountry = function () {};
     }
 
     function addCityPins() {
-      (window.CITY_PINS || []).forEach(city => {
+      (Array.isArray(window.CITY_PINS) ? window.CITY_PINS : []).forEach(city => {
         L.circleMarker([city.lat, city.lng], {
           pane: "cityPane",
           radius: 3,
