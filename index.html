@@ -850,6 +850,18 @@ window.setHoveredTravelCountry = function () {};
     return reverseAlias[raw] || raw;
   }
 
+  function normalisePlaceName(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[()'.,]/g, "")
+      .replace(/&/g, "and")
+      .replace(/-/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
   function resolveTravelCountry(options) {
     const city = String(options?.city || "").trim();
     const iata = String(options?.iata || "").trim().toUpperCase();
@@ -883,8 +895,9 @@ window.setHoveredTravelCountry = function () {};
       "Hagatna": "Guam"
     };
 
+    const cityLookup = window.__cityCountryLookup || {};
     const cityKey = normalisePlaceName(city);
-    if (cityKey && cityCountryLookup[cityKey]) return cityCountryLookup[cityKey];
+    if (cityKey && cityLookup[cityKey]) return cityLookup[cityKey];
     if (iata && codeOverrides[iata]) return codeOverrides[iata];
     if (icao && codeOverrides[icao]) return codeOverrides[icao];
     if (city && cityOverrides[city]) return cityOverrides[city];
@@ -1024,19 +1037,7 @@ window.setHoveredTravelCountry = function () {};
   : (typeof CITY_PINS !== 'undefined' && Array.isArray(CITY_PINS) ? CITY_PINS : []);
     const visitedCitiesCount = cityData.length;
 
-    function normalisePlaceName(value) {
-      return String(value || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[()'.,]/g, "")
-        .replace(/&/g, "and")
-        .replace(/-/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-    }
-
-    const cityCountryLookup = Object.fromEntries(
+    window.__cityCountryLookup = Object.fromEntries(
       cityData.map(city => [
         normalisePlaceName(city.name),
         canonicaliseTravelCountryName(city.country || "")
