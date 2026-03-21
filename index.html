@@ -61,10 +61,10 @@
   }
   .page-girl{
     position:absolute;
-    left:255px;
-    top:18px;
-    width:min(42vw, 320px);
-    height:860px;
+    left:120px;
+    top:34px;
+    width:min(34vw, 210px);
+    height:520px;
     background:url("./images/travel-girl.png") left top / contain no-repeat;
     pointer-events:none;
     z-index:0;
@@ -89,16 +89,16 @@
     backdrop-filter: blur(12px);
   }
   .hero-panel{
-    min-height:470px;
+    min-height:120px;
     padding:28px 18px 18px;
     background:transparent;
     border-color:rgba(255,255,255,.16);
     box-shadow:none;
   }
-  .hero-copy{ max-width:420px; }
+  .hero-copy{ max-width:260px; margin-left:170px; }
   .hero-title{
     margin:0;
-    font-size:56px;
+    font-size:16px;
     line-height:.93;
     letter-spacing:-.045em;
     font-weight:800;
@@ -106,7 +106,7 @@
   .hero-title .accent{ color:var(--accent); }
   .hero-subtitle{
     margin-top:10px;
-    font-size:17px;
+    font-size:10px;
     color:#475569;
   }
   .hero-stats{
@@ -114,14 +114,14 @@
     grid-template-columns:repeat(3, minmax(0,1fr));
     gap:10px;
     margin-top:16px;
-    max-width:340px;
+    max-width:260px;
   }
   .hero-calendar-wrap{
     margin-top:14px;
     max-width:340px;
   }
   .stat-card{
-    min-height:102px;
+    min-height:86px;
     padding:12px 10px;
     border-radius:22px;
     background:rgba(255,255,255,.64);
@@ -147,7 +147,7 @@
     background:#dbeafe;color:var(--accent);font-weight:800;
   }
   .stat-value{
-    font-size:18px;
+    font-size:12px;
     font-weight:800;
     line-height:1.05;
     color:var(--accent);
@@ -155,13 +155,13 @@
   .stat-value.bool-ok{ color:var(--ok); }
   .stat-value.bool-bad{ color:var(--bad); }
   .stat-label{
-    font-size:12px;
-    line-height:1.2;
+    font-size:10px;
+    line-height:1.15;
     color:#334155;
     font-weight:700;
   }
   .stat-sub{
-    font-size:11px;
+    font-size:10px;
     line-height:1.2;
     color:#64748b;
     margin-top:2px;
@@ -178,7 +178,7 @@
   }
   .panel-title{
     margin:0;
-    font-size:18px;
+    font-size:14px;
     font-weight:800;
   }
   .panel-subtitle{
@@ -219,7 +219,7 @@
     background:rgba(255,255,255,.38);
     border:1px solid rgba(148,163,184,.16);
     border-radius:18px;
-    padding:10px 12px;
+    padding:8px 10px;
     margin-bottom:10px;
     backdrop-filter: blur(10px);
   }
@@ -247,6 +247,17 @@
     background:rgba(219,234,254,.88);
     color:var(--accent);
     border-color:rgba(59,130,246,.28);
+  }
+  .map-toggle-btn, .external-links button{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+  }
+  .map-toggle-btn:hover, .external-links button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 10px 20px rgba(37,99,235,.12);
+    background:rgba(219,234,254,.92);
+  }
+  .map-toggle-btn:active, .external-links button:active{
+    transform:translateY(0) scale(.98);
   }
   .swatch { display:inline-block; width:16px; height:16px; border:1px solid rgba(148,163,184,.5); border-radius:4px; vertical-align:middle; }
   .country-swatch-visited { background:#93c5fd; border-color:#1d4ed8; }
@@ -289,7 +300,7 @@
   .kpi-label{ margin-top:2px; font-size:12px; color:#475569; }
 
     .mini-panel{
-    padding:16px 14px 14px;
+    padding:12px 12px 10px;
   }
   .mini-panel h3{
     margin:0 0 12px;
@@ -404,8 +415,8 @@
   }
   .summary-grid-four{
     display:grid;
-    grid-template-columns:repeat(4, minmax(0,1fr));
-    gap:8px;
+    grid-template-columns:repeat(5, minmax(0,1fr));
+    gap:6px;
   }
 
   .summary-gauge-grid{
@@ -431,8 +442,8 @@
   .gauge{
     --pct: 0;
     --gauge-color: #2563eb;
-    width:120px;
-    height:120px;
+    width:92px;
+    height:92px;
     margin:0 auto;
     border-radius:50%;
     position:relative;
@@ -443,7 +454,7 @@
   .gauge::after{
     content:"";
     position:absolute;
-    inset:10px;
+    inset:8px;
     border-radius:50%;
     background:rgba(255,255,255,.82);
     box-shadow: inset 0 0 0 1px rgba(148,163,184,.10);
@@ -470,7 +481,7 @@
     font-weight:700;
   }
   .summary-mini-card{
-    padding:10px 8px;
+    padding:8px 4px;
     border-radius:16px;
     background:rgba(248,250,252,.48);
     border:1px solid rgba(148,163,184,.10);
@@ -485,7 +496,7 @@
   }
   .summary-mini-card .mini-value{
     margin-top:6px;
-    font-size:18px;
+    font-size:13px;
     font-weight:800;
     color:var(--accent);
     line-height:1;
@@ -566,7 +577,7 @@
   .weekdays, .days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; width:100%; }
   .weekday { text-align:center; font-size:12px; font-weight:700; color:var(--muted); padding-bottom:4px; }
   .day, .empty {
-    min-height:48px;
+    min-height:40px;
     border:1px solid rgba(148,163,184,.12);
     border-radius:12px;
     background:rgba(255,255,255,.74);
@@ -600,10 +611,10 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      left:210px;
-      top:74px;
-      width:min(54vw, 240px);
-      height:620px;
+      left:92px;
+      top:84px;
+      width:min(36vw, 160px);
+      height:380px;
       background-position:left top;
       background-size:contain;
     }
@@ -747,18 +758,26 @@
       <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
       <div id="travelMap" class="country-visited-map"></div>
 
-      <div class="kpi-strip">
+      <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
         <div class="kpi-item">
           <div class="kpi-value" id="heroCountryCount">--</div>
           <div class="kpi-label">Countries</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-value" id="heroCityCount">--</div>
+          <div class="kpi-label">Cities</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-value" id="heroAirportCount">--</div>
+          <div class="kpi-label">Airports</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroFlightCount">--</div>
           <div class="kpi-label">Flights</div>
         </div>
         <div class="kpi-item">
-          <div class="kpi-value" id="heroDaysBottomValue">--</div>
-          <div class="kpi-label">Days Remaining</div>
+          <div class="kpi-value" id="heroRouteCount">--</div>
+          <div class="kpi-label">Routes</div>
         </div>
       </div>
 
@@ -1816,18 +1835,22 @@ function initAbsenceTracker() {
     };
 
     function updateStatusText() {
-      statusText.textContent =
-        `Visited countries: ${counters.visitedCountries} | ` +
-        `Visited cities: ${counters.visitedCities} | ` +
-        `Visited airports: ${counters.visitedAirports} | ` +
-        `Flights taken: ${counters.flightsTaken} | ` +
-        `Routes (pairs) flown: ${counters.routePairs}`;
+      if (statusText) statusText.textContent = "";
 
       const heroCountryCount = document.getElementById("heroCountryCount");
       if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
 
+      const heroCityCount = document.getElementById("heroCityCount");
+      if (heroCityCount) heroCityCount.textContent = String(counters.visitedCities);
+
+      const heroAirportCount = document.getElementById("heroAirportCount");
+      if (heroAirportCount) heroAirportCount.textContent = String(counters.visitedAirports);
+
       const heroFlightCount = document.getElementById("heroFlightCount");
       if (heroFlightCount) heroFlightCount.textContent = String(counters.flightsTaken);
+
+      const heroRouteCount = document.getElementById("heroRouteCount");
+      if (heroRouteCount) heroRouteCount.textContent = String(counters.routePairs);
     }
 
     function applyHoverHighlight(activeCountry) {
