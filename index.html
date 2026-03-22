@@ -673,19 +673,39 @@
 
   .hidden-support, h1, h2, .intro, .footnote{ display:none !important; }
 
+  /* For mobile devices */
   @media (max-width: 560px){
-    .container{ padding:16px 10px 24px; }
+    .container{ padding:16px 16px 24px; }
     .page-girl{
-      right:max(-12px, -2vw);
-      top:clamp(72px, 11vw, 96px);
-      width:min(58vw, 255px);
-      height:clamp(360px, 62vh, 500px);
+      right:-150px;
+      top:18px;
+      width:min(80vw, 400px);
+      height:clamp(480px, 70vh, 560px);
       background-position:right top;
       background-size:contain;
     }
-    .hero-panel{ min-height:430px; padding:22px 14px 14px; overflow:visible;}
-    .hero-copy{ max-width:250px; }
-    .hero-stats{ max-width:250px; }
+    .hero-panel{ min-height:430px; padding:20px 0px 0px;}
+    .hero-copy{ max-width:325px; }
+    .tagline{ max-width:250px;}
+    .hero-stats{ max-width:325px; }
+    .hero-calendar-wrap{
+      max-width:none;
+      width:100%;
+      margin-left:0px;
+      margin-right:0px;
+      padding-left:0px;
+      padding-right:0px;
+    }
+    .hero-calendar-wrap .mini-panel{
+      width:100%;
+      margin-left:0px;
+      margin-right:0px;
+    }
+    .map-panel{
+      width:100%;
+      margin-left:0 !important;
+      margin-right:0 !important;
+    }
     .stat-card{ min-height:92px; padding:10px 8px; }
     .stat-value{ font-size:16px; }
     .country-visited-map{ height:260px; }
