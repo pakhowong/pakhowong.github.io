@@ -62,14 +62,15 @@
   }
   .page-girl{
     position:absolute;
-    inset:0;
-    background:url("./images/travel-girl.png") calc(50% + 160px) 30px / min(56vw, 430px) auto no-repeat;
+    right:-6px;
+    top:74px;
+    width:min(46vw, 360px);
+    height:760px;
+    background:url("./images/travel-girl.png") right top / contain no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
     filter:drop-shadow(0 16px 28px rgba(37,99,235,.12));
-    bottom:-50px;
-    overflow:visible;
   }
   .stack{
     position:relative;
@@ -89,7 +90,7 @@
     backdrop-filter: blur(12px);
   }
   .hero-panel{
-    min-height:470px;
+    min-height:760px;
     padding:28px 18px 18px 0px;
     background:transparent;
     border-color:rgba(255,255,255,0);
@@ -98,6 +99,8 @@
     overflow:visible;
   }
   .hero-copy{ 
+    position:relative;
+    z-index:1;
     max-width:320px; 
     margin-left:0px; 
     padding-left:0px;
@@ -124,6 +127,8 @@
     max-width:340px;
   }
   .hero-calendar-wrap{
+    position:relative;
+    z-index:1;
     margin-top:8px;
     max-width:340px;
     margin-left:0px;
@@ -668,14 +673,12 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      left:210px;
-      top:74px;
-      width:min(54vw, 240px);
-      height:620px;
-      background-position:left top;
+      right:-8px;
+      top:96px;
+      width:min(48vw, 220px);
+      height:430px;
+      background-position:right top;
       background-size:contain;
-      overflow:visible;
-      bottom:-100px;
     }
     .hero-panel{ min-height:430px; padding:22px 14px 14px; overflow:visible;}
     .hero-copy{ max-width:250px; }
@@ -691,8 +694,8 @@
 </head>
 
 <body>
-<div class="page-girl" aria-hidden="true"></div>
 <div class="container">
+  <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
     <section class="panel hero-panel">
       <div class="hero-copy">
@@ -797,6 +800,7 @@
     <section class="panel glass map-panel">
       <div class="panel-header">
         <div>
+          <h3 class="panel-title">Travel Map</h3>
           <div class="panel-subtitle">Travel Map</div>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
