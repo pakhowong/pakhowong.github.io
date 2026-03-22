@@ -72,7 +72,7 @@
     position:relative;
     z-index:1;
     display:grid;
-    gap:18px;
+    gap:14px;
   }
   .panel{
     position:relative;
@@ -102,7 +102,7 @@
   }
   .hero-title .accent{ color:var(--accent); }
   .hero-subtitle{
-    margin-top:10px;
+    margin-top:8px;
     font-size:17px;
     color:#475569;
   }
@@ -114,7 +114,7 @@
     max-width:340px;
   }
   .hero-calendar-wrap{
-    margin-top:12px;
+    margin-top:8px;
     max-width:340px;
     margin-left:18px;
   }
@@ -172,7 +172,7 @@
     justify-content:space-between;
     align-items:flex-start;
     gap:10px;
-    margin-bottom:10px;
+    margin-bottom:8px;
   }
   .panel-title{
     margin:0;
@@ -181,8 +181,9 @@
   }
   .panel-subtitle{
     margin-top:4px;
-    font-size:13px;
-    color:var(--muted);
+    font-size:18px;
+    font-weight:800;
+    color:var(--accent);
   }
   .action-btn, .ghost-btn, .external-links button{
     border:none;
@@ -218,7 +219,7 @@
     border:1px solid rgba(148,163,184,.16);
     border-radius:18px;
     padding:10px 12px;
-    margin-bottom:10px;
+    margin-bottom:8px;
     backdrop-filter: blur(10px);
   }
   .legend-row{
@@ -250,20 +251,39 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-top:10px;
-    margin-bottom:10px;
+    gap:6px;
+    flex-wrap:nowrap;
+    margin-top:6px;
+    margin-bottom:6px;
+    padding:0 6px;
   }
   .travel-map-controls .legend-row{
     margin-top:0;
     flex:1 1 auto;
+    flex-wrap:nowrap;
+    gap:6px;
+  }
+  .map-toggle-btn{
+    padding:4px 8px;
+    font-size:11px;
+    min-height:28px;
+    line-height:1;
   }
   .travel-map-actions{
     display:flex;
-    gap:8px;
-    flex-wrap:wrap;
+    gap:6px;
+    flex-wrap:nowrap;
     justify-content:flex-end;
+    flex:0 0 auto;
+  }
+  .external-links button{
+    padding:4px 8px;
+    font-size:11px;
+    min-height:28px;
+    line-height:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
   .map-toggle-btn, .external-links button{
     transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
@@ -318,7 +338,7 @@
   .kpi-label{ margin-top:2px; font-size:12px; color:#475569; }
 
     .mini-panel{
-    padding:12px 12px 10px;
+    padding:10px 10px 8px;
   }
   .mini-panel h3{
     margin:0 0 12px;
@@ -330,7 +350,7 @@
     border:1px solid rgba(148,163,184,.10);
     border-radius:18px;
     padding:14px;
-    margin-bottom:12px;
+    margin-bottom:8px;
     backdrop-filter: blur(8px);
   }
   .summary-box .kicker{ font-size:13px; font-weight:700; color:#475569; }
@@ -559,6 +579,8 @@
     gap:6px;
     flex-wrap:nowrap;
     align-items:center;
+    width:100%;
+    margin:0 auto;
   }
   .month-nav{
     display:flex;
@@ -683,8 +705,8 @@
     
         <div class="hero-calendar-wrap">
           <section class="panel glass mini-panel">
-            <div class="panel-header" style="margin-bottom:12px;">
-              <h3 style="margin:0; font-size:20px; font-weight:800;">Immigration Calendar</h3>
+            <div class="panel-header" style="margin-bottom:8px;">
+              <h3 style="margin:0; font-size:20px; font-weight:800;"></h3>
               <div class="controls" style="margin:0;">
                 <div class="controls-row">
                   <button type="button" class="month-nav-btn" id="prevMonthBtn" aria-label="Previous month">‹</button>
@@ -709,7 +731,7 @@
           </section>
 
           
-          <section class="panel glass mini-panel" style="margin-top:14px;">
+          <section class="panel glass mini-panel" style="margin-top:10px;">
             <h3>Absence Summary</h3>
             <div class="summary-compact">
               <div class="summary-gauge-grid">
@@ -760,7 +782,7 @@
       <div class="panel-header">
         <div>
           <h2 class="panel-title">Travel Map</h2>
-          <div class="panel-subtitle">Your explored world</div>
+          <div class="panel-subtitle">Your Explored World</div>
         </div>
       </div>
 
@@ -789,13 +811,13 @@
 
       <div class="travel-map-controls">
         <div class="legend-row">
-          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Visited</button>
-          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>City</button>
-          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airport</button>
-          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flight Route</button>
+          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Countries</button>
+          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>Cities</button>
+          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airports</button>
+          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flights</button>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
+          <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
           <button onclick="openExternal('flightradar')">myFlightradar24</button>
         </div>
       </div>
