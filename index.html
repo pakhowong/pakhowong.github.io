@@ -1768,8 +1768,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof L === "undefined") return;
     
     const isMobile = window.innerWidth <= 560;
-    const defaultCentre = isMobile ? [10, 182] : [28, 7];
-    const defaultZoom = isMobile ? 2 : 1.2;
+    const defaultCentre = isMobile ? [28, 7] : [28, 7];
+    const defaultZoom = isMobile ? 0.8 : 1.2;
     const map = L.map("travelMap", {
       worldCopyJump: true,
       zoomSnap: 0.25,
