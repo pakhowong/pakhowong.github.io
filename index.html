@@ -157,13 +157,16 @@
   }
   .stat-icon{
     width:15px;height:15px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
+    display:inline;
+    align-items:center;
+    justify-content:center;
     background:#dbeafe;color:var(--accent);font-weight:800;
   }
   .stat-value{
     font-size:15px;
     font-weight:800;
     line-height:1.05;
+    display:inline;
     color:var(--accent);
   }
   .stat-value.bool-ok{ color:var(--ok); }
@@ -706,12 +709,12 @@
         <div class="hero-stats">
           <div class="stat-card">
             <div class="stat-top">ILR</div>
-            <div><span class="stat-value" id="heroIlrValue">--</span><span class="stat-icon" id="heroIlrIcon">…</span></div>
+            <div><span class="stat-icon" id="heroIlrIcon">…</span> <span class="stat-value" id="heroIlrValue">--</span></div>
             <div class="stat-sub" id="heroIlrWindow">--</div>
           </div>
           <div class="stat-card">
             <div class="stat-top">Citizenship</div>
-            <div><span class="stat-value" id="heroCitValue">--</span><span class="stat-icon" id="heroCitIcon">…</span></div>
+            <div><span class="stat-icon" id="heroCitIcon">…</span> <span class="stat-value" id="heroCitValue">--</span></div>
             <div class="stat-sub" id="heroCitWindow">--</div>
           </div>
           <div class="stat-card">
