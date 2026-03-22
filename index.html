@@ -17,6 +17,14 @@
 <title>Travel History</title>
 
 <style>
+  /*
+    ==========================================================================
+    VISUAL DESIGN TOKENS
+    --------------------------------------------------------------------------
+    These variables control the core colours used across the site.
+    Change these first if you want to reskin the page later.
+    ==========================================================================
+  */
   :root{
     --text:#1d2942;
     --muted:#64748b;
@@ -57,13 +65,25 @@
     z-index:-2;
   }
 
+  /*
+    Main page wrapper:
+    - limits desktop width
+    - centres the site
+    - acts as the positioning context for the decorative girl image
+  */
   .container {
     position:relative;
     max-width:720px;
     margin:0 auto;
     padding:18px 14px 28px;
-    overflow:visible;
+    overflow-x:hidden;
+    overflow-y:visible;
   }
+  /*
+    Decorative character layer.
+    This is taken out of normal layout flow so it can overlap with cards without
+    pushing them around.
+  */
   .page-girl{
     position:absolute;
     right:-12px;
@@ -76,6 +96,10 @@
     opacity:.98;
     filter:drop-shadow(0 16px 28px rgba(37,99,235,.12));
   }
+  /*
+    Main vertical content stack.
+    The `gap` value here controls the spacing between the major sections.
+  */
   .stack{
     position:relative;
     z-index:1;
@@ -93,6 +117,13 @@
     background:var(--card);
     backdrop-filter: blur(12px);
   }
+  /*
+    Top section wrapper.
+    Contains:
+    1) the banner and three headline cards
+    2) the calendar card
+    3) the absence summary card
+  */
   .hero-panel{
     min-height:820px;
     padding:28px 18px 18px 0px;
@@ -105,7 +136,7 @@
   .hero-copy{ 
     position:relative;
     z-index:1;
-    max-width:350px; 
+    max-width:320px; 
     margin-left:0px; 
     padding-left:0px;
   }
@@ -189,6 +220,9 @@
   }
 
 
+  /*
+    Travel Map card wrapper.
+  */
   .map-panel{ padding:14px; }
   .panel-header{
     display:flex;
@@ -197,34 +231,16 @@
     gap:10px;
     margin-bottom:8px;
   }
-  .panel-title{
-    margin:0;
-    font-size:18px;
-    font-weight:800;
-  }
+
   .panel-subtitle{
     margin-top:4px;
     font-size:18px;
     font-weight:800;
     color:var(--accent);
   }
-  .action-btn, .ghost-btn, .external-links button{
-    border:none;
-    border-radius:999px;
-    padding:12px 18px;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .action-btn{
-    background:linear-gradient(135deg,#3b82f6,#2563eb);
-    color:#fff;
-    box-shadow:0 10px 24px rgba(37,99,235,.18);
-  }
-  .ghost-btn{
-    background:rgba(235,242,255,.82);
-    color:var(--accent);
-  }
+
+
+
   .external-links{
     display:flex;
     gap:8px;
@@ -368,116 +384,26 @@
     font-size:20px;
     font-weight:800;
   }
-  .summary-box{
-    background:rgba(248,250,252,.48);
-    border:1px solid rgba(148,163,184,.10);
-    border-radius:18px;
-    padding:14px;
-    margin-bottom:8px;
-    backdrop-filter: blur(8px);
-  }
-  .summary-box .kicker{ 
-    font-size:13px; 
-    font-weight:700; 
-    color:#475569; 
-  }
-  .summary-box .big{
-    margin-top:8px;
-    font-size:21px;
-    font-weight:800;
-    color:var(--accent);
-  }
-  .summary-box .sub{
-    margin-top:4px;
-    font-size:12px;
-    color:#64748b;
-  }
+
+
+
+
 
   .summary-compact{
     display:grid;
     gap:10px;
   }
-  .summary-row{
-    display:grid;
-    grid-template-columns: 1fr auto;
-    gap:10px;
-    align-items:center;
-    padding:10px 12px;
-    border-radius:16px;
-    background:rgba(248,250,252,.48);
-    border:1px solid rgba(148,163,184,.10);
-    backdrop-filter: blur(8px);
-  }
-  .summary-row .label{
-    font-size:13px;
-    font-weight:700;
-    color:#475569;
-    line-height:1.25;
-  }
-  .summary-row .value{
-    font-size:18px;
-    font-weight:800;
-    color:var(--accent);
-    white-space:nowrap;
-  }
-  .summary-row .value.small{
-    font-size:15px;
-  }
-  .summary-badge{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:34px;
-    height:34px;
-    padding:0 10px;
-    border-radius:999px;
-    background:rgba(219,234,254,.92);
-    color:var(--accent);
-    font-size:14px;
-    font-weight:800;
-  }
-  .summary-meter{
-    margin-top:6px;
-    height:8px;
-    border-radius:999px;
-    background:rgba(191,219,254,.45);
-    overflow:visible;
-  }
-  .summary-meter-bar{
-    height:100%;
-    border-radius:999px;
-    background:linear-gradient(90deg, #60a5fa, #2563eb);
-    width:0%;
-  }
 
-  .summary-barometer{
-    position:relative;
-    margin-top:8px;
-    height:28px;
-    border-radius:999px;
-    background:rgba(191,219,254,.45);
-    overflow:hidden;
-    border:1px solid rgba(148,163,184,.12);
-  }
-  .summary-barometer-bar{
-    position:absolute;
-    left:0; top:0; bottom:0;
-    border-radius:999px;
-    background:linear-gradient(90deg, #93c5fd, #2563eb);
-    width:0%;
-  }
-  .summary-barometer-text{
-    position:relative;
-    z-index:1;
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    font-weight:800;
-    color:#1d2942;
-  }
+
+
+
+
+
+
+
+
+
+
   .summary-grid-four{
     display:grid;
     grid-template-columns:repeat(4, minmax(0,1fr));
@@ -567,39 +493,11 @@
     color:var(--accent);
     line-height:1;
   }
-  .check-list{
-    display:grid;
-    gap:8px;
-    margin:12px 0 14px;
-  }
-  .check-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 0;
-    border-top:1px solid rgba(148,163,184,.12);
-  }
-  .check-row:first-child{ border-top:none; }
-  .check-row .label{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-weight:700;
-    color:#334155;
-  }
-  .check-dot{
-    width:18px;height:18px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    background:#dcfce7;color:#16a34a;font-size:11px;font-weight:800;
-  }
-  .check-tick{ font-size:20px; font-weight:800; color:#16a34a; }
 
-  .controls{
-    margin:0;
-    background:transparent;
-    border:none;
-    padding:0;
-  }
+
+
+
+
   .controls-row{
     display:flex;
     justify-content:center;
@@ -609,11 +507,7 @@
     width:100%;
     margin:0 auto;
   }
-  .month-nav{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
+
   .month-nav-btn{
     width:28px;
     height:28px;
@@ -675,9 +569,16 @@
   }
   .leaflet-tooltip.country-tooltip:before { border-top-color: rgba(31,41,55,0.92); }
 
-  .hidden-support, h1, h2, .intro, .footnote{ display:none !important; }
+  .hidden-support{ display:none !important; }
   
-  /* For mobile devices */
+  /*
+    ==========================================================================
+    MOBILE-ONLY LAYOUT RULES
+    --------------------------------------------------------------------------
+    These overrides only apply on narrow screens.
+    Desktop and tablet landscape continue to use the default rules above.
+    ==========================================================================
+  */
   @media (max-width: 560px){
     .container{ 
       padding:0px 16px 24px; 
@@ -728,8 +629,10 @@
 
 <body>
 <div class="container">
+  <!-- Decorative character layer. Purely visual. -->
   <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
+    <!-- HERO SECTION: banner, headline stats, calendar and summary -->
     <section class="panel hero-panel">
       <div class="hero-copy">
         <div class="tagline">
@@ -830,7 +733,8 @@
         </div>
 </section>
 
-    <section class="panel glass map-panel" style="margin-top:-4px;">
+        <!-- TRAVEL MAP SECTION -->
+    <section class="panel glass map-panel">
       <div class="panel-header">
         <div>
           <h3 class="panel-subtitle">Travel Map</h3>
@@ -876,21 +780,11 @@
       <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
       <div id="travelMap" class="country-visited-map"></div>
     </section>
-
-    <div class="bottom-grid">    </div>
-
-    <div class="hidden-support">
-      <div id="ilrPill"></div>
-      <div id="ilrText"></div>
-      <div id="citPill"></div>
-      <div id="citText"></div>
-      <div id="dataText"></div>
-      <div id="today180Text"></div>
-      <div id="today90Text"></div>
-      <div id="currentDateText"></div>
-    </div>
   </div>
 </div>
+</div>
+
+<!-- Behaviour: absence tracker -->
 <script>
 /*
   ============================================================================
@@ -904,6 +798,38 @@
   - Make calculations deterministic and easy to inspect.
   ============================================================================
 */
+
+
+// ---------------------------------------------------------------------------
+// DEBUGGING HELPERS
+// ---------------------------------------------------------------------------
+// Set ENABLE_DEBUG_LOGS to false when you no longer want console output.
+const SITE_DEBUG = {
+  ENABLE_DEBUG_LOGS: true,
+  PREFIX: "[Travel Site]"
+};
+
+function debugLog(step, details = null) {
+  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
+  if (details === null) console.log(`${SITE_DEBUG.PREFIX} ${step}`);
+  else console.log(`${SITE_DEBUG.PREFIX} ${step}`, details);
+}
+
+function debugWarn(step, details = null) {
+  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
+  if (details === null) console.warn(`${SITE_DEBUG.PREFIX} ${step}`);
+  else console.warn(`${SITE_DEBUG.PREFIX} ${step}`, details);
+}
+
+function debugError(step, error) {
+  console.error(`${SITE_DEBUG.PREFIX} ${step}`, error);
+}
+
+function getElementOrWarn(id) {
+  const element = document.getElementById(id);
+  if (!element) debugWarn(`Missing DOM element: #${id}`);
+  return element;
+}
 
 // Data sources loaded from JSON bootstrap (see initSiteData at the end of the file).
 let ABSENCE_RANGES_DATA = [];
@@ -935,6 +861,11 @@ const IMMIGRATION_RULES = {
   }
 };
 
+/**
+ * Convert a YYYY-MM-DD string into a local Date object.
+ * We avoid the browser's built-in Date parser because time zones can create
+ * hard-to-debug differences between browsers.
+ */
 function parseDateLocal(isoDate) {
   const [year, month, day] = isoDate.split("-").map(Number);
   return new Date(year, month - 1, day);
@@ -953,6 +884,13 @@ function addDays(date, offsetDays) {
   return copy;
 }
 
+/**
+ * Expand trip ranges into a Set of individual absent dates.
+ * Example:
+ *   ["2025-01-01", "2025-01-03"]
+ * becomes:
+ *   2025-01-01, 2025-01-02, 2025-01-03
+ */
 function buildAbsenceSet(ranges) {
   const absentDays = new Set();
 
@@ -969,6 +907,10 @@ function buildAbsenceSet(ranges) {
   return absentDays;
 }
 
+/**
+ * Build a lookup table where each day stores the number of absent days in the
+ * previous 365-day window.
+ */
 function buildRollingCounts(siteStart, siteEnd, absentSet, minimumIncludedDate = null) {
   const counts = {};
   let current = parseDateLocal(siteStart);
@@ -1025,9 +967,18 @@ function monthTitle(year, monthIndex) {
   });
 }
 
+
+/**
+ * Calculate all summary numbers and update the visible cards.
+ * The function is intentionally split into logical sections so it is easier for
+ * non-programmers to follow later.
+ */
 function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const { ilr, citizenship, safetyBuffer } = IMMIGRATION_RULES;
 
+  debugLog("Calculating compliance summary");
+
+  // 1) Core compliance calculations
   const ilrResult = getMaxRollingCount(rollingCounts, ilr.start, ilr.end);
   const isIlrCompliant = ilrResult.maxCount <= ilr.rollingLimit;
 
@@ -1037,13 +988,13 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
     citizenship.finalTwelveMonthsStart,
     citizenship.finalTwelveMonthsEnd
   );
+
   const isCitizenshipCompliant =
     citizenshipTotal <= citizenship.totalLimit &&
     citizenshipFinalYear <= citizenship.finalTwelveMonthsLimit;
 
   const today = new Date();
   const todayKey = formatDate(today);
-
   const todayRolling = rollingCounts[todayKey] || 0;
   const remainingIlrDays = ilr.rollingLimit - todayRolling;
 
@@ -1054,70 +1005,56 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const safetyRemaining = safetyBuffer.rollingLimit - safetyUsed;
 
   const totalAbsentDays = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
+  const supportingDocumentCount = Object.keys(DAY_LINKS_DATA).length;
 
-  const ilrPill = document.getElementById("ilrPill");
-  ilrPill.className = `pill ${isIlrCompliant ? "ok" : "bad"}`;
-  ilrPill.textContent = isIlrCompliant ? "ILR compliant" : "ILR not compliant";
+  debugLog("Compliance summary values", {
+    ilrResult,
+    isIlrCompliant,
+    citizenshipTotal,
+    citizenshipFinalYear,
+    isCitizenshipCompliant,
+    todayKey,
+    todayRolling,
+    remainingIlrDays,
+    safetyUsed,
+    safetyRemaining,
+    totalAbsentDays,
+    supportingDocumentCount
+  });
 
-  document.getElementById("ilrText").innerHTML =
-    `Highest rolling 12-month absence count: <strong>${ilrResult.maxCount}</strong> day(s), on <strong>${ilrResult.maxDate}</strong>. Limit: ${ilr.rollingLimit}.`;
-
-  const citPill = document.getElementById("citPill");
-  citPill.className = `pill ${isCitizenshipCompliant ? "ok" : "bad"}`;
-  citPill.textContent = isCitizenshipCompliant ? "Citizenship compliant" : "Citizenship not compliant";
-
-  document.getElementById("citText").innerHTML =
-    `Total absent days in citizenship window: <strong>${citizenshipTotal}</strong> / ${citizenship.totalLimit}.<br>` +
-    `Absent days in final 12 months: <strong>${citizenshipFinalYear}</strong> / ${citizenship.finalTwelveMonthsLimit}.`;
-
-  document.getElementById("dataText").innerHTML =
-    `Trips taken: <strong>${ABSENCE_RANGES_DATA.length}</strong><br>` +
-    `Total number of absent days: <strong>${totalAbsentDays}</strong><br>` +
-    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS_DATA).length}</strong>`;
-
-  document.getElementById("today180Text").innerHTML =
-    `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
-    `Remaining days available under the ILR 180-day rolling limit: <strong>${remainingIlrDays}</strong> day(s).`;
-
-  if (today < safetyStartDate) {
-    document.getElementById("today90Text").innerHTML =
-      `Your self-imposed 90-day rolling rule starts on <strong>${safetyBuffer.start}</strong>.<br>` +
-      `Using <strong>${safetyBuffer.start}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
-      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
-  } else {
-    document.getElementById("today90Text").innerHTML =
-      `As of <strong>${todayKey}</strong>, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
-      `Remaining days available under the 90-day rolling safety buffer rule: <strong>${safetyRemaining}</strong> day(s).`;
-  }
-
-  document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
-
-  const summaryCitTotal = document.getElementById("summaryCitTotal");
+  // 2) Update the circular gauges
+  const summaryCitTotal = getElementOrWarn("summaryCitTotal");
   if (summaryCitTotal) summaryCitTotal.textContent = String(citizenshipTotal);
 
-  const summaryCitGauge = document.getElementById("summaryCitGauge");
-  if (summaryCitGauge) summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
+  const summaryCitGauge = getElementOrWarn("summaryCitGauge");
+  if (summaryCitGauge) {
+    summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
+  }
 
-  const summaryCitFinal = document.getElementById("summaryCitFinal");
+  const summaryCitFinal = getElementOrWarn("summaryCitFinal");
   if (summaryCitFinal) summaryCitFinal.textContent = String(citizenshipFinalYear);
 
-  const summaryCitFinalGauge = document.getElementById("summaryCitFinalGauge");
-  if (summaryCitFinalGauge) summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
+  const summaryCitFinalGauge = getElementOrWarn("summaryCitFinalGauge");
+  if (summaryCitFinalGauge) {
+    summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
+  }
 
-  const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
+  // 3) Update the four summary mini-cards
+  const summarySafetyRemaining = getElementOrWarn("summarySafetyRemaining");
   if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining}d`;
 
-  const summaryTripsTaken = document.getElementById("summaryTripsTaken");
+  const summaryTripsTaken = getElementOrWarn("summaryTripsTaken");
   if (summaryTripsTaken) summaryTripsTaken.textContent = String(ABSENCE_RANGES_DATA.length);
 
-  const summaryTotalAbsent = document.getElementById("summaryTotalAbsent");
+  const summaryTotalAbsent = getElementOrWarn("summaryTotalAbsent");
   if (summaryTotalAbsent) summaryTotalAbsent.textContent = String(totalAbsentDays);
 
-  const summarySupportingDocs = document.getElementById("summarySupportingDocs");
-  if (summarySupportingDocs) summarySupportingDocs.textContent = String(Object.keys(DAY_LINKS_DATA).length);
+  const summarySupportingDocs = getElementOrWarn("summarySupportingDocs");
+  if (summarySupportingDocs) summarySupportingDocs.textContent = String(supportingDocumentCount);
 
-  const heroIlrIcon = document.getElementById("heroIlrIcon");
-  const heroIlrValue = document.getElementById("heroIlrValue");
+  // 4) Update the top headline cards
+  const heroIlrIcon = getElementOrWarn("heroIlrIcon");
+  const heroIlrValue = getElementOrWarn("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
     heroIlrValue.textContent = isIlrCompliant ? "Pass" : "Risk";
@@ -1126,8 +1063,8 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
   }
 
-  const heroCitIcon = document.getElementById("heroCitIcon");
-  const heroCitValue = document.getElementById("heroCitValue");
+  const heroCitIcon = getElementOrWarn("heroCitIcon");
+  const heroCitValue = getElementOrWarn("heroCitValue");
   if (heroCitIcon && heroCitValue) {
     heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
     heroCitValue.textContent = isCitizenshipCompliant ? "Pass" : "Risk";
@@ -1136,30 +1073,16 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
     heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
   }
 
-  const heroIlrWindow = document.getElementById("heroIlrWindow");
+  const heroIlrWindow = getElementOrWarn("heroIlrWindow");
   if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
 
-  const heroCitWindow = document.getElementById("heroCitWindow");
+  const heroCitWindow = getElementOrWarn("heroCitWindow");
   if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
 
-  const heroDaysValue = document.getElementById("heroDaysValue");
+  const heroDaysValue = getElementOrWarn("heroDaysValue");
   if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
-
-  const heroDaysBottomValue = document.getElementById("heroDaysBottomValue");
-  if (heroDaysBottomValue) heroDaysBottomValue.textContent = String(remainingIlrDays);
-
-  const miniDaysRemaining = document.getElementById("miniDaysRemaining");
-  if (miniDaysRemaining) miniDaysRemaining.textContent = `${remainingIlrDays} days remaining`;
-
-  const miniDaysReference = document.getElementById("miniDaysReference");
-  if (miniDaysReference) miniDaysReference.textContent = todayKey;
-
-  const miniIlrTick = document.getElementById("miniIlrTick");
-  if (miniIlrTick) miniIlrTick.textContent = isIlrCompliant ? "✓" : "✕";
-
-  const miniCitTick = document.getElementById("miniCitTick");
-  if (miniCitTick) miniCitTick.textContent = isCitizenshipCompliant ? "✓" : "✕";
 }
+
 
 function createDayCell(date, absentSet, rollingCounts) {
   const key = formatDate(date);
@@ -1284,7 +1207,11 @@ function openExternal(type) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
+/**
+ * Initialise the absence tracker once the required JSON files have loaded.
+ */
 function initAbsenceTracker() {
+  debugLog("Initialising absence tracker");
   const absentSet = buildAbsenceSet(ABSENCE_RANGES_DATA);
   const rollingCounts = buildRollingCounts(
     IMMIGRATION_RULES.siteStart,
@@ -1325,9 +1252,11 @@ function initAbsenceTracker() {
     year = Math.max(2024, Math.min(2031, year));
     yearPicker.value = String(year);
     monthPicker.value = String(month);
-    renderSelectedMonth();
+    debugLog("Rendering initial calendar month", { year: yearPicker.value, month: monthPicker.value });
+  renderSelectedMonth();
   };
 
+  debugLog("Rendering initial calendar month", { year: yearPicker.value, month: monthPicker.value });
   renderSelectedMonth();
   yearPicker.addEventListener("change", renderSelectedMonth);
   monthPicker.addEventListener("change", renderSelectedMonth);
@@ -1338,6 +1267,7 @@ function initAbsenceTracker() {
 
 </script>
 
+<!-- External library used by the travel map -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
@@ -1843,9 +1773,19 @@ function initAbsenceTracker() {
   // 5) Travel map bootstrap
   // --------------------------------------------------------------------------
 
+  /**
+   * Build the interactive travel map.
+   * This function:
+   * 1) creates the map
+   * 2) loads visited countries
+   * 3) loads city pins
+   * 4) loads airports and flight routes
+   * 5) wires up hover highlighting and toggle buttons
+   */
   window.initTravelMap = function initTravelMap() {
-    const mapContainer = document.getElementById("travelMap");
-    const statusText = document.getElementById("travelMapStatusText");
+    debugLog("Initialising travel map");
+    const mapContainer = getElementOrWarn("travelMap");
+    const statusText = getElementOrWarn("travelMapStatusText");
     if (!mapContainer || typeof L === "undefined") return;
 
     const map = L.map("travelMap", {
@@ -1926,6 +1866,7 @@ function initAbsenceTracker() {
 
     function updateStatusText() {
       if (statusText) statusText.textContent = "";
+      debugLog("Travel map counters updated", counters);
 
       const heroCountryCount = document.getElementById("heroCountryCount");
       if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
@@ -2031,6 +1972,7 @@ function initAbsenceTracker() {
     }
 
     async function loadVisitedCountries() {
+      debugLog("Loading visited country polygons");
       const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
       const visitedCountries = Array.isArray(window.VISITED_COUNTRIES_DATA) ? window.VISITED_COUNTRIES_DATA : [];
       const targetNames = visitedCountries.flatMap(country => {
@@ -2081,6 +2023,7 @@ function initAbsenceTracker() {
     }
 
     async function loadFlightHistory() {
+      debugLog("Loading flight history and airport datasets");
       const [csvText, mwggAirports, openFlightsData] = await Promise.all([
         fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
         fetchJsonWithFallback(TRAVEL_MAP_CONFIG.mwggAirportUrls),
@@ -2289,13 +2232,14 @@ function initAbsenceTracker() {
       .catch(error => {
         statusText.textContent = "Unable to load the travel map right now.";
         mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-        console.error("Travel map load failed:", error);
+        debugError("Travel map load failed", error);
       });
   }
 
 })();
 </script>
 
+<!-- Behaviour: initial data loading and startup -->
 <script>
 /*
   ============================================================================
@@ -2310,7 +2254,13 @@ function initAbsenceTracker() {
     /data/city_pins.json
   ============================================================================
 */
+/**
+ * Load one local JSON file.
+ * A dedicated helper means every JSON file passes through the same error and
+ * debug checkpoint.
+ */
 async function fetchLocalJson(path) {
+  debugLog(`Loading local JSON: ${path}`);
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
     throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
@@ -2318,6 +2268,10 @@ async function fetchLocalJson(path) {
   return response.json();
 }
 
+/**
+ * Main startup function for the whole site.
+ * Nothing should render until the required data files are ready.
+ */
 async function initSiteData() {
   try {
     const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
@@ -2328,6 +2282,12 @@ async function initSiteData() {
     ]);
 
     ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
+    debugLog("Primary JSON datasets loaded", {
+      absenceRanges: ABSENCE_RANGES_DATA.length,
+      dayLinks: Object.keys(dayLinks || {}).length,
+      cityPins: Array.isArray(cityPins) ? cityPins.length : 0,
+      visitedCountriesRaw: Array.isArray(visitedCountries) ? visitedCountries.length : 0
+    });
     DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
     window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
 
@@ -2340,7 +2300,7 @@ async function initSiteData() {
     try {
       initAbsenceTracker();
     } catch (error) {
-      console.error("Absence tracker init failed:", error);
+      debugError("Absence tracker init failed", error);
       const months = document.getElementById("months");
       if (months) {
         months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
@@ -2354,7 +2314,7 @@ async function initSiteData() {
         throw new Error("initTravelMap is not available");
       }
     } catch (error) {
-      console.error("Travel map init failed:", error);
+      debugError("Travel map init failed", error);
       const travelMapStatus = document.getElementById("travelMapStatusText");
       if (travelMapStatus) {
         travelMapStatus.textContent = "Unable to load the travel map right now."; console.error(error);
@@ -2365,7 +2325,7 @@ async function initSiteData() {
       }
     }
   } catch (error) {
-    console.error("Initial data load failed:", error);
+    debugError("Initial data load failed", error);
 
     const months = document.getElementById("months");
     if (months) {
