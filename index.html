@@ -68,7 +68,7 @@
     z-index:0;
     opacity:.98;
     filter:drop-shadow(0 16px 28px rgba(37,99,235,.12));
-    bottom:-20px;
+    bottom:-50px;
     overflow:visible;
   }
   .stack{
@@ -348,7 +348,7 @@
   .kpi-value{ font-size:18px; font-weight:800; color:var(--accent); }
   .kpi-label{ margin-top:2px; font-size:12px; color:#475569; }
 
-    .mini-panel{
+  .mini-panel{
     padding:10px 10px 8px;
   }
   .mini-panel h3{
@@ -364,7 +364,11 @@
     margin-bottom:8px;
     backdrop-filter: blur(8px);
   }
-  .summary-box .kicker{ font-size:13px; font-weight:700; color:#475569; }
+  .summary-box .kicker{ 
+    font-size:13px; 
+    font-weight:700; 
+    color:#475569; 
+  }
   .summary-box .big{
     margin-top:8px;
     font-size:21px;
@@ -425,7 +429,7 @@
     height:8px;
     border-radius:999px;
     background:rgba(191,219,254,.45);
-    overflow:hidden;
+    overflow:visible;
   }
   .summary-meter-bar{
     height:100%;
@@ -670,10 +674,10 @@
       height:620px;
       background-position:left top;
       background-size:contain;
+      overflow:visible;
+      bottom:-50px;
     }
-    .hero-panel{ min-height:430px; padding:22px 14px 14px; }
-    .hero-title{ font-size:42px; max-width:250px; }
-    .hero-subtitle{ font-size:15px; max-width:220px; }
+    .hero-panel{ min-height:430px; padding:22px 14px 14px; overflow:visible;}
     .hero-copy{ max-width:250px; }
     .hero-stats{ max-width:250px; }
     .stat-card{ min-height:92px; padding:10px 8px; }
@@ -744,24 +748,24 @@
 
           
           <section class="panel glass mini-panel" style="margin-top:10px;">
-            <h3>Absence Summary</h3>
+            <h3 class="panel-subtitle">Absence from the UK</h3>
             <div class="summary-compact">
               <div class="summary-gauge-grid">
                 <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Citizenship days used</div>
+                  <div class="summary-gauge-label">Quota for citizenship</div>
                   <div class="gauge" id="summaryCitGauge">
                     <div class="gauge-text">
                       <div class="gauge-number" id="summaryCitTotal">--</div>
-                      <div class="gauge-sub">of 450</div>
+                      <div class="gauge-sub">of 450 days</div>
                     </div>
                   </div>
                 </div>
                 <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Final 12 months used</div>
+                  <div class="summary-gauge-label">Absence in final 12 months</div>
                   <div class="gauge" id="summaryCitFinalGauge">
                     <div class="gauge-text">
                       <div class="gauge-number" id="summaryCitFinal">--</div>
-                      <div class="gauge-sub">of 90</div>
+                      <div class="gauge-sub">of 90 days</div>
                     </div>
                   </div>
                 </div>
@@ -773,7 +777,7 @@
                   <div class="mini-value" id="summarySafetyRemaining">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Trips</div>
+                  <div class="mini-label">Trips taken</div>
                   <div class="mini-value" id="summaryTripsTaken">--</div>
                 </div>
                 <div class="summary-mini-card">
@@ -781,7 +785,7 @@
                   <div class="mini-value" id="summaryTotalAbsent">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Docs</div>
+                  <div class="mini-label">Flight tickets</div>
                   <div class="mini-value" id="summarySupportingDocs">--</div>
                 </div>
               </div>
@@ -794,7 +798,7 @@
       <div class="panel-header">
         <div>
           <h2 class="panel-title">Travel Map</h2>
-          <div class="panel-subtitle">Your Explored World</div>
+          <div class="panel-subtitle">Travel Map</div>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
           <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
@@ -805,23 +809,23 @@
       <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
         <div class="kpi-item">
           <div class="kpi-value" id="heroCountryCount">--</div>
-          <div class="kpi-label">Countries</div>
+          <div class="kpi-label">Countries Visited</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroCityCount">--</div>
-          <div class="kpi-label">Cities</div>
+          <div class="kpi-label">Cities Visited</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroAirportCount">--</div>
-          <div class="kpi-label">Airports</div>
+          <div class="kpi-label">Airports Visited</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroFlightCount">--</div>
-          <div class="kpi-label">Flights</div>
+          <div class="kpi-label">Flights Taken</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-value" id="heroRouteCount">--</div>
-          <div class="kpi-label">Routes</div>
+          <div class="kpi-label">Routes Flown</div>
         </div>
       </div>
 
