@@ -1836,7 +1836,7 @@ function initAbsenceTracker() {
         return { color: "#1d4ed8", weight: 1.5, fillColor: "#93c5fd", fillOpacity: 0.6, opacity: 1 };
       },
       cityBase() {
-        return { radius: 2.1, color: "#b45309", weight: 1, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
+        return { radius: 2.5, color: "#b45309", weight: 1, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
       },
       airportBase() {
         return { radius: 1.5, color: "#1e3a8a", weight: 0.5, fillColor: "#1d4ed8", fillOpacity: 0.8, opacity: 1 };
@@ -1903,7 +1903,7 @@ function initAbsenceTracker() {
         const related = hoveredCountry && entry.countries.includes(hoveredCountry);
         const routeStyle = hoveredCountry
           ? (related ? { weight: 2.2, opacity: 1 } : { weight: 0.6, opacity: 0.18 })
-          : { weight: 1.15, opacity: 1 };
+          : { weight: 1.2, opacity: 0.8 };
 
         entry.polylines.forEach(polyline => polyline.setStyle(routeStyle));
       });
@@ -2178,8 +2178,8 @@ function initAbsenceTracker() {
           const polyline = L.polyline(segment, {
             pane: "routePane",
             color: routeColor,
-            weight: 2.3,
-            opacity: 1,
+            weight: 2.5,
+            opacity: 0.8,
             smoothFactor: 1,
             noClip: true
           })
