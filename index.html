@@ -218,8 +218,7 @@
     color:#64748b;
     margin-top:2px;
   }
-
-
+  
   /*
     Travel Map card wrapper.
   */
@@ -238,9 +237,7 @@
     font-weight:800;
     color:var(--accent);
   }
-
-
-
+  
   .external-links{
     display:flex;
     gap:8px;
@@ -386,33 +383,16 @@
     font-size:20px;
     font-weight:800;
   }
-
-
-
-
-
   .summary-compact{
     display:grid;
     gap:10px;
   }
-
-
-
-
-
-
-
-
-
-
-
   .summary-grid-four{
     display:grid;
     grid-template-columns:repeat(4, minmax(0,1fr));
     gap:10px;
     width:100%;
   }
-
   .summary-gauge-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -495,10 +475,6 @@
     color:var(--accent);
     line-height:1;
   }
-
-
-
-
 
   .controls-row{
     display:flex;
@@ -702,7 +678,7 @@
                   </div>
                 </div>
                 <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Final 12 months</div>
+                  <div class="summary-gauge-label">Final 12 months (citizenship)</div>
                   <div class="gauge" id="summaryCitFinalGauge">
                     <div class="gauge-text">
                       <div class="gauge-number" id="summaryCitFinal">--</div>
@@ -726,7 +702,7 @@
                   <div class="mini-value" id="summaryTotalAbsent">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Flight tickets</div>
+                  <div class="mini-label">Flights logged</div>
                   <div class="mini-value" id="summarySupportingDocs">--</div>
                 </div>
               </div>
@@ -1059,7 +1035,7 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroIlrValue = getElementOrWarn("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "Pass" : "Risk";
+    heroIlrValue.textContent = isIlrCompliant ? "OK" : "Fail";
     heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
     heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
@@ -1076,10 +1052,10 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   }
 
   const heroIlrWindow = getElementOrWarn("heroIlrWindow");
-  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
+  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sept 2029";
 
   const heroCitWindow = getElementOrWarn("heroCitWindow");
-  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
+  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sept 2030";
 
   const heroDaysValue = getElementOrWarn("heroDaysValue");
   if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
@@ -1185,7 +1161,7 @@ function populateYearPicker() {
 
 function populateMonthPicker() {
   const picker = document.getElementById("monthPicker");
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   monthNames.forEach((name, index) => {
     const option = document.createElement("option");
