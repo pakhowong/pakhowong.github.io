@@ -1766,12 +1766,15 @@ function initAbsenceTracker() {
     const mapContainer = getElementOrWarn("travelMap");
     const statusText = getElementOrWarn("travelMapStatusText");
     if (!mapContainer || typeof L === "undefined") return;
-
+    
+    const isMobile = window.innerWidth <= 560;
+    const defaultCentre = isMobile ? [10, 182] : [28, 7];
+    const defaultZoom = isMobile ? 2 : 1.2;
     const map = L.map("travelMap", {
       worldCopyJump: true,
       zoomSnap: 0.25,
       zoomControl: true
-    }).setView([28, 7], 1.2);  
+    }).setView([defaultCentre, defaultZoom);  
     /* 
       setView function
         var 1: latitude (lower = map moves upwards)
