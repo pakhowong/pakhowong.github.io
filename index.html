@@ -60,7 +60,7 @@
     padding:18px 14px 28px;
   }
   .page-girl{
-    position:fixed;
+    position:absolute;
     inset:0;
     background:url("./images/travel-girl.png") calc(50% + 160px) 30px / min(56vw, 430px) auto no-repeat;
     pointer-events:none;
@@ -784,6 +784,10 @@
           <h2 class="panel-title">Travel Map</h2>
           <div class="panel-subtitle">Your Explored World</div>
         </div>
+        <div class="travel-map-actions external-links" style="margin-top:0;">
+          <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
+          <button onclick="openExternal('flightradar')">myFlightradar24</button>
+        </div>
       </div>
 
       <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
@@ -815,10 +819,6 @@
           <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>Cities</button>
           <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airports</button>
           <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flights</button>
-        </div>
-        <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
-          <button onclick="openExternal('flightradar')">myFlightradar24</button>
         </div>
       </div>
 
