@@ -98,19 +98,6 @@
     margin-left:0px; 
     padding-left:0px;
   }
-  .hero-title{
-    margin:0;
-    font-size:56px;
-    line-height:.93;
-    letter-spacing:-.045em;
-    font-weight:800;
-  }
-  .hero-title .accent{ color:var(--accent); }
-  .hero-subtitle{
-    margin-top:8px;
-    font-size:17px;
-    color:#475569;
-  }
   .hero-stats{
     display:grid;
     grid-template-columns:repeat(3, minmax(0,1fr));
@@ -679,6 +666,21 @@
   }
 </style>
 
+
+<style>
+.header-banner {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.tagline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+
 </head>
 
 <body>
@@ -687,8 +689,6 @@
   <div class="stack">
     <section class="panel hero-panel">
       <div class="hero-copy">
-        <h1 class="hero-title">Let’s Explore<br>the <span class="accent">World ✈️ 🌍</span></h1>
-        <div class="hero-subtitle">Every journey leaves a story behind</div>
 
         <div class="hero-stats">
           <div class="stat-card">
