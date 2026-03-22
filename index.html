@@ -1771,7 +1771,7 @@ function initAbsenceTracker() {
       worldCopyJump: true,
       zoomSnap: 0.25,
       zoomControl: true
-    }).setView([20, 0], 2);
+    }).setView([12, 182], 1.25);
 
     map.createPane("countryPane");
     map.getPane("countryPane").style.zIndex = 400;
@@ -1995,10 +1995,6 @@ function initAbsenceTracker() {
       addCityMarkers();
 
       const bounds = visitedLayer.getBounds();
-      if (bounds.isValid()) {
-        map.fitBounds(bounds.pad(0.12));
-        map.setZoom(2);
-      }
     }
 
     async function loadFlightHistory() {
@@ -2178,7 +2174,7 @@ function initAbsenceTracker() {
           const polyline = L.polyline(segment, {
             pane: "routePane",
             color: routeColor,
-            weight: 2.5,
+            weight: 1.2,
             opacity: 0.8,
             smoothFactor: 1,
             noClip: true
