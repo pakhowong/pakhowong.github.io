@@ -1771,7 +1771,13 @@ function initAbsenceTracker() {
       worldCopyJump: true,
       zoomSnap: 0.25,
       zoomControl: true
-    }).setView([28, 10], 1.2);
+    }).setView([28, 7], 1.2);  
+    /* 
+      setView function
+        var 1: latitude (lower = map moves upwards)
+        var 2: longtitude (lower = map moves left)
+        var 3: zoom level
+    */
 
     map.createPane("countryPane");
     map.getPane("countryPane").style.zIndex = 400;
