@@ -62,10 +62,10 @@
   }
   .page-girl{
     position:absolute;
-    right:-6px;
-    top:74px;
-    width:min(46vw, 360px);
-    height:760px;
+    right:-12px;
+    top:38px;
+    width:min(52vw, 430px);
+    height:900px;
     background:url("./images/travel-girl.png") right top / contain no-repeat;
     pointer-events:none;
     z-index:0;
@@ -76,7 +76,7 @@
     position:relative;
     z-index:1;
     display:grid;
-    gap:14px;
+    gap:10px;
   }
   .panel{
     position:relative;
@@ -90,7 +90,7 @@
     backdrop-filter: blur(12px);
   }
   .hero-panel{
-    min-height:760px;
+    min-height:820px;
     padding:28px 18px 18px 0px;
     background:transparent;
     border-color:rgba(255,255,255,0);
@@ -673,10 +673,10 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      right:-8px;
-      top:96px;
-      width:min(48vw, 220px);
-      height:430px;
+      right:-10px;
+      top:82px;
+      width:min(56vw, 255px);
+      height:500px;
       background-position:right top;
       background-size:contain;
     }
@@ -705,14 +705,14 @@
 
         <div class="hero-stats">
           <div class="stat-card">
-            <div class="stat-top"><span>ILR</span><span class="stat-icon" id="heroIlrIcon">…</span></div>
-            <div class="stat-value" id="heroIlrValue">--</div>
-            <div class="stat-sub" id="heroIlrWindow">1 Oct 2024 – 30 Sep 2029</div>
+            <div class="stat-top"><span>ILR</span></div>
+            <div class="stat-value" id="heroIlrValue"><span>--</span><span class="stat-icon" id="heroIlrIcon">…</span></div>
+            <div class="stat-sub" id="heroIlrWindow">1 Oct 2024 – 30 Sept 2029</div>
           </div>
           <div class="stat-card">
-            <div class="stat-top"><span>Citizenship</span><span class="stat-icon" id="heroCitIcon">…</span></div>
-            <div class="stat-value" id="heroCitValue">--</div>
-            <div class="stat-sub" id="heroCitWindow">1 Oct 2025 – 30 Sep 2030</div>
+            <div class="stat-top"><span>Citizenship</span></div>
+            <div class="stat-value" id="heroCitValue"><span>--</span><span class="stat-icon" id="heroCitIcon">…</span></div>
+            <div class="stat-sub" id="heroCitWindow">1 Oct 2025 – 30 Sept 2030</div>
           </div>
           <div class="stat-card">
             <div class="stat-top"><span>Days</span><span class="stat-icon">📅</span></div>
@@ -797,10 +797,9 @@
         </div>
 </section>
 
-    <section class="panel glass map-panel">
+    <section class="panel glass map-panel" style="margin-top:-4px;">
       <div class="panel-header">
         <div>
-          <h3 class="panel-title">Travel Map</h3>
           <div class="panel-subtitle">Travel Map</div>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
