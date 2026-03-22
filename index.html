@@ -1832,10 +1832,10 @@ function initAbsenceTracker() {
   }
 
   function getRouteColor(flightCount) {
-    if (flightCount >= 20) return "#7c3aed"; // purple
-    if (flightCount >= 10) return "#ef4444"; // red
-    if (flightCount >= 5) return "#f97316";  // strong orange
-    if (flightCount >= 2) return "#fb923c";  // light orange
+    if (flightCount >= 5) return "#7c3aed"; // purple
+    if (flightCount == 4) return "#ef4444"; // red
+    if (flightCount == 3) return "#f97316";  // strong orange
+    if (flightCount == 2) return "#fb923c";  // light orange
     return "#fdba74";                        // very light orange
   }
 
@@ -1920,7 +1920,7 @@ function initAbsenceTracker() {
         return { radius: 3, color: "#b45309", weight: 1.5, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
       },
       airportBase() {
-        return { radius: 2.2, color: "#1e3a8a", weight: 1.2, fillColor: "#1d4ed8", fillOpacity: 0.8, opacity: 1 };
+        return { radius: 2.2, color: "#ffffff", weight: 1.2, fillColor: "#7db8ff", fillOpacity: 0.8, opacity: 1 };
       }
     };
 
@@ -1973,8 +1973,8 @@ function initAbsenceTracker() {
         entry.marker.setStyle(
           hoveredCountry
             ? (related
-                ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
-                : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
+                ? { radius: 4.2, color: "#ffffff", weight: 1.8, fillColor: "#58a8ff", fillOpacity: 1, opacity: 1 }
+                : { radius: 2.2, color: "#ffffff", weight: 1, fillColor: "#b8d8ff", fillOpacity: 0.2, opacity: 0.22 })
             : styles.airportBase()
         );
       });
