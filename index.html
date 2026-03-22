@@ -673,10 +673,10 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      right:-10px;
-      top:82px;
-      width:min(56vw, 255px);
-      height:auto;
+      right:max(-12px, -2vw);
+      top:clamp(72px, 11vw, 96px);
+      width:min(58vw, 255px);
+      height:clamp(360px, 62vh, 500px);
       background-position:right top;
       background-size:contain;
     }
