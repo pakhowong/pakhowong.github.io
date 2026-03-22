@@ -355,12 +355,7 @@
     height:338px;
     border-radius:20px;
     overflow:hidden;
-    background:linear-gradient(180deg, #eaf4ff 0%, #d9ebff 100%);
-    filter:saturate(0.96) brightness(1.03);
-  }
-
-  .route-glow {
-    filter: drop-shadow(0 0 3px rgba(120, 182, 255, 0.55));
+    background:#dce9ff;
   }
   .kpi-strip{
     display:grid;
@@ -552,19 +547,6 @@
     font-size: 12px;
   }
   .leaflet-tooltip.country-tooltip:before { border-top-color: rgba(31,41,55,0.92); }
-
-  .leaflet-control-zoom a,
-  .leaflet-bar a {
-    background: rgba(255,255,255,0.82) !important;
-    color: #4f7cff !important;
-    border: 1px solid rgba(183, 207, 253, 0.8) !important;
-    backdrop-filter: blur(8px);
-  }
-
-  .leaflet-control-zoom a:hover,
-  .leaflet-bar a:hover {
-    background: rgba(234, 244, 255, 0.95) !important;
-  }
 
   .hidden-support{ display:none !important; }
   
@@ -1807,14 +1789,13 @@ function initAbsenceTracker() {
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
       attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       subdomains: "abcd",
-      maxZoom: 10
+      maxZoom: 8
     }).addTo(map);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
       attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       subdomains: "abcd",
-      maxZoom: 10,
-      opacity: 0.72,
+      maxZoom: 8,
       pane: "labelPane"
     }).addTo(map);
 
@@ -1852,33 +1833,13 @@ function initAbsenceTracker() {
     // Base layer styles. These are reused when hover state is cleared.
     const styles = {
       countryBase() {
-        return {
-          color: "#b7cffd",
-          weight: 1.2,
-          fillColor: "#9ec5ff",
-          fillOpacity: 0.62,
-          opacity: 1
-        };
+        return { color: "#1d4ed8", weight: 1.5, fillColor: "#93c5fd", fillOpacity: 0.6, opacity: 1 };
       },
       cityBase() {
-        return {
-          radius: 4,
-          color: "#ffffff",
-          weight: 1.2,
-          fillColor: "#7db8ff",
-          fillOpacity: 0.96,
-          opacity: 1
-        };
+        return { radius: 3, color: "#b45309", weight: 1.5, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
       },
       airportBase() {
-        return {
-          radius: 3,
-          color: "#ffffff",
-          weight: 1,
-          fillColor: "#5a8dff",
-          fillOpacity: 0.88,
-          opacity: 1
-        };
+        return { radius: 2.2, color: "#1e3a8a", weight: 1.2, fillColor: "#1d4ed8", fillOpacity: 0.8, opacity: 1 };
       }
     };
 
@@ -1910,20 +1871,8 @@ function initAbsenceTracker() {
         entry.layer.setStyle(
           hoveredCountry
             ? (related
-                ? {
-                    color: "#6f9cff",
-                    weight: 2.2,
-                    fillColor: "#78b6ff",
-                    fillOpacity: 0.9,
-                    opacity: 1
-                  }
-                : {
-                    color: "#cfe0ff",
-                    weight: 1,
-                    fillColor: "#eaf2ff",
-                    fillOpacity: 0.18,
-                    opacity: 0.26
-                  })
+                ? { color: "#1d4ed8", weight: 2.4, fillColor: "#60a5fa", fillOpacity: 0.82, opacity: 1 }
+                : { color: "#1d4ed8", weight: 1, fillColor: "#93c5fd", fillOpacity: 0.18, opacity: 0.22 })
             : styles.countryBase()
         );
       });
@@ -1933,22 +1882,8 @@ function initAbsenceTracker() {
         entry.marker.setStyle(
           hoveredCountry
             ? (related
-                ? {
-                    radius: 5.5,
-                    color: "#ffffff",
-                    weight: 1.8,
-                    fillColor: "#58a8ff",
-                    fillOpacity: 1,
-                    opacity: 1
-                  }
-                : {
-                    radius: 4,
-                    color: "#ffffff",
-                    weight: 1,
-                    fillColor: "#b8d8ff",
-                    fillOpacity: 0.22,
-                    opacity: 0.22
-                  })
+                ? { radius: 5.2, color: "#92400e", weight: 2.2, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
+                : { radius: 3, color: "#b45309", weight: 1.2, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
             : styles.cityBase()
         );
       });
@@ -1958,22 +1893,8 @@ function initAbsenceTracker() {
         entry.marker.setStyle(
           hoveredCountry
             ? (related
-                ? {
-                    radius: 4.5,
-                    color: "#ffffff",
-                    weight: 1.5,
-                    fillColor: "#3d7eff",
-                    fillOpacity: 1,
-                    opacity: 1
-                  }
-                : {
-                    radius: 3,
-                    color: "#ffffff",
-                    weight: 1,
-                    fillColor: "#aac8ff",
-                    fillOpacity: 0.2,
-                    opacity: 0.22
-                  })
+                ? { radius: 4.2, color: "#1e3a8a", weight: 1.8, fillColor: "#2563eb", fillOpacity: 1, opacity: 1 }
+                : { radius: 2.2, color: "#1e3a8a", weight: 1, fillColor: "#1d4ed8", fillOpacity: 0.2, opacity: 0.22 })
             : styles.airportBase()
         );
       });
@@ -1981,10 +1902,8 @@ function initAbsenceTracker() {
       registries.routes.forEach(entry => {
         const related = hoveredCountry && entry.countries.includes(hoveredCountry);
         const routeStyle = hoveredCountry
-          ? (related
-              ? { weight: 3.4, opacity: 0.92 }
-              : { weight: 1.1, opacity: 0.12 })
-          : { weight: 2.2, opacity: 0.58 };
+          ? (related ? { weight: 4.4, opacity: 1 } : { weight: 1.2, opacity: 0.18 })
+          : { weight: 2.3, opacity: 1 };
 
         entry.polylines.forEach(polyline => polyline.setStyle(routeStyle));
       });
@@ -2245,7 +2164,7 @@ function initAbsenceTracker() {
         const totalFlightsOnPair = Array.from(routePair.directions.values())
           .reduce((sum, direction) => sum + direction.flights.length, 0);
 
-        const routeColor = "#78b6ff";
+        const routeColor = getRouteColor(totalFlightsOnPair);
         const tooltipHtml = Array.from(routePair.directions.values())
           .map(direction =>
             `${direction.fromAirport} (${direction.fromIata}) → ${direction.toAirport} (${direction.toIata})<br>` +
@@ -2259,14 +2178,10 @@ function initAbsenceTracker() {
           const polyline = L.polyline(segment, {
             pane: "routePane",
             color: routeColor,
-            weight: 2.2,
-            opacity: 0.58,
+            weight: 2.3,
+            opacity: 1,
             smoothFactor: 1,
-            noClip: true,
-            dashArray: "6 8",
-            lineCap: "round",
-            lineJoin: "round",
-            className: "route-glow"
+            noClip: true
           })
           .addTo(layers.route)
           .bindTooltip(tooltipHtml, {
