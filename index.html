@@ -247,6 +247,7 @@
   .external-links button{
     background:var(--accent);
     border-radius:999px;
+    border-color:var(--border);
     color:white;
     box-shadow:0 8px 18px rgba(15,23,42,.05);
   }
@@ -1035,7 +1036,7 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroIlrValue = getElementOrWarn("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "OK" : "Fail";
+    heroIlrValue.textContent = isIlrCompliant ? "OK" : "FAIL";
     heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
     heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
@@ -1045,7 +1046,7 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroCitValue = getElementOrWarn("heroCitValue");
   if (heroCitIcon && heroCitValue) {
     heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
-    heroCitValue.textContent = isCitizenshipCompliant ? "Pass" : "Risk";
+    heroCitValue.textContent = isCitizenshipCompliant ? "OK" : "FAIL";
     heroCitValue.className = `stat-value ${isCitizenshipCompliant ? "bool-ok" : "bool-bad"}`;
     heroCitIcon.style.background = isCitizenshipCompliant ? "#dcfce7" : "#fee2e2";
     heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
