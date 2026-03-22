@@ -61,19 +61,24 @@
   }
   .page-girl{
     position:absolute;
-    inset:0;
-    background:url("./images/travel-girl.png") calc(50% + 160px) 30px / min(56vw, 430px) auto no-repeat;
+    right:-18px;
+    bottom:-28px;
+    left:auto;
+    top:auto;
+    width:min(46vw, 360px);
+    height:min(82vh, 760px);
+    background:url("./images/travel-girl.png") right bottom / contain no-repeat;
     pointer-events:none;
     z-index:0;
     opacity:.98;
     filter:drop-shadow(0 16px 28px rgba(37,99,235,.12));
-    bottom:-20px;
   }
   .stack{
     position:relative;
     z-index:1;
     display:grid;
     gap:14px;
+    overflow:visible;
   }
   .panel{
     position:relative;
@@ -87,7 +92,7 @@
     backdrop-filter: blur(12px);
   }
   .hero-panel{
-    min-height:470px;
+    min-height:760px;
     padding:28px 18px 18px 0px;
     background:transparent;
     border-color:rgba(255,255,255,0);
@@ -96,6 +101,8 @@
     overflow:visible;
   }
   .hero-copy{ 
+    position:relative;
+    z-index:1;
     max-width:320px; 
     margin-left:0px; 
     padding-left:0px;
@@ -122,6 +129,8 @@
     max-width:340px;
   }
   .hero-calendar-wrap{
+    position:relative;
+    z-index:1;
     margin-top:8px;
     max-width:340px;
     margin-left:0px;
@@ -662,11 +671,13 @@
   @media (max-width: 560px){
     .container{ padding:16px 10px 24px; }
     .page-girl{
-      left:210px;
-      top:74px;
-      width:min(54vw, 240px);
-      height:620px;
-      background-position:left top;
+      right:-8px;
+      bottom:-18px;
+      left:auto;
+      top:auto;
+      width:min(48vw, 220px);
+      height:420px;
+      background-position:right bottom;
       background-size:contain;
     }
     .hero-panel{ min-height:430px; padding:22px 14px 14px; }
