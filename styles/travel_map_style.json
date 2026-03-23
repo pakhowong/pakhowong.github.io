@@ -1,47 +1,57 @@
 {
   "version": 8,
-  "name": "Anime Travel Map",
+  "name": "Travel Map Style",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "sources": {
-    "basemap": {
-      "type": "vector",
-      "url": "https://demotiles.maplibre.org/tiles/tiles.json"
+    "carto-base": {
+      "type": "raster",
+      "tiles": [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
+      ],
+      "tileSize": 256,
+      "attribution": "\u00a9 OpenStreetMap contributors \u00a9 CARTO"
+    },
+    "carto-labels": {
+      "type": "raster",
+      "tiles": [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
+      ],
+      "tileSize": 256,
+      "attribution": "\u00a9 OpenStreetMap contributors \u00a9 CARTO"
     }
   },
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#eaf6ff"
+        "background-color": "#dfefff"
       }
     },
     {
-      "id": "water",
-      "type": "fill",
-      "source": "basemap",
-      "source-layer": "water",
+      "id": "base-raster",
+      "type": "raster",
+      "source": "carto-base",
       "paint": {
-        "fill-color": "#cfe8ff"
+        "raster-opacity": 0.88,
+        "raster-saturation": 0.05,
+        "raster-brightness-min": 0.02,
+        "raster-brightness-max": 0.98,
+        "raster-contrast": 0.05
       }
     },
     {
-      "id": "land",
-      "type": "fill",
-      "source": "basemap",
-      "source-layer": "land",
+      "id": "labels-raster",
+      "type": "raster",
+      "source": "carto-labels",
       "paint": {
-        "fill-color": "#f5faff"
-      }
-    },
-    {
-      "id": "country-borders",
-      "type": "line",
-      "source": "basemap",
-      "source-layer": "admin",
-      "paint": {
-        "line-color": "#94a3b8",
-        "line-width": 0.5
+        "raster-opacity": 0.72
       }
     }
   ]
