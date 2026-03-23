@@ -321,10 +321,10 @@
     box-shadow:0 4px 10px rgba(37,99,235,.10);
   }
   .swatch { display:inline-block; width:16px; height:16px; border:1px solid rgba(148,163,184,.5); border-radius:4px; vertical-align:middle; }
-  .country-swatch-visited { background:#2f6fff; border-color:#1847b8; }
-  .country-swatch-city { background:#24c483; border-color:#149d67; border-radius:50%; }
-  .flight-route-swatch { background:#f79d65; border-color:#e11d48; }
-  .flight-airport-swatch { background:#13b8a6; border-color:#0d9488; border-radius:50%; }
+  .country-swatch-visited { background:var(--map-country-fill, #2f6fff); border-color:var(--map-country-line, #1847b8); }
+  .country-swatch-city { background:var(--map-city-fill, #24c483); border-color:var(--map-city-hover, #149d67); border-radius:50%; }
+  .flight-route-swatch { background:var(--map-route-level2, #f79d65); border-color:var(--map-route-level4, #e11d48); }
+  .flight-airport-swatch { background:var(--map-airport-fill, #13b8a6); border-color:var(--map-airport-hover, #0d9488); border-radius:50%; }
   .swatch.absent { background:var(--absent-bg); border-color:var(--absent-border); }
   .swatch.today { background:var(--today-bg); border-color:var(--accent); }
   .swatch.linked { background:#f3e8ff; border-color:var(--link); }
@@ -339,7 +339,7 @@
     height:338px;
     border-radius:20px;
     overflow:hidden;
-    background:linear-gradient(180deg, #eef6ff 0%, #dfeeff 100%);
+    background:linear-gradient(180deg, var(--map-bg-top, #eef6ff) 0%, var(--map-bg-bottom, #dfeeff) 100%);
   }
   .kpi-strip{
     display:grid;
@@ -943,6 +943,39 @@ function getElementOrWarn(id) {
 window.TRAVEL_MAP_STYLE = {
   version: 8,
   name: "Travel Anime Map Fallback",
+  metadata: {
+    theme: {
+      countries: {
+        fill: "#2f6fff",
+        line: "#1847b8",
+        hoverFill: "#1748d8",
+        hoverLine: "#103aab",
+        fadedFill: "#e8f0ff",
+        fadedLine: "#d7e4ff"
+      },
+      cities: {
+        fill: "#24c483",
+        hoverFill: "#149d67",
+        fadedFill: "#b7f0d6"
+      },
+      airports: {
+        fill: "#13b8a6",
+        hoverFill: "#0d9488",
+        fadedFill: "#99f6e4"
+      },
+      routes: {
+        level1: "#f7b267",
+        level2: "#f79d65",
+        level3: "#f97316",
+        level4: "#e11d48",
+        level5: "#7c3aed"
+      },
+      ui: {
+        bgTop: "#eef6ff",
+        bgBottom: "#dfeeff"
+      }
+    }
+  },
   transition: { duration: 250, delay: 0 },
   sources: {
     "voyager-base": {
@@ -974,6 +1007,49 @@ window.TRAVEL_MAP_STYLE = {
     { id: "voyager-labels", type: "raster", source: "voyager-labels", paint: { "raster-opacity": 0.82 } }
   ]
 };
+
+function getTravelMapTheme() {
+  return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
+}
+
+function applyTravelMapThemeToCss(theme) {
+  const root = document.documentElement;
+  if (!theme) return;
+  if (theme.countries) {
+    root.style.setProperty("--map-country-fill", theme.countries.fill || "#2f6fff");
+    root.style.setProperty("--map-country-line", theme.countries.line || "#1847b8");
+  }
+  if (theme.cities) {
+    root.style.setProperty("--map-city-fill", theme.cities.fill || "#24c483");
+    root.style.setProperty("--map-city-hover", theme.cities.hoverFill || "#149d67");
+  }
+  if (theme.airports) {
+    root.style.setProperty("--map-airport-fill", theme.airports.fill || "#13b8a6");
+    root.style.setProperty("--map-airport-hover", theme.airports.hoverFill || "#0d9488");
+  }
+  if (theme.routes) {
+    root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
+    root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
+  }
+  if (theme.ui) {
+    root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
+    root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
+  }
+}
+
+async function loadTravelMapStyle() {
+  try {
+    const response = await fetch("./styles/travel_map_style.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Failed to load style JSON: HTTP ${response.status}`);
+    const styleJson = await response.json();
+    window.TRAVEL_MAP_STYLE = styleJson;
+    applyTravelMapThemeToCss(getTravelMapTheme());
+    debugLog("Travel map style JSON loaded", styleJson.metadata?.theme || {});
+  } catch (error) {
+    debugWarn("Using fallback travel map style", error);
+    applyTravelMapThemeToCss(getTravelMapTheme());
+  }
+}
 
 async function fetchLocalJson(path) {
   debugLog(`Loading local JSON: ${path}`);
@@ -1481,7 +1557,7 @@ function initAbsenceTracker() {
   // --------------------------------------------------------------------------
   // 2) Theme colours kept in one place for easier maintenance
   // --------------------------------------------------------------------------
-  const MAP_THEME = {
+  const MAP_THEME = (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {
     countries: {
       fill: "#2f6fff",
       line: "#1847b8",
@@ -1506,6 +1582,10 @@ function initAbsenceTracker() {
       level3: "#f97316",
       level4: "#e11d48",
       level5: "#7c3aed"
+    },
+    ui: {
+      bgTop: "#eef6ff",
+      bgBottom: "#dfeeff"
     }
   };
 
@@ -2742,6 +2822,7 @@ async function initSiteData() {
     }
 
     try {
+      await loadTravelMapStyle();
       if (typeof window.initTravelMap === "function") {
         window.initTravelMap();
         debugLog("Travel map init triggered");
