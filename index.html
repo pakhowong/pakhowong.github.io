@@ -2193,8 +2193,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 25] : [15, 25];
-    const defaultZoom = isMobile ? -0.7 : 0.1;
+    const defaultCenter = isMobile ? [13, 25] : [20, 25];
+    const defaultZoom = isMobile ? -0.4 : 0.1;
 
     const map = new maplibregl.Map({
       container: "travelMap",
