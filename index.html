@@ -940,110 +940,278 @@ function getElementOrWarn(id) {
 }
 
 window.TRAVEL_MAP_STYLE = {
-  version: 8,
-  name: "Travel Map Fallback",
-  metadata: {
-    theme: {
-      countries: {
-        fill: "#2f6fff",
-        line: "#1847b8",
-        hoverFill: "#1748d8",
-        hoverLine: "#103aab",
-        fadedFill: "#e8f0ff",
-        fadedLine: "#d7e4ff"
+  "version": 8,
+  "name": "Travel Map",
+  "metadata": {
+    "theme": {
+      "countries": {
+        "fill": "#93c5fd",
+        "line": "#1d4ed8",
+        "hoverFill": "#1748d8",
+        "hoverLine": "#103aab",
+        "fadedFill": "#e8f0ff",
+        "fadedLine": "#d7e4ff"
       },
-      cities: {
-        fill: "#24c483",
-        hoverFill: "#149d67",
-        fadedFill: "#b7f0d6"
+      "cities": {
+        "fill": "#fbbf24",
+        "hoverFill": "#f59e0b",
+        "fadedFill": "#fbbf24"
       },
-      airports: {
-        fill: "#13b8a6",
-        hoverFill: "#0d9488",
-        fadedFill: "#99f6e4"
+      "airports": {
+        "fill": "#13b8a6",
+        "hoverFill": "#0d9488",
+        "fadedFill": "#99f6e4"
       },
-      routes: {
-        level1: "#f7b267",
-        level2: "#f79d65",
-        level3: "#f97316",
-        level4: "#e11d48",
-        level5: "#7c3aed"
+      "routes": {
+        "level1": "#f59e0b",
+        "level2": "#f97316",
+        "level3": "#ef4444",
+        "level4": "#c026d3",
+        "level5": "#7c3aed"
       },
-      ui: {
-        bgTop: "#eef6ff",
-        bgBottom: "#dfeeff"
+      "ui": {
+        "bgTop": "#eef6ff",
+        "bgBottom": "#dfeeff"
       },
-      sizes: {
-        countries: {
-          lineWidth: 1.4,
-          hoverLineWidth: 2.3,
-          fillOpacity: 0.78,
-          hoverFillOpacity: 0.96
+      "sizes": {
+        "countries": {
+          "lineWidth": 1.4,
+          "hoverLineWidth": 2.3,
+          "fillOpacity": 0.78,
+          "hoverFillOpacity": 0.96
         },
-        cities: {
-          glowRadius: 10,
-          glowOpacity: 0.55,
-          glowBlur: 0.85,
-          baseRadius: 4.6,
-          baseStrokeWidth: 1.4,
-          hoverRadius: 5.8,
-          hoverStrokeWidth: 1.8,
-          hoverGlowRadius: 13,
-          hoverGlowOpacity: 0.72,
-          hoverGlowBlur: 0.9
+        "cities": {
+          "baseRadius": 2.5,
+          "baseStrokeWidth": 1,
+          "hoverRadius": 3.5,
+          "hoverStrokeWidth": 1.5
         },
-        airports: {
-          glowRadius: 8,
-          glowOpacity: 0.45,
-          glowBlur: 0.9,
-          baseRadius: 3.6,
-          baseStrokeWidth: 1.2,
-          hoverRadius: 4.8,
-          hoverStrokeWidth: 1.5,
-          hoverGlowRadius: 10,
-          hoverGlowOpacity: 0.72,
-          hoverGlowBlur: 0.9
+        "airports": {
+          "baseRadius": 2,
+          "baseStrokeWidth": 0.8,
+          "hoverRadius": 3,
+          "hoverStrokeWidth": 1.2
         },
-        routes: {
-          baseWidth: 2.1,
-          baseOpacity: 0.85,
-          hoverWidth: 2.8,
-          hoverOpacity: 0.96,
-          animatedWidth: 2.4,
-          animatedOpacity: 0.85
+        "routes": {
+          "baseWidth": 2.3,
+          "baseOpacity": 0.85,
+          "hoverWidth": 2.8,
+          "hoverOpacity": 0.96
         }
       }
     }
   },
-  transition: { duration: 250, delay: 0 },
-  sources: {
-    "voyager-base": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
-    },
-    "voyager-labels": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+  "transition": {
+    "duration": 250,
+    "delay": 0
+  },
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "https://demotiles.maplibre.org/tiles/tiles.json"
     }
   },
-  layers: [
-    { id: "background", type: "background", paint: { "background-color": "#eaf6ff" } },
-    { id: "voyager-base", type: "raster", source: "voyager-base", paint: { "raster-opacity": 0.92, "raster-saturation": 0.15 } },
-    { id: "voyager-labels", type: "raster", source: "voyager-labels", paint: { "raster-opacity": 0.82 } }
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#eef6ff"
+      }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "paint": {
+        "fill-color": "#cfe8ff"
+      }
+    },
+    {
+      "id": "landcover",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "paint": {
+        "fill-color": "#dfeeff",
+        "fill-opacity": 0.35
+      }
+    },
+    {
+      "id": "park",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "park",
+      "paint": {
+        "fill-color": "#e6f4ea",
+        "fill-opacity": 0.55
+      }
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "paint": {
+        "line-color": "#b9ddff",
+        "line-width": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          3,
+          0.3,
+          8,
+          0.8,
+          12,
+          1.2
+        ],
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "country-boundary",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "filter": [
+        "<=",
+        [
+          "coalesce",
+          [
+            "get",
+            "admin_level"
+          ],
+          99
+        ],
+        2
+      ],
+      "paint": {
+        "line-color": "#c9d8f2",
+        "line-width": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          1,
+          0.4,
+          4,
+          0.7,
+          8,
+          1.0
+        ],
+        "line-opacity": 0.75
+      }
+    },
+    {
+      "id": "place-labels-country",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "filter": [
+        "==",
+        [
+          "get",
+          "class"
+        ],
+        "country"
+      ],
+      "layout": {
+        "text-field": [
+          "coalesce",
+          [
+            "get",
+            "name_en"
+          ],
+          [
+            "get",
+            "name"
+          ]
+        ],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
+        "text-size": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          0,
+          10,
+          4,
+          12
+        ]
+      },
+      "paint": {
+        "text-color": "#6b7da3",
+        "text-halo-color": "rgba(255,255,255,0.82)",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "place-labels-city",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "filter": [
+        "match",
+        [
+          "get",
+          "class"
+        ],
+        [
+          "city",
+          "town"
+        ],
+        true,
+        false
+      ],
+      "layout": {
+        "text-field": [
+          "coalesce",
+          [
+            "get",
+            "name_en"
+          ],
+          [
+            "get",
+            "name"
+          ]
+        ],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
+        "text-size": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          3,
+          9,
+          8,
+          11
+        ]
+      },
+      "paint": {
+        "text-color": "#8b9bb8",
+        "text-halo-color": "rgba(255,255,255,0.82)",
+        "text-halo-width": 1
+      }
+    }
   ]
 };
 
@@ -1554,11 +1722,10 @@ function initAbsenceTracker() {
   This block renders the travel map with MapLibre GL JS.
 
   What changed compared with the older Leaflet version:
-  - the base map now uses a dedicated MapLibre style JSON at /styles/travel_map_style.json
+  - the base map now uses a dedicated MapLibre vector style JSON at /styles/travel_map_style.json
   - countries, cities, airports and routes are converted into GeoJSON sources
   - hover highlighting is handled with native MapLibre layers and filters
-  - glow effects use GPU-accelerated line/circle blur layers
-  - flight routes are curved great-circle arcs with a moving highlight animation
+  - flight routes are curved great-circle arcs
   ============================================================================
 */
 (function () {
