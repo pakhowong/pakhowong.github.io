@@ -65,10 +65,10 @@
         }
       },
       "baseMap": {
-        "water": "#cfe8ff",
-        "land": "#fff4dc",
-        "landShadow": "#f3e5c8",
-        "border": "#d6e4f5",
+        "water": "#f8fbff",
+        "land": "#ffffff",
+        "landShadow": "#e6edf7",
+        "border": "#eef2f7",
         "waterway": "#b9ddff",
         "label": "#6b7da3",
         "subLabel": "#8b9bb8"
@@ -91,7 +91,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#dff3ff"
+        "background-color": "#cfe8ff"
       }
     },
     {
@@ -100,9 +100,9 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#e8fff4",
+        "fill-color": "#fff4dc",
         "fill-opacity": 1.0,
-        "fill-outline-color": "#86c5ff"
+        "fill-outline-color": "#f3e5c8"
       }
     },
     {
@@ -111,7 +111,7 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "line-color": "#cfe8ff",
+        "line-color": "#d6e4f5",
         "line-width": [
           "interpolate",
           [
