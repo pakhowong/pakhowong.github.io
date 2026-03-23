@@ -955,12 +955,18 @@ window.TRAVEL_MAP_STYLE = {
       "cities": {
         "fill": "#fbbf24",
         "hoverFill": "#f59e0b",
-        "fadedFill": "#fbbf24"
+        "fadedFill": "#fbbf24",
+        "line": "#ffffff",
+        "hoverLine": "#ffffff",
+        "fadedLine": "#d9efe5"
       },
       "airports": {
         "fill": "#13b8a6",
         "hoverFill": "#0d9488",
-        "fadedFill": "#99f6e4"
+        "fadedFill": "#99f6e4",
+        "line": "#ffffff",
+        "hoverLine": "#ffffff",
+        "fadedLine": "#d7f7f1"
       },
       "routes": {
         "level1": "#f59e0b",
@@ -998,6 +1004,15 @@ window.TRAVEL_MAP_STYLE = {
           "hoverWidth": 2.8,
           "hoverOpacity": 0.96
         }
+      },
+      "baseMap": {
+        "water": "#cfe8ff",
+        "land": "#fff4dc",
+        "landShadow": "#f3e5c8",
+        "border": "#d6e4f5",
+        "waterway": "#b9ddff",
+        "label": "#6b7da3",
+        "subLabel": "#8b9bb8"
       }
     }
   },
@@ -1026,8 +1041,9 @@ window.TRAVEL_MAP_STYLE = {
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#dfeeff",
-        "fill-opacity": 1.0
+        "fill-color": "#fff4dc",
+        "fill-opacity": 1.0,
+        "fill-outline-color": "#f3e5c8"
       }
     },
     {
@@ -1036,7 +1052,7 @@ window.TRAVEL_MAP_STYLE = {
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "line-color": "#c9d8f2",
+        "line-color": "#d6e4f5",
         "line-width": [
           "interpolate",
           [
@@ -1072,16 +1088,25 @@ function applyTravelMapThemeToCss(theme) {
   if (theme.cities) {
     root.style.setProperty("--map-city-fill", theme.cities.fill || "#24c483");
     root.style.setProperty("--map-city-hover", theme.cities.hoverFill || "#149d67");
+    root.style.setProperty("--map-city-line", theme.cities.line || "#ffffff");
+    root.style.setProperty("--map-city-hover-line", theme.cities.hoverLine || "#ffffff");
+    root.style.setProperty("--map-city-faded-line", theme.cities.fadedLine || "#d9efe5");
   }
   if (theme.airports) {
     root.style.setProperty("--map-airport-fill", theme.airports.fill || "#13b8a6");
     root.style.setProperty("--map-airport-hover", theme.airports.hoverFill || "#0d9488");
+    root.style.setProperty("--map-airport-line", theme.airports.line || "#ffffff");
+    root.style.setProperty("--map-airport-hover-line", theme.airports.hoverLine || "#ffffff");
+    root.style.setProperty("--map-airport-faded-line", theme.airports.fadedLine || "#d7f7f1");
   }
   if (theme.routes) {
     root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
     root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
   }
-  if (theme.ui) {
+  if (theme.baseMap) {
+    root.style.setProperty("--map-bg-top", theme.baseMap.water || "#cfe8ff");
+    root.style.setProperty("--map-bg-bottom", theme.baseMap.land || "#fff4dc");
+  } else if (theme.ui) {
     root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
     root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
   }
@@ -1615,14 +1640,20 @@ function initAbsenceTracker() {
         fadedLine: "#d7e4ff"
       },
       cities: {
-        fill: "#24c483",
-        hoverFill: "#149d67",
-        fadedFill: "#b7f0d6"
+        fill: "#fbbf24",
+        line: "#ffffff",
+        hoverFill: "#f59e0b",
+        hoverLine: "#ffffff",
+        fadedFill: "#fbbf24",
+        fadedLine: "#d9efe5"
       },
       airports: {
         fill: "#13b8a6",
+        line: "#ffffff",
         hoverFill: "#0d9488",
-        fadedFill: "#99f6e4"
+        hoverLine: "#ffffff",
+        fadedFill: "#99f6e4",
+        fadedLine: "#d7f7f1"
       },
       routes: {
         level1: "#f59e0b",
@@ -1630,6 +1661,15 @@ function initAbsenceTracker() {
         level3: "#ef4444",
         level4: "#c026d3",
         level5: "#7c3aed"
+      },
+      baseMap: {
+        water: "#cfe8ff",
+        land: "#fff4dc",
+        landShadow: "#f3e5c8",
+        border: "#d6e4f5",
+        waterway: "#b9ddff",
+        label: "#6b7da3",
+        subLabel: "#8b9bb8"
       },
       ui: {
         bgTop: "#eef6ff",
@@ -2204,11 +2244,15 @@ function initAbsenceTracker() {
       map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
       map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
 
+      const MAP_THEME = getMapTheme();
+
       map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
       map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
+      map.setPaintProperty("cities-base", "circle-stroke-color", hasHover ? (MAP_THEME.cities.fadedLine || MAP_THEME.cities.line || "#ffffff") : (MAP_THEME.cities.line || "#ffffff"));
 
       map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
       map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
+      map.setPaintProperty("airports-base", "circle-stroke-color", hasHover ? (MAP_THEME.airports.fadedLine || MAP_THEME.airports.line || "#ffffff") : (MAP_THEME.airports.line || "#ffffff"));
 
       map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
 
@@ -2301,7 +2345,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (CITY_SIZES.baseRadius ?? 4.6),
           "circle-color": MAP_THEME.cities.fill,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": MAP_THEME.cities.line,
           "circle-stroke-width": (CITY_SIZES.baseStrokeWidth ?? 1.4),
           "circle-opacity": 1,
           "circle-opacity-transition": { duration: 220, delay: 0 }
@@ -2316,7 +2360,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (CITY_SIZES.hoverRadius ?? 5.8),
           "circle-color": MAP_THEME.cities.hoverFill,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": MAP_THEME.cities.hoverLine,
           "circle-stroke-width": (CITY_SIZES.hoverStrokeWidth ?? 1.8),
           "circle-opacity": 1
         }
@@ -2335,7 +2379,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (AIRPORT_SIZES.baseRadius ?? 3.6),
           "circle-color": MAP_THEME.airports.fill,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": MAP_THEME.airports.line,
           "circle-stroke-width": (AIRPORT_SIZES.baseStrokeWidth ?? 1.2),
           "circle-opacity": 0.96,
           "circle-opacity-transition": { duration: 220, delay: 0 }
@@ -2350,7 +2394,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (AIRPORT_SIZES.hoverRadius ?? 4.8),
           "circle-color": MAP_THEME.airports.hoverFill,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": MAP_THEME.airports.hoverLine,
           "circle-stroke-width": (AIRPORT_SIZES.hoverStrokeWidth ?? 1.5),
           "circle-opacity": 1
         }
