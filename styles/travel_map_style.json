@@ -40,28 +40,16 @@
           "hoverFillOpacity": 0.96
         },
         "cities": {
-          "glowRadius": 10,
-          "glowOpacity": 0.55,
-          "glowBlur": 0.85,
           "baseRadius": 4.6,
           "baseStrokeWidth": 1.4,
           "hoverRadius": 5.8,
-          "hoverStrokeWidth": 1.8,
-          "hoverGlowRadius": 13,
-          "hoverGlowOpacity": 0.72,
-          "hoverGlowBlur": 0.9
+          "hoverStrokeWidth": 1.8
         },
         "airports": {
-          "glowRadius": 8,
-          "glowOpacity": 0.45,
-          "glowBlur": 0.9,
           "baseRadius": 3.6,
           "baseStrokeWidth": 1.2,
           "hoverRadius": 4.8,
-          "hoverStrokeWidth": 1.5,
-          "hoverGlowRadius": 10,
-          "hoverGlowOpacity": 0.72,
-          "hoverGlowBlur": 0.9
+          "hoverStrokeWidth": 1.5
         },
         "routes": {
           "baseWidth": 2.1,
