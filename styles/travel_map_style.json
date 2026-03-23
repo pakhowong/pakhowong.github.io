@@ -23,8 +23,8 @@
         "fill": "#13b8a6",
         "hoverFill": "#0d9488",
         "fadedFill": "#99f6e4",
-        "line": "#ffffff",
-        "hoverLine": "#ffffff",
+        "line": "#99f6e4",
+        "hoverLine": "#99f6e4",
         "fadedLine": "#d7f7f1"
       },
       "routes": {
