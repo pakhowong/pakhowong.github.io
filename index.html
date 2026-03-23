@@ -2689,3 +2689,94 @@ function initAbsenceTracker() {
 })();
 </script>
 
+
+<script>
+/*
+  ============================================================================
+  SITE DATA BOOTSTRAP
+  ----------------------------------------------------------------------------
+  Loads the local JSON datasets first, then initialises:
+  1) immigration day calculations
+  2) calendar
+  3) travel map
+  ============================================================================
+*/
+async function initSiteData() {
+  const months = getElementOrWarn("months");
+  const travelMapStatus = getElementOrWarn("travelMapStatusText");
+  const travelMap = getElementOrWarn("travelMap");
+
+  try {
+    const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
+      fetchLocalJson("./data/absence_ranges.json"),
+      fetchLocalJson("./data/day_links.json"),
+      fetchLocalJson("./data/city_pins.json"),
+      fetchLocalJson("./data/visited_countries.json")
+    ]);
+
+    ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
+    DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
+    window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
+
+    const visitedCountryRows = Array.isArray(visitedCountries) ? visitedCountries : [];
+    window.VISITED_NATIONS_DATA = visitedCountryRows
+      .filter(row => row && row.visited === true)
+      .map(row => row.country);
+    window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(window.VISITED_TERRITORIES_DATA || []);
+
+    debugLog("Primary datasets loaded", {
+      absenceRanges: ABSENCE_RANGES_DATA.length,
+      dayLinks: Object.keys(DAY_LINKS_DATA).length,
+      cityPins: window.CITY_PINS_DATA.length,
+      visitedCountries: window.VISITED_NATIONS_DATA.length
+    });
+
+    try {
+      initAbsenceTracker();
+      debugLog("Absence tracker initialised");
+    } catch (error) {
+      debugError("Absence tracker init failed", error);
+      if (months) {
+        months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
+      }
+    }
+
+    try {
+      if (typeof window.initTravelMap === "function") {
+        window.initTravelMap();
+        debugLog("Travel map init triggered");
+      } else {
+        throw new Error("initTravelMap is not available");
+      }
+    } catch (error) {
+      debugError("Travel map init failed", error);
+      if (travelMapStatus) {
+        travelMapStatus.textContent = "Unable to load the travel map right now.";
+      }
+      if (travelMap) {
+        travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
+      }
+    }
+  } catch (error) {
+    debugError("Initial data load failed", error);
+
+    if (months) {
+      months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
+    }
+    if (travelMapStatus) {
+      travelMapStatus.textContent = "Unable to load the travel map right now.";
+    }
+    if (travelMap) {
+      travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
+    }
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initSiteData);
+} else {
+  initSiteData();
+}
+</script>
+</body>
+</html>
