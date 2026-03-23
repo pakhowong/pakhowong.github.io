@@ -91,7 +91,7 @@
       "id": "background",
       "type": "background",
       "paint": {
-        "background-color": "#f8fbff"
+        "background-color": "#cfe8ff"
       }
     },
     {
@@ -100,7 +100,7 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#e7f6ff",
+        "fill-color": "#dfeeff",
         "fill-opacity": 1.0,
         "fill-outline-color": "#dbeafe"
       }
@@ -111,7 +111,7 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "line-color": "#eef2f7",
+        "line-color": "#c9d8f2",
         "line-width": [
           "interpolate",
           [
