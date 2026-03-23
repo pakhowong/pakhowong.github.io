@@ -2150,38 +2150,6 @@ function initAbsenceTracker() {
     });
   }
 
-  function animateRoutePulse(map) {
-    let animationFrameId = null;
-    const layerId = "routes-animated";
-    let progress = 0;
-
-    function frame() {
-      if (!map.getLayer(layerId)) return;
-      progress += 0.006;
-      if (progress > 1) progress = 0;
-
-      const start = Math.max(0, progress - 0.08);
-      const mid = progress;
-      const end = Math.min(1, progress + 0.08);
-
-      map.setPaintProperty(layerId, "line-gradient", [
-        "interpolate",
-        ["linear"],
-        ["line-progress"],
-        start, "rgba(255,255,255,0)",
-        mid, "rgba(255,255,255,0.95)",
-        end, "rgba(255,255,255,0)"
-      ]);
-
-      animationFrameId = requestAnimationFrame(frame);
-    }
-
-    frame();
-    return () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
-  }
-
   /**
    * Build the interactive travel map with MapLibre GL JS.
    */
@@ -2193,7 +2161,7 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [15, 42] : [15, 38];
+    const defaultCenter = isMobile ? [15, 43] : [15, 38];
     const defaultZoom = isMobile ? -0.4 : 0.1;
 
     const map = new maplibregl.Map({
@@ -2217,7 +2185,6 @@ function initAbsenceTracker() {
     };
 
     const popup = createPopup();
-    let cleanupRouteAnimation = null;
 
     const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
     const cityCountryLookup = Object.fromEntries(
@@ -2264,8 +2231,6 @@ function initAbsenceTracker() {
       map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
       map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
       map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
-      map.setPaintProperty("routes-animated", "line-opacity", hasHover ? 0.14 : (ROUTE_SIZES.animatedOpacity ?? 0.85));
-
       // Apply hover filters to dedicated highlight layers.
       map.setFilter("countries-hover-fill", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
       map.setFilter("countries-hover-line", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
@@ -2448,29 +2413,10 @@ function initAbsenceTracker() {
         }
       });
 
-      map.addLayer({
-        id: "routes-animated",
-        type: "line",
-        source: "flight-routes",
-        layout: { "line-cap": "round", "line-join": "round" },
-        paint: {
-          "line-width": (ROUTE_SIZES.animatedWidth ?? 2.4),
-          "line-opacity": (ROUTE_SIZES.animatedOpacity ?? 0.85),
-          "line-gradient": [
-            "interpolate",
-            ["linear"],
-            ["line-progress"],
-            0, "rgba(255,255,255,0)",
-            0.5, "rgba(255,255,255,0.8)",
-            1, "rgba(255,255,255,0)"
-          ]
-        }
-      });
-
       // Layer visibility defaults to match the current toggle buttons
       setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
       setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
-      setLayerVisibility(map, ["routes-base", "routes-hover", "routes-animated"], layerState.route);
+      setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
     }
 
     function bindLegendButtons() {
@@ -2487,7 +2433,7 @@ function initAbsenceTracker() {
           } else if (key === "airport") {
             setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
           } else if (key === "route") {
-            setLayerVisibility(map, ["routes-base", "routes-hover", "routes-animated"], layerState.route);
+            setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
           }
         });
       });
@@ -2769,9 +2715,6 @@ function initAbsenceTracker() {
         bindLegendButtons();
         bindHoverAndPopups();
         updateStatusText();
-
-        if (cleanupRouteAnimation) cleanupRouteAnimation();
-        cleanupRouteAnimation = animateRoutePulse(map);
 
         if (statusText) statusText.textContent = "";
       } catch (error) {
