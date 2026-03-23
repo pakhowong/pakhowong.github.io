@@ -66,7 +66,7 @@
       },
       "baseMap": {
         "water": "#f8fbff",
-        "land": "#f1f1f1",
+        "land": "#e7f6ff",
         "landShadow": "#e6edf7",
         "border": "#eef2f7",
         "waterway": "#b9ddff",
@@ -100,7 +100,7 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#f1f1f1",
+        "fill-color": "#e7f6ff",
         "fill-opacity": 1.0,
         "fill-outline-color": "#dbeafe"
       }
