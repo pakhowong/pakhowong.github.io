@@ -1,0 +1,48 @@
+{
+  "version": 8,
+  "name": "Anime Travel Map",
+  "sources": {
+    "basemap": {
+      "type": "vector",
+      "url": "https://demotiles.maplibre.org/tiles/tiles.json"
+    }
+  },
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#eaf6ff"
+      }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "basemap",
+      "source-layer": "water",
+      "paint": {
+        "fill-color": "#cfe8ff"
+      }
+    },
+    {
+      "id": "land",
+      "type": "fill",
+      "source": "basemap",
+      "source-layer": "land",
+      "paint": {
+        "fill-color": "#f5faff"
+      }
+    },
+    {
+      "id": "country-borders",
+      "type": "line",
+      "source": "basemap",
+      "source-layer": "admin",
+      "paint": {
+        "line-color": "#94a3b8",
+        "line-width": 0.5
+      }
+    }
+  ]
+}
