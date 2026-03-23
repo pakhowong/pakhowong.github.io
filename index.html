@@ -841,7 +841,7 @@
                   <div class="mini-value" id="summaryTotalAbsent">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Flight log</div>
+                  <div class="mini-label">Flight logs</div>
                   <div class="mini-value" id="summarySupportingDocs">--</div>
                 </div>
               </div>
@@ -2193,8 +2193,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 28] : [12, 25];
-    const defaultZoom = isMobile ? -2 : 0.1;
+    const defaultCenter = isMobile ? [7, 25] : [15, 25];
+    const defaultZoom = isMobile ? -0.7 : 0.1;
 
     const map = new maplibregl.Map({
       container: "travelMap",
