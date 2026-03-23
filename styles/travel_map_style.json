@@ -80,7 +80,7 @@
       }
     },
     {
-      "id": "countries-fill",
+      "id": "basemap-countries-fill",
       "type": "fill",
       "source": "maplibre-world",
       "source-layer": "countries",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "id": "countries-line",
+      "id": "basemap-countries-line",
       "type": "line",
       "source": "maplibre-world",
       "source-layer": "countries",
