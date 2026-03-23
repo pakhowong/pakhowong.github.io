@@ -324,7 +324,7 @@
   .country-swatch-visited { background:#2f6fff; border-color:#1847b8; }
   .country-swatch-city { background:#24c483; border-color:#149d67; border-radius:50%; }
   .flight-route-swatch { background:#f79d65; border-color:#e11d48; }
-  .flight-airport-swatch { background:#1d4ed8; border-color:#1e3a8a; border-radius:50%; }
+  .flight-airport-swatch { background:#13b8a6; border-color:#0d9488; border-radius:50%; }
   .swatch.absent { background:var(--absent-bg); border-color:var(--absent-border); }
   .swatch.today { background:var(--today-bg); border-color:var(--accent); }
   .swatch.linked { background:#f3e8ff; border-color:var(--link); }
@@ -798,7 +798,7 @@
               </div>
             </div>
 
-            <div id="months" class="months"></div>
+            <div id="months" class="months"><div class="small" style="padding:16px;">Loading calendar…</div></div>
           </section>
 
           
@@ -910,6 +910,79 @@
     </div>
   </div>
 </div>
+
+<script>
+/* Shared helpers and fallback map style */
+const SITE_DEBUG = {
+  ENABLE_DEBUG_LOGS: true,
+  PREFIX: "[Travel Site]"
+};
+
+function debugLog(step, details = null) {
+  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
+  if (details === null) console.log(`${SITE_DEBUG.PREFIX} ${step}`);
+  else console.log(`${SITE_DEBUG.PREFIX} ${step}`, details);
+}
+
+function debugWarn(step, details = null) {
+  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
+  if (details === null) console.warn(`${SITE_DEBUG.PREFIX} ${step}`);
+  else console.warn(`${SITE_DEBUG.PREFIX} ${step}`, details);
+}
+
+function debugError(step, error) {
+  console.error(`${SITE_DEBUG.PREFIX} ${step}`, error);
+}
+
+function getElementOrWarn(id) {
+  const element = document.getElementById(id);
+  if (!element) debugWarn(`Missing DOM element: #${id}`);
+  return element;
+}
+
+window.TRAVEL_MAP_STYLE = {
+  version: 8,
+  name: "Travel Anime Map Fallback",
+  transition: { duration: 250, delay: 0 },
+  sources: {
+    "voyager-base": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
+      ],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+    },
+    "voyager-labels": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
+      ],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+    }
+  },
+  layers: [
+    { id: "background", type: "background", paint: { "background-color": "#eaf6ff" } },
+    { id: "voyager-base", type: "raster", source: "voyager-base", paint: { "raster-opacity": 0.92, "raster-saturation": 0.15 } },
+    { id: "voyager-labels", type: "raster", source: "voyager-labels", paint: { "raster-opacity": 0.82 } }
+  ]
+};
+
+async function fetchLocalJson(path) {
+  debugLog(`Loading local JSON: ${path}`);
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+  return response.json();
+}
+</script>
+
 <script>
 /*
   ============================================================================
@@ -1959,7 +2032,7 @@ function initAbsenceTracker() {
 
     const map = new maplibregl.Map({
       container: "travelMap",
-      style: TRAVEL_MAP_CONFIG.styleUrl,
+      style: window.TRAVEL_MAP_STYLE,
       center: defaultCenter,
       zoom: defaultZoom,
       attributionControl: false,
