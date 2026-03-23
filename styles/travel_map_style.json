@@ -4,17 +4,17 @@
   "metadata": {
     "theme": {
       "countries": {
-        "fill": "#2f6fff",
-        "line": "#1847b8",
+        "fill": "#93c5fd",
+        "line": "#1d4ed8",
         "hoverFill": "#1748d8",
         "hoverLine": "#103aab",
         "fadedFill": "#e8f0ff",
         "fadedLine": "#d7e4ff"
       },
       "cities": {
-        "fill": "#24c483",
-        "hoverFill": "#149d67",
-        "fadedFill": "#b7f0d6"
+        "fill": "#fbbf24",
+        "hoverFill": "#f59e0b",
+        "fadedFill": "#fbbf24"
       },
       "airports": {
         "fill": "#13b8a6",
@@ -22,10 +22,10 @@
         "fadedFill": "#99f6e4"
       },
       "routes": {
-        "level1": "#f7b267",
-        "level2": "#f79d65",
-        "level3": "#f97316",
-        "level4": "#e11d48",
+        "level1": "#f59e0b",
+        "level2": "#f97316",
+        "level3": "#ef4444",
+        "level4": "#c026d3",
         "level5": "#7c3aed"
       },
       "ui": {
@@ -40,24 +40,22 @@
           "hoverFillOpacity": 0.96
         },
         "cities": {
-          "baseRadius": 4.6,
-          "baseStrokeWidth": 1.4,
-          "hoverRadius": 5.8,
-          "hoverStrokeWidth": 1.8
-        },
-        "airports": {
-          "baseRadius": 3.6,
-          "baseStrokeWidth": 1.2,
-          "hoverRadius": 4.8,
+          "baseRadius": 2.5,
+          "baseStrokeWidth": 1,
+          "hoverRadius": 3.5,
           "hoverStrokeWidth": 1.5
         },
+        "airports": {
+          "baseRadius": 2,
+          "baseStrokeWidth": 0.8,
+          "hoverRadius": 3,
+          "hoverStrokeWidth": 1.2
+        },
         "routes": {
-          "baseWidth": 2.1,
+          "baseWidth": 2.3,
           "baseOpacity": 0.85,
           "hoverWidth": 2.8,
-          "hoverOpacity": 0.96,
-          "animatedWidth": 2.4,
-          "animatedOpacity": 0.85
+          "hoverOpacity": 0.96
         }
       }
     }
