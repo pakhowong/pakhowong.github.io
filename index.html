@@ -2185,26 +2185,36 @@ function initAbsenceTracker() {
     }
 
     function applyHoverHighlight(activeCountry) {
+      const ROUTE_SIZES = getRouteSizes();
       const hoveredCountry = activeCountry ? canonicaliseCountryName(activeCountry) : null;
       const hasHover = Boolean(hoveredCountry);
 
       if (!map.isStyleLoaded()) return;
 
-      // Fade base layers when there is an active hover target.
       map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
       map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
+
       map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
-      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
-      // Apply hover filters to dedicated highlight layers.
-      map.setFilter("countries-hover-fill", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("countries-hover-line", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("cities-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter(hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("airports-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter(hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("routes-hover", hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter(hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
+      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
+
+      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
+      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
+
+      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
+
+      const countryFilter = hoveredCountry
+        ? ["==", ["get", "country"], hoveredCountry]
+        : ["==", ["get", "country"], "___none___"];
+
+      const routeFilter = hoveredCountry
+        ? ["in", hoveredCountry, ["get", "countries"]]
+        : ["==", ["get", "routeId"], "___none___"];
+
+      map.setFilter("countries-hover-fill", countryFilter);
+      map.setFilter("countries-hover-line", countryFilter);
+      map.setFilter("cities-hover", countryFilter);
+      map.setFilter("airports-hover", countryFilter);
+      map.setFilter("routes-hover", routeFilter);
     }
 
     function addGeoJsonLayers(countryGeoJson, cityGeoJson, airportGeoJson, routeGeoJson) {
@@ -2425,6 +2435,21 @@ function initAbsenceTracker() {
           popup.remove();
           applyHoverHighlight(null);
         });
+      });
+
+      map.on("mousemove", event => {
+        const features = map.queryRenderedFeatures(event.point, { layers: ["countries-fill", "countries-hover-fill"] });
+        if (!features || !features.length) {
+          popup.remove();
+          applyHoverHighlight(null);
+          map.getCanvas().style.cursor = "";
+        }
+      });
+
+      map.on("mouseout", () => {
+        popup.remove();
+        applyHoverHighlight(null);
+        map.getCanvas().style.cursor = "";
       });
 
       bindPopupForLayer(map, popup, "cities-base", feature => `${feature.properties.name}, ${feature.properties.country}`);
