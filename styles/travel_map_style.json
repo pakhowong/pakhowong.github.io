@@ -14,12 +14,18 @@
       "cities": {
         "fill": "#fbbf24",
         "hoverFill": "#f59e0b",
-        "fadedFill": "#fbbf24"
+        "fadedFill": "#fbbf24",
+        "line": "#ffffff",
+        "hoverLine": "#ffffff",
+        "fadedLine": "#d9efe5"
       },
       "airports": {
         "fill": "#13b8a6",
         "hoverFill": "#0d9488",
-        "fadedFill": "#99f6e4"
+        "fadedFill": "#99f6e4",
+        "line": "#ffffff",
+        "hoverLine": "#ffffff",
+        "fadedLine": "#d7f7f1"
       },
       "routes": {
         "level1": "#f59e0b",
@@ -57,6 +63,15 @@
           "hoverWidth": 2.8,
           "hoverOpacity": 0.96
         }
+      },
+      "baseMap": {
+        "water": "#cfe8ff",
+        "land": "#fff4dc",
+        "landShadow": "#f3e5c8",
+        "border": "#d6e4f5",
+        "waterway": "#b9ddff",
+        "label": "#6b7da3",
+        "subLabel": "#8b9bb8"
       }
     }
   },
@@ -85,8 +100,9 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#dfeeff",
-        "fill-opacity": 1.0
+        "fill-color": "#fff4dc",
+        "fill-opacity": 1.0,
+        "fill-outline-color": "#f3e5c8"
       }
     },
     {
@@ -95,7 +111,7 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "line-color": "#c9d8f2",
+        "line-color": "#d6e4f5",
         "line-width": [
           "interpolate",
           [
