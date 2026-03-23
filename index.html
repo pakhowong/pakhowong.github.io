@@ -1548,6 +1548,7 @@ function initAbsenceTracker() {
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 
+
 <script>
 /*
   ============================================================================
@@ -2094,10 +2095,10 @@ function initAbsenceTracker() {
   }
 
   function getRouteColor(flightCount) {
-    if (flightCount >= 20) return MAP_THEME.routes.level5;
-    if (flightCount >= 10) return MAP_THEME.routes.level4;
-    if (flightCount >= 5) return MAP_THEME.routes.level3;
-    if (flightCount >= 2) return MAP_THEME.routes.level2;
+    if (flightCount >= 5) return MAP_THEME.routes.level5;
+    if (flightCount === 4) return MAP_THEME.routes.level4;
+    if (flightCount === 3) return MAP_THEME.routes.level3;
+    if (flightCount === 2) return MAP_THEME.routes.level2;
     return MAP_THEME.routes.level1;
   }
 
@@ -2192,8 +2193,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 28] : [12, 28];
-    const defaultZoom = isMobile ? 0.8 : 0.7;
+    const defaultCenter = isMobile ? [7, 28] : [7, 28];
+    const defaultZoom = isMobile ? 1.05 : 1.2;
 
     const map = new maplibregl.Map({
       container: "travelMap",
@@ -2261,21 +2262,17 @@ function initAbsenceTracker() {
       map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
       map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
       map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-glow", "circle-opacity", hasHover ? 0.12 : 0.55);
-      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
-      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
-      map.setPaintProperty("airports-glow", "circle-opacity", hasHover ? 0.12 : 0.45);
-      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
+      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
+      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
       map.setPaintProperty("routes-animated", "line-opacity", hasHover ? 0.14 : (ROUTE_SIZES.animatedOpacity ?? 0.85));
 
       // Apply hover filters to dedicated highlight layers.
       map.setFilter("countries-hover-fill", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
       map.setFilter("countries-hover-line", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
       map.setFilter("cities-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("cities-hover-glow", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter(hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
       map.setFilter("airports-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
-      map.setFilter("airports-hover-glow", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter(hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
       map.setFilter("routes-hover", hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
       map.setFilter(hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
     }
@@ -2343,19 +2340,6 @@ function initAbsenceTracker() {
       });
 
       map.addLayer({
-        id: "cities-glow",
-        type: "circle",
-        source: "visited-cities",
-        paint: {
-          "circle-radius": (CITY_SIZES.glowRadius ?? 10),
-          "circle-color": MAP_THEME.cities.fill,
-          "circle-opacity": (CITY_SIZES.glowOpacity ?? 0.55),
-          "circle-blur": (CITY_SIZES.glowBlur ?? 0.85),
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
         id: "cities-base",
         type: "circle",
         source: "visited-cities",
@@ -2366,19 +2350,6 @@ function initAbsenceTracker() {
           "circle-stroke-width": (CITY_SIZES.baseStrokeWidth ?? 1.4),
           "circle-opacity": 1,
           "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "cities-hover-glow",
-        type: "circle",
-        source: "visited-cities",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (CITY_SIZES.hoverGlowRadius ?? 13),
-          "circle-color": MAP_THEME.cities.hoverFill,
-          "circle-opacity": (CITY_SIZES.hoverGlowOpacity ?? 0.72),
-          "circle-blur": (CITY_SIZES.hoverGlowBlur ?? 0.9)
         }
       });
 
@@ -2403,19 +2374,6 @@ function initAbsenceTracker() {
       });
 
       map.addLayer({
-        id: "airports-glow",
-        type: "circle",
-        source: "visited-airports",
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.glowRadius ?? 8),
-          "circle-color": MAP_THEME.airports.fill,
-          "circle-opacity": (AIRPORT_SIZES.glowOpacity ?? 0.45),
-          "circle-blur": (AIRPORT_SIZES.glowBlur ?? 0.9),
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
         id: "airports-base",
         type: "circle",
         source: "visited-airports",
@@ -2426,19 +2384,6 @@ function initAbsenceTracker() {
           "circle-stroke-width": (AIRPORT_SIZES.baseStrokeWidth ?? 1.2),
           "circle-opacity": 0.96,
           "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "airports-hover-glow",
-        type: "circle",
-        source: "visited-airports",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.hoverGlowRadius ?? 10),
-          "circle-color": MAP_THEME.airports.hoverFill,
-          "circle-opacity": (AIRPORT_SIZES.hoverGlowOpacity ?? 0.72),
-          "circle-blur": (AIRPORT_SIZES.hoverGlowBlur ?? 0.9)
         }
       });
 
@@ -2516,15 +2461,15 @@ function initAbsenceTracker() {
             ["linear"],
             ["line-progress"],
             0, "rgba(255,255,255,0)",
-            0.5, "rgba(255,255,255,0.9)",
+            0.5, "rgba(255,255,255,0.8)",
             1, "rgba(255,255,255,0)"
           ]
         }
       });
 
       // Layer visibility defaults to match the current toggle buttons
-      setLayerVisibility(map, ["cities-glow", "cities-base", "cities-hover-glow", "cities-hover"], layerState.city);
-      setLayerVisibility(map, ["airports-glow", "airports-base", "airports-hover-glow", "airports-hover"], layerState.airport);
+      setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
+      setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
       setLayerVisibility(map, ["routes-base", "routes-hover", "routes-animated"], layerState.route);
     }
 
@@ -2538,9 +2483,9 @@ function initAbsenceTracker() {
           if (key === "country") {
             setLayerVisibility(map, ["countries-fill", "countries-line", "countries-hover-fill", "countries-hover-line"], layerState.country);
           } else if (key === "city") {
-            setLayerVisibility(map, ["cities-glow", "cities-base", "cities-hover-glow", "cities-hover"], layerState.city);
+            setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
           } else if (key === "airport") {
-            setLayerVisibility(map, ["airports-glow", "airports-base", "airports-hover-glow", "airports-hover"], layerState.airport);
+            setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
           } else if (key === "route") {
             setLayerVisibility(map, ["routes-base", "routes-hover", "routes-animated"], layerState.route);
           }
