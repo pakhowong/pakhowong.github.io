@@ -13,18 +13,10 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/android-chrome-512x512.png">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-  
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <title>Travel History</title>
 
 <style>
-  /*
-    ==========================================================================
-    VISUAL DESIGN TOKENS
-    --------------------------------------------------------------------------
-    These variables control the core colours used across the site.
-    Change these first if you want to reskin the page later.
-    ==========================================================================
-  */
   :root{
     --text:#1d2942;
     --muted:#64748b;
@@ -65,25 +57,13 @@
     z-index:-2;
   }
 
-  /*
-    Main page wrapper:
-    - limits desktop width
-    - centres the site
-    - acts as the positioning context for the decorative girl image
-  */
   .container {
     position:relative;
     max-width:720px;
     margin:0 auto;
     padding:18px 14px 28px;
-    overflow-x:hidden;
-    overflow-y:visible;
+    overflow:visible;
   }
-  /*
-    Decorative character layer.
-    This is taken out of normal layout flow so it can overlap with cards without
-    pushing them around.
-  */
   .page-girl{
     position:absolute;
     right:-12px;
@@ -96,10 +76,6 @@
     opacity:.98;
     filter:drop-shadow(0 16px 28px rgba(37,99,235,.12));
   }
-  /*
-    Main vertical content stack.
-    The `gap` value here controls the spacing between the major sections.
-  */
   .stack{
     position:relative;
     z-index:1;
@@ -117,13 +93,6 @@
     background:var(--card);
     backdrop-filter: blur(12px);
   }
-  /*
-    Top section wrapper.
-    Contains:
-    1) the banner and three headline cards
-    2) the calendar card
-    3) the absence summary card
-  */
   .hero-panel{
     min-height:820px;
     padding:28px 18px 18px 0px;
@@ -136,7 +105,7 @@
   .hero-copy{ 
     position:relative;
     z-index:1;
-    max-width:340px; 
+    max-width:320px; 
     margin-left:0px; 
     padding-left:0px;
   }
@@ -218,10 +187,8 @@
     color:#64748b;
     margin-top:2px;
   }
-  
-  /*
-    Travel Map card wrapper.
-  */
+
+
   .map-panel{ padding:14px; }
   .panel-header{
     display:flex;
@@ -230,14 +197,34 @@
     gap:10px;
     margin-bottom:8px;
   }
-
+  .panel-title{
+    margin:0;
+    font-size:18px;
+    font-weight:800;
+  }
   .panel-subtitle{
     margin-top:4px;
     font-size:18px;
     font-weight:800;
     color:var(--accent);
   }
-  
+  .action-btn, .ghost-btn, .external-links button{
+    border:none;
+    border-radius:999px;
+    padding:12px 18px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .action-btn{
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:#fff;
+    box-shadow:0 10px 24px rgba(37,99,235,.18);
+  }
+  .ghost-btn{
+    background:rgba(235,242,255,.82);
+    color:var(--accent);
+  }
   .external-links{
     display:flex;
     gap:8px;
@@ -245,10 +232,8 @@
     margin-top:12px;
   }
   .external-links button{
-    background:var(--accent);
-    border-radius:999px;
-    border-color:var(--border);
-    color:white;
+    background:rgba(235,242,255,.82);
+    color:var(--accent);
     box-shadow:0 8px 18px rgba(15,23,42,.05);
   }
 
@@ -317,7 +302,6 @@
   .external-links button{
     padding:4px 8px;
     font-size:11px;
-    font-weight:bold;
     min-height:28px;
     line-height:1;
     display:inline-flex;
@@ -337,10 +321,10 @@
     box-shadow:0 4px 10px rgba(37,99,235,.10);
   }
   .swatch { display:inline-block; width:16px; height:16px; border:1px solid rgba(148,163,184,.5); border-radius:4px; vertical-align:middle; }
-  .country-swatch-visited { background:#93c5fd; border-color:#1d4ed8; }
-  .country-swatch-city { background:#fbbf24; border-color:#b45309; border-radius:50%; }
-  .flight-route-swatch { background:#ff8c00; border-color:#d00000; }
-  .flight-airport-swatch { background:#14b8a6; border-color:#0f766e; border-radius:50%; }
+  .country-swatch-visited { background:#2f6fff; border-color:#1847b8; }
+  .country-swatch-city { background:#24c483; border-color:#149d67; border-radius:50%; }
+  .flight-route-swatch { background:#f79d65; border-color:#e11d48; }
+  .flight-airport-swatch { background:#1d4ed8; border-color:#1e3a8a; border-radius:50%; }
   .swatch.absent { background:var(--absent-bg); border-color:var(--absent-border); }
   .swatch.today { background:var(--today-bg); border-color:var(--accent); }
   .swatch.linked { background:#f3e8ff; border-color:var(--link); }
@@ -355,7 +339,7 @@
     height:338px;
     border-radius:20px;
     overflow:hidden;
-    background:#dce9ff;
+    background:linear-gradient(180deg, #eef6ff 0%, #dfeeff 100%);
   }
   .kpi-strip{
     display:grid;
@@ -384,9 +368,115 @@
     font-size:20px;
     font-weight:800;
   }
+  .summary-box{
+    background:rgba(248,250,252,.48);
+    border:1px solid rgba(148,163,184,.10);
+    border-radius:18px;
+    padding:14px;
+    margin-bottom:8px;
+    backdrop-filter: blur(8px);
+  }
+  .summary-box .kicker{ 
+    font-size:13px; 
+    font-weight:700; 
+    color:#475569; 
+  }
+  .summary-box .big{
+    margin-top:8px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--accent);
+  }
+  .summary-box .sub{
+    margin-top:4px;
+    font-size:12px;
+    color:#64748b;
+  }
+
   .summary-compact{
     display:grid;
     gap:10px;
+  }
+  .summary-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:10px 12px;
+    border-radius:16px;
+    background:rgba(248,250,252,.48);
+    border:1px solid rgba(148,163,184,.10);
+    backdrop-filter: blur(8px);
+  }
+  .summary-row .label{
+    font-size:13px;
+    font-weight:700;
+    color:#475569;
+    line-height:1.25;
+  }
+  .summary-row .value{
+    font-size:18px;
+    font-weight:800;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .summary-row .value.small{
+    font-size:15px;
+  }
+  .summary-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:34px;
+    height:34px;
+    padding:0 10px;
+    border-radius:999px;
+    background:rgba(219,234,254,.92);
+    color:var(--accent);
+    font-size:14px;
+    font-weight:800;
+  }
+  .summary-meter{
+    margin-top:6px;
+    height:8px;
+    border-radius:999px;
+    background:rgba(191,219,254,.45);
+    overflow:visible;
+  }
+  .summary-meter-bar{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, #60a5fa, #2563eb);
+    width:0%;
+  }
+
+  .summary-barometer{
+    position:relative;
+    margin-top:8px;
+    height:28px;
+    border-radius:999px;
+    background:rgba(191,219,254,.45);
+    overflow:hidden;
+    border:1px solid rgba(148,163,184,.12);
+  }
+  .summary-barometer-bar{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    border-radius:999px;
+    background:linear-gradient(90deg, #93c5fd, #2563eb);
+    width:0%;
+  }
+  .summary-barometer-text{
+    position:relative;
+    z-index:1;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:800;
+    color:#1d2942;
   }
   .summary-grid-four{
     display:grid;
@@ -394,6 +484,7 @@
     gap:10px;
     width:100%;
   }
+
   .summary-gauge-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -476,7 +567,39 @@
     color:var(--accent);
     line-height:1;
   }
+  .check-list{
+    display:grid;
+    gap:8px;
+    margin:12px 0 14px;
+  }
+  .check-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-top:1px solid rgba(148,163,184,.12);
+  }
+  .check-row:first-child{ border-top:none; }
+  .check-row .label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:700;
+    color:#334155;
+  }
+  .check-dot{
+    width:18px;height:18px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#dcfce7;color:#16a34a;font-size:11px;font-weight:800;
+  }
+  .check-tick{ font-size:20px; font-weight:800; color:#16a34a; }
 
+  .controls{
+    margin:0;
+    background:transparent;
+    border:none;
+    padding:0;
+  }
   .controls-row{
     display:flex;
     justify-content:center;
@@ -486,7 +609,11 @@
     width:100%;
     margin:0 auto;
   }
-
+  .month-nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
   .month-nav-btn{
     width:28px;
     height:28px;
@@ -538,24 +665,38 @@
   .rolling { font-size:9px; line-height:1.2; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .star { color:var(--link); font-weight:700; margin-left:2px; }
 
-    background: rgba(31,41,55,0.92);
-    border: 0;
+    .maplibregl-popup {
+    z-index: 800;
+  }
+  .maplibregl-popup-content {
+    background: rgba(31,41,55,0.94);
     color: #fff;
-    box-shadow: none;
-    padding: 6px 8px;
+    border-radius: 12px;
+    padding: 8px 10px;
+    box-shadow: 0 10px 30px rgba(15,23,42,.28);
     font-size: 12px;
+    line-height: 1.35;
+  }
+  .maplibregl-popup-close-button {
+    color: #fff;
+    opacity: .8;
+  }
+  .maplibregl-ctrl-group {
+    border-radius: 14px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 22px rgba(15,23,42,.12) !important;
+    border: 1px solid rgba(148,163,184,.16) !important;
+  }
+  .maplibregl-ctrl-group button {
+    background: rgba(255,255,255,.86) !important;
+  }
+  .maplibregl-ctrl button .maplibregl-ctrl-icon {
+    opacity: .9;
   }
 
-  .hidden-support{ display:none !important; }
+  .hidden-support, h1, h2, .intro, .footnote{ display:none !important; }
   
-  /*
-    ==========================================================================
-    MOBILE-ONLY LAYOUT RULES
-    --------------------------------------------------------------------------
-    These overrides only apply on narrow screens.
-    Desktop and tablet landscape continue to use the default rules above.
-    ==========================================================================
-  */
+  /* For mobile devices */
   @media (max-width: 560px){
     .container{ 
       padding:0px 16px 24px; 
@@ -602,18 +743,12 @@
   }
 </style>
 
-
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.css"/>
-<script src="https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.js"></script>
 </head>
-
 
 <body>
 <div class="container">
-  <!-- Decorative character layer. Purely visual. -->
   <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
-    <!-- HERO SECTION: banner, headline stats, calendar and summary -->
     <section class="panel hero-panel">
       <div class="hero-copy">
         <div class="tagline">
@@ -681,7 +816,7 @@
                   </div>
                 </div>
                 <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Final 12 months (citizenship)</div>
+                  <div class="summary-gauge-label">Final 12 months</div>
                   <div class="gauge" id="summaryCitFinalGauge">
                     <div class="gauge-text">
                       <div class="gauge-number" id="summaryCitFinal">--</div>
@@ -705,7 +840,7 @@
                   <div class="mini-value" id="summaryTotalAbsent">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Flight logs</div>
+                  <div class="mini-label">Flight tickets</div>
                   <div class="mini-value" id="summarySupportingDocs">--</div>
                 </div>
               </div>
@@ -714,14 +849,13 @@
         </div>
 </section>
 
-        <!-- TRAVEL MAP SECTION -->
-    <section class="panel glass map-panel">
+    <section class="panel glass map-panel" style="margin-top:-4px;">
       <div class="panel-header">
         <div>
           <h3 class="panel-subtitle">Travel Map</h3>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
+          <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
           <button onclick="openExternal('flightradar')">myFlightradar24</button>
         </div>
       </div>
@@ -761,11 +895,21 @@
       <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
       <div id="travelMap" class="country-visited-map"></div>
     </section>
+
+    <div class="bottom-grid">    </div>
+
+    <div class="hidden-support">
+      <div id="ilrPill"></div>
+      <div id="ilrText"></div>
+      <div id="citPill"></div>
+      <div id="citText"></div>
+      <div id="dataText"></div>
+      <div id="today180Text"></div>
+      <div id="today90Text"></div>
+      <div id="currentDateText"></div>
+    </div>
   </div>
 </div>
-</div>
-
-<!-- Behaviour: absence tracker -->
 <script>
 /*
   ============================================================================
@@ -779,38 +923,6 @@
   - Make calculations deterministic and easy to inspect.
   ============================================================================
 */
-
-
-// ---------------------------------------------------------------------------
-// DEBUGGING HELPERS
-// ---------------------------------------------------------------------------
-// Set ENABLE_DEBUG_LOGS to false when you no longer want console output.
-const SITE_DEBUG = {
-  ENABLE_DEBUG_LOGS: true,
-  PREFIX: "[Travel Site]"
-};
-
-function debugLog(step, details = null) {
-  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
-  if (details === null) console.log(`${SITE_DEBUG.PREFIX} ${step}`);
-  else console.log(`${SITE_DEBUG.PREFIX} ${step}`, details);
-}
-
-function debugWarn(step, details = null) {
-  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
-  if (details === null) console.warn(`${SITE_DEBUG.PREFIX} ${step}`);
-  else console.warn(`${SITE_DEBUG.PREFIX} ${step}`, details);
-}
-
-function debugError(step, error) {
-  console.error(`${SITE_DEBUG.PREFIX} ${step}`, error);
-}
-
-function getElementOrWarn(id) {
-  const element = document.getElementById(id);
-  if (!element) debugWarn(`Missing DOM element: #${id}`);
-  return element;
-}
 
 // Data sources loaded from JSON bootstrap (see initSiteData at the end of the file).
 let ABSENCE_RANGES_DATA = [];
@@ -842,11 +954,6 @@ const IMMIGRATION_RULES = {
   }
 };
 
-/**
- * Convert a YYYY-MM-DD string into a local Date object.
- * We avoid the browser's built-in Date parser because time zones can create
- * hard-to-debug differences between browsers.
- */
 function parseDateLocal(isoDate) {
   const [year, month, day] = isoDate.split("-").map(Number);
   return new Date(year, month - 1, day);
@@ -865,13 +972,6 @@ function addDays(date, offsetDays) {
   return copy;
 }
 
-/**
- * Expand trip ranges into a Set of individual absent dates.
- * Example:
- *   ["2025-01-01", "2025-01-03"]
- * becomes:
- *   2025-01-01, 2025-01-02, 2025-01-03
- */
 function buildAbsenceSet(ranges) {
   const absentDays = new Set();
 
@@ -888,10 +988,6 @@ function buildAbsenceSet(ranges) {
   return absentDays;
 }
 
-/**
- * Build a lookup table where each day stores the number of absent days in the
- * previous 365-day window.
- */
 function buildRollingCounts(siteStart, siteEnd, absentSet, minimumIncludedDate = null) {
   const counts = {};
   let current = parseDateLocal(siteStart);
@@ -948,18 +1044,9 @@ function monthTitle(year, monthIndex) {
   });
 }
 
-
-/**
- * Calculate all summary numbers and update the visible cards.
- * The function is intentionally split into logical sections so it is easier for
- * non-programmers to follow later.
- */
 function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const { ilr, citizenship, safetyBuffer } = IMMIGRATION_RULES;
 
-  debugLog("Calculating compliance summary");
-
-  // 1) Core compliance calculations
   const ilrResult = getMaxRollingCount(rollingCounts, ilr.start, ilr.end);
   const isIlrCompliant = ilrResult.maxCount <= ilr.rollingLimit;
 
@@ -969,13 +1056,13 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
     citizenship.finalTwelveMonthsStart,
     citizenship.finalTwelveMonthsEnd
   );
-
   const isCitizenshipCompliant =
     citizenshipTotal <= citizenship.totalLimit &&
     citizenshipFinalYear <= citizenship.finalTwelveMonthsLimit;
 
   const today = new Date();
   const todayKey = formatDate(today);
+
   const todayRolling = rollingCounts[todayKey] || 0;
   const remainingIlrDays = ilr.rollingLimit - todayRolling;
 
@@ -986,84 +1073,112 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const safetyRemaining = safetyBuffer.rollingLimit - safetyUsed;
 
   const totalAbsentDays = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
-  const supportingDocumentCount = Object.keys(DAY_LINKS_DATA).length;
 
-  debugLog("Compliance summary values", {
-    ilrResult,
-    isIlrCompliant,
-    citizenshipTotal,
-    citizenshipFinalYear,
-    isCitizenshipCompliant,
-    todayKey,
-    todayRolling,
-    remainingIlrDays,
-    safetyUsed,
-    safetyRemaining,
-    totalAbsentDays,
-    supportingDocumentCount
-  });
+  const ilrPill = document.getElementById("ilrPill");
+  ilrPill.className = `pill ${isIlrCompliant ? "ok" : "bad"}`;
+  ilrPill.textContent = isIlrCompliant ? "ILR compliant" : "ILR not compliant";
 
-  // 2) Update the circular gauges
-  const summaryCitTotal = getElementOrWarn("summaryCitTotal");
+  document.getElementById("ilrText").innerHTML =
+    `Highest rolling 12-month absence count: <strong>${ilrResult.maxCount}</strong> day(s), on <strong>${ilrResult.maxDate}</strong>. Limit: ${ilr.rollingLimit}.`;
+
+  const citPill = document.getElementById("citPill");
+  citPill.className = `pill ${isCitizenshipCompliant ? "ok" : "bad"}`;
+  citPill.textContent = isCitizenshipCompliant ? "Citizenship compliant" : "Citizenship not compliant";
+
+  document.getElementById("citText").innerHTML =
+    `Total absent days in citizenship window: <strong>${citizenshipTotal}</strong> / ${citizenship.totalLimit}.<br>` +
+    `Absent days in final 12 months: <strong>${citizenshipFinalYear}</strong> / ${citizenship.finalTwelveMonthsLimit}.`;
+
+  document.getElementById("dataText").innerHTML =
+    `Trips taken: <strong>${ABSENCE_RANGES_DATA.length}</strong><br>` +
+    `Total number of absent days: <strong>${totalAbsentDays}</strong><br>` +
+    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS_DATA).length}</strong>`;
+
+  document.getElementById("today180Text").innerHTML =
+    `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
+    `Remaining days available under the ILR 180-day rolling limit: <strong>${remainingIlrDays}</strong> day(s).`;
+
+  if (today < safetyStartDate) {
+    document.getElementById("today90Text").innerHTML =
+      `Your self-imposed 90-day rolling rule starts on <strong>${safetyBuffer.start}</strong>.<br>` +
+      `Using <strong>${safetyBuffer.start}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
+  } else {
+    document.getElementById("today90Text").innerHTML =
+      `As of <strong>${todayKey}</strong>, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
+      `Remaining days available under the 90-day rolling safety buffer rule: <strong>${safetyRemaining}</strong> day(s).`;
+  }
+
+  document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
+
+  const summaryCitTotal = document.getElementById("summaryCitTotal");
   if (summaryCitTotal) summaryCitTotal.textContent = String(citizenshipTotal);
 
-  const summaryCitGauge = getElementOrWarn("summaryCitGauge");
-  if (summaryCitGauge) {
-    summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
-  }
+  const summaryCitGauge = document.getElementById("summaryCitGauge");
+  if (summaryCitGauge) summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
 
-  const summaryCitFinal = getElementOrWarn("summaryCitFinal");
+  const summaryCitFinal = document.getElementById("summaryCitFinal");
   if (summaryCitFinal) summaryCitFinal.textContent = String(citizenshipFinalYear);
 
-  const summaryCitFinalGauge = getElementOrWarn("summaryCitFinalGauge");
-  if (summaryCitFinalGauge) {
-    summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
-  }
+  const summaryCitFinalGauge = document.getElementById("summaryCitFinalGauge");
+  if (summaryCitFinalGauge) summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
 
-  // 3) Update the four summary mini-cards
-  const summarySafetyRemaining = getElementOrWarn("summarySafetyRemaining");
+  const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
   if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining}d`;
 
-  const summaryTripsTaken = getElementOrWarn("summaryTripsTaken");
+  const summaryTripsTaken = document.getElementById("summaryTripsTaken");
   if (summaryTripsTaken) summaryTripsTaken.textContent = String(ABSENCE_RANGES_DATA.length);
 
-  const summaryTotalAbsent = getElementOrWarn("summaryTotalAbsent");
+  const summaryTotalAbsent = document.getElementById("summaryTotalAbsent");
   if (summaryTotalAbsent) summaryTotalAbsent.textContent = String(totalAbsentDays);
 
-  const summarySupportingDocs = getElementOrWarn("summarySupportingDocs");
-  if (summarySupportingDocs) summarySupportingDocs.textContent = String(supportingDocumentCount);
+  const summarySupportingDocs = document.getElementById("summarySupportingDocs");
+  if (summarySupportingDocs) summarySupportingDocs.textContent = String(Object.keys(DAY_LINKS_DATA).length);
 
-  // 4) Update the top headline cards
-  const heroIlrIcon = getElementOrWarn("heroIlrIcon");
-  const heroIlrValue = getElementOrWarn("heroIlrValue");
+  const heroIlrIcon = document.getElementById("heroIlrIcon");
+  const heroIlrValue = document.getElementById("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "OK" : "FAIL";
+    heroIlrValue.textContent = isIlrCompliant ? "Pass" : "Risk";
     heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
     heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
   }
 
-  const heroCitIcon = getElementOrWarn("heroCitIcon");
-  const heroCitValue = getElementOrWarn("heroCitValue");
+  const heroCitIcon = document.getElementById("heroCitIcon");
+  const heroCitValue = document.getElementById("heroCitValue");
   if (heroCitIcon && heroCitValue) {
     heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
-    heroCitValue.textContent = isCitizenshipCompliant ? "OK" : "FAIL";
+    heroCitValue.textContent = isCitizenshipCompliant ? "Pass" : "Risk";
     heroCitValue.className = `stat-value ${isCitizenshipCompliant ? "bool-ok" : "bool-bad"}`;
     heroCitIcon.style.background = isCitizenshipCompliant ? "#dcfce7" : "#fee2e2";
     heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
   }
 
-  const heroIlrWindow = getElementOrWarn("heroIlrWindow");
-  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sept 2029";
+  const heroIlrWindow = document.getElementById("heroIlrWindow");
+  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
 
-  const heroCitWindow = getElementOrWarn("heroCitWindow");
-  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sept 2030";
+  const heroCitWindow = document.getElementById("heroCitWindow");
+  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
 
-  const heroDaysValue = getElementOrWarn("heroDaysValue");
+  const heroDaysValue = document.getElementById("heroDaysValue");
   if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
-}
 
+  const heroDaysBottomValue = document.getElementById("heroDaysBottomValue");
+  if (heroDaysBottomValue) heroDaysBottomValue.textContent = String(remainingIlrDays);
+
+  const miniDaysRemaining = document.getElementById("miniDaysRemaining");
+  if (miniDaysRemaining) miniDaysRemaining.textContent = `${remainingIlrDays} days remaining`;
+
+  const miniDaysReference = document.getElementById("miniDaysReference");
+  if (miniDaysReference) miniDaysReference.textContent = todayKey;
+
+  const miniIlrTick = document.getElementById("miniIlrTick");
+  if (miniIlrTick) miniIlrTick.textContent = isIlrCompliant ? "✓" : "✕";
+
+  const miniCitTick = document.getElementById("miniCitTick");
+  if (miniCitTick) miniCitTick.textContent = isCitizenshipCompliant ? "✓" : "✕";
+}
 
 function createDayCell(date, absentSet, rollingCounts) {
   const key = formatDate(date);
@@ -1164,7 +1279,7 @@ function populateYearPicker() {
 
 function populateMonthPicker() {
   const picker = document.getElementById("monthPicker");
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   monthNames.forEach((name, index) => {
     const option = document.createElement("option");
@@ -1188,11 +1303,7 @@ function openExternal(type) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-/**
- * Initialise the absence tracker once the required JSON files have loaded.
- */
 function initAbsenceTracker() {
-  debugLog("Initialising absence tracker");
   const absentSet = buildAbsenceSet(ABSENCE_RANGES_DATA);
   const rollingCounts = buildRollingCounts(
     IMMIGRATION_RULES.siteStart,
@@ -1233,11 +1344,9 @@ function initAbsenceTracker() {
     year = Math.max(2024, Math.min(2031, year));
     yearPicker.value = String(year);
     monthPicker.value = String(month);
-    debugLog("Rendering initial calendar month", { year: yearPicker.value, month: monthPicker.value });
-  renderSelectedMonth();
+    renderSelectedMonth();
   };
 
-  debugLog("Rendering initial calendar month", { year: yearPicker.value, month: monthPicker.value });
   renderSelectedMonth();
   yearPicker.addEventListener("change", renderSelectedMonth);
   monthPicker.addEventListener("change", renderSelectedMonth);
@@ -1248,21 +1357,22 @@ function initAbsenceTracker() {
 
 </script>
 
-<!-- External library used by the travel map -->
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
 
 <script>
 /*
   ============================================================================
   TRAVEL MAP
   ----------------------------------------------------------------------------
-  This block merges visited countries, cities, airports and flight routes into
-  one interactive Leaflet map.
+  This block renders the travel map with MapLibre GL JS.
 
-  Design goals:
-  - Keep one canonical country model across all datasets.
-  - Make hover highlighting data-driven.
-  - Prefer your own city-country data when resolving country membership.
-  - Keep all special-case overrides in one place.
+  What changed compared with the older Leaflet version:
+  - the base map now uses a dedicated MapLibre style JSON at /styles/travel_map_style.json
+  - countries, cities, airports and routes are converted into GeoJSON sources
+  - hover highlighting is handled with native MapLibre layers and filters
+  - glow effects use GPU-accelerated line/circle blur layers
+  - flight routes are curved great-circle arcs with a moving highlight animation
   ============================================================================
 */
 (function () {
@@ -1279,10 +1389,10 @@ function initAbsenceTracker() {
     "Puerto Rico",
     "Svalbard"
   ];
-  const VISITED_TERRITORIES = window.VISITED_TERRITORIES_DATA;
   window.VISITED_COUNTRIES_DATA = [];
 
   const TRAVEL_MAP_CONFIG = {
+    styleUrl: "./styles/travel_map_style.json",
     countryGeoJsonUrls: [
       "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
       "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
@@ -1296,11 +1406,39 @@ function initAbsenceTracker() {
   };
 
   // --------------------------------------------------------------------------
-  // 2) Canonical country model
+  // 2) Theme colours kept in one place for easier maintenance
   // --------------------------------------------------------------------------
-  // Everything on the map must ultimately resolve to one consistent country
-  // name. This is the foundation that makes hover highlighting reliable.
+  const MAP_THEME = {
+    countries: {
+      fill: "#2f6fff",
+      line: "#1847b8",
+      hoverFill: "#1748d8",
+      hoverLine: "#103aab",
+      fadedFill: "#e8f0ff",
+      fadedLine: "#d7e4ff"
+    },
+    cities: {
+      fill: "#24c483",
+      hoverFill: "#149d67",
+      fadedFill: "#b7f0d6"
+    },
+    airports: {
+      fill: "#13b8a6",
+      hoverFill: "#0d9488",
+      fadedFill: "#99f6e4"
+    },
+    routes: {
+      level1: "#f7b267",
+      level2: "#f79d65",
+      level3: "#f97316",
+      level4: "#e11d48",
+      level5: "#7c3aed"
+    }
+  };
 
+  // --------------------------------------------------------------------------
+  // 3) Canonical country model
+  // --------------------------------------------------------------------------
   const COUNTRY_ALIASES = {
     "Bahamas": "The Bahamas",
     "Congo (Congo-Brazzaville)": "Republic of the Congo",
@@ -1343,7 +1481,6 @@ function initAbsenceTracker() {
     "Somalia": ["Somalia", "Somaliland"]
   };
 
-  // Airport and territory overrides. These are intentionally centralised here.
   const AIRPORT_CODE_OVERRIDES = {
     HKG: "Hong Kong S.A.R.", VHHH: "Hong Kong S.A.R.",
     MFM: "Macao S.A.R.", VMMC: "Macao S.A.R.",
@@ -1442,9 +1579,8 @@ function initAbsenceTracker() {
   };
 
   // --------------------------------------------------------------------------
-  // 3) Generic helpers
+  // 4) Generic helpers
   // --------------------------------------------------------------------------
-
   function normaliseText(value) {
     return String(value || "")
       .normalize("NFD")
@@ -1487,21 +1623,16 @@ function initAbsenceTracker() {
 
   function resolvePolygonCountry(feature) {
     const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
-
     for (const country of (window.VISITED_COUNTRIES_DATA || [])) {
       const canonical = getCanonicalVisitedCountry(country);
       const expandedNames = getExpansionTargets(canonical).map(normaliseText);
-      if (expandedNames.some(name => candidateNames.includes(name))) {
-        return canonical;
-      }
+      if (expandedNames.some(name => candidateNames.includes(name))) return canonical;
     }
-
     return getFeatureDisplayName(feature);
   }
 
   async function fetchJsonWithFallback(urls) {
     let lastError = null;
-
     for (const url of urls) {
       try {
         const response = await fetch(url, { cache: "no-store" });
@@ -1511,13 +1642,11 @@ function initAbsenceTracker() {
         lastError = error;
       }
     }
-
     throw lastError || new Error("Unable to load JSON data.");
   }
 
   async function fetchTextWithFallback(urls) {
     let lastError = null;
-
     for (const url of urls) {
       try {
         const response = await fetch(url, { cache: "no-store" });
@@ -1527,13 +1656,8 @@ function initAbsenceTracker() {
         lastError = error;
       }
     }
-
     throw lastError || new Error("Unable to load text data.");
   }
-
-  // --------------------------------------------------------------------------
-  // 4) Flight helpers
-  // --------------------------------------------------------------------------
 
   function parseCsv(text) {
     const rows = [];
@@ -1568,7 +1692,6 @@ function initAbsenceTracker() {
 
     row.push(value);
     if (row.some(cell => cell !== "")) rows.push(row);
-
     return rows;
   }
 
@@ -1582,7 +1705,6 @@ function initAbsenceTracker() {
 
     return rows.slice(1).map(cells => {
       const get = name => (cells[indexByColumn[name]] || "").trim();
-
       const fromMatch = get("From").match(fromToPattern);
       const toMatch = get("To").match(fromToPattern);
       if (!fromMatch || !toMatch) return null;
@@ -1608,12 +1730,10 @@ function initAbsenceTracker() {
 
   function buildIataIndex(airportsByIcao) {
     const byIata = {};
-
     Object.values(airportsByIcao).forEach(airport => {
       const iata = String(airport.iata || "").trim();
       const lat = Number(airport.lat);
       const lon = Number(airport.lon);
-
       if (!iata || iata === "\\N" || !Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
       if (!byIata[iata]) {
@@ -1628,13 +1748,11 @@ function initAbsenceTracker() {
         };
       }
     });
-
     return byIata;
   }
 
   function normaliseAirportRecord(record, fallbackIcao = "") {
     if (!record) return null;
-
     const lat = Number(record.lat);
     const lon = Number(record.lon);
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
@@ -1692,7 +1810,7 @@ function initAbsenceTracker() {
     ));
 
     if (!isFinite(distance) || distance === 0) {
-      return [[lat1, lon1], [lat2, lon2]];
+      return [[lon1, lat1], [lon2, lat2]];
     }
 
     const points = [];
@@ -1716,120 +1834,155 @@ function initAbsenceTracker() {
       }
 
       previousLng = lng;
-      points.push([toDeg(phi), lng]);
+      points.push([lng, toDeg(phi)]);
     }
 
     return points;
   }
 
-  function splitPolylineAtDateLine(points) {
+  function splitLineAtDateLine(points) {
     if (!Array.isArray(points) || points.length === 0) return [];
-
     const segments = [[points[0]]];
-
     for (let i = 1; i < points.length; i += 1) {
       const previous = points[i - 1];
       const current = points[i];
-
-      if (Math.abs(current[1] - previous[1]) > 180) {
+      if (Math.abs(current[0] - previous[0]) > 180) {
         segments.push([current]);
       } else {
         segments[segments.length - 1].push(current);
       }
     }
-
     return segments.filter(segment => segment.length >= 2);
   }
 
-  function getRouteColor(count) {
-    if (count === 1) return "#ff8c00";
-    if (count === 2) return "#ff3b30";
-    if (count === 3) return "#d00000";
-    if (count === 4) return "#c2185b";
-    return "#7b2cff";
+  function getRouteColor(flightCount) {
+    if (flightCount >= 20) return MAP_THEME.routes.level5;
+    if (flightCount >= 10) return MAP_THEME.routes.level4;
+    if (flightCount >= 5) return MAP_THEME.routes.level3;
+    if (flightCount >= 2) return MAP_THEME.routes.level2;
+    return MAP_THEME.routes.level1;
   }
 
-  // --------------------------------------------------------------------------
-  // 5) Travel map bootstrap
-  // --------------------------------------------------------------------------
+  function toFeatureCollection(features) {
+    return { type: "FeatureCollection", features };
+  }
+
+  function uniqueBy(array, keyFn) {
+    const seen = new Set();
+    return array.filter(item => {
+      const key = keyFn(item);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function setLayerVisibility(map, layerIds, isVisible) {
+    layerIds.forEach(layerId => {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, "visibility", isVisible ? "visible" : "none");
+      }
+    });
+  }
+
+  function createPopup() {
+    return new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 12,
+      maxWidth: "320px"
+    });
+  }
+
+  function bindPopupForLayer(map, popup, layerId, htmlBuilder) {
+    map.on("mousemove", layerId, event => {
+      const feature = event.features && event.features[0];
+      if (!feature) return;
+      map.getCanvas().style.cursor = "pointer";
+      popup
+        .setLngLat(event.lngLat)
+        .setHTML(htmlBuilder(feature))
+        .addTo(map);
+    });
+
+    map.on("mouseleave", layerId, () => {
+      map.getCanvas().style.cursor = "";
+      popup.remove();
+    });
+  }
+
+  function animateRoutePulse(map) {
+    let animationFrameId = null;
+    const layerId = "routes-animated";
+    let progress = 0;
+
+    function frame() {
+      if (!map.getLayer(layerId)) return;
+      progress += 0.006;
+      if (progress > 1) progress = 0;
+
+      const start = Math.max(0, progress - 0.08);
+      const mid = progress;
+      const end = Math.min(1, progress + 0.08);
+
+      map.setPaintProperty(layerId, "line-gradient", [
+        "interpolate",
+        ["linear"],
+        ["line-progress"],
+        start, "rgba(255,255,255,0)",
+        mid, "rgba(255,255,255,0.95)",
+        end, "rgba(255,255,255,0)"
+      ]);
+
+      animationFrameId = requestAnimationFrame(frame);
+    }
+
+    frame();
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }
 
   /**
-   * Build the interactive travel map.
-   * This function:
-   * 1) creates the map
-   * 2) loads visited countries
-   * 3) loads city pins
-   * 4) loads airports and flight routes
-   * 5) wires up hover highlighting and toggle buttons
+   * Build the interactive travel map with MapLibre GL JS.
    */
   window.initTravelMap = function initTravelMap() {
-    debugLog("Initialising travel map");
+    debugLog("Initialising travel map (MapLibre)");
+
     const mapContainer = getElementOrWarn("travelMap");
     const statusText = getElementOrWarn("travelMapStatusText");
-    if (!mapContainer || typeof L === "undefined") return;
-    
+    if (!mapContainer || typeof maplibregl === "undefined") return;
+
     const isMobile = window.innerWidth <= 560;
-    const defaultCentre = isMobile ? [28, 7] : [28, 7];
-    const defaultZoom = isMobile ? 0.8 : 1.2;
-    const map = L.map("travelMap", {
-      worldCopyJump: true,
-      zoomSnap: 0.25,
-      zoomControl: true
-    }).setView(defaultCentre, defaultZoom);  
-    /* 
-      setView function
-        var 1: latitude (lower = map moves upwards)
-        var 2: longtitude (lower = map moves left)
-        var 3: zoom level
-    */
+    const defaultCenter = isMobile ? [7, 28] : [7, 28];
+    const defaultZoom = isMobile ? 1.05 : 1.2;
 
-    map.createPane("countryPane");
-    map.getPane("countryPane").style.zIndex = 400;
-    map.createPane("routePane");
-    map.getPane("routePane").style.zIndex = 430;
-    map.createPane("labelPane");
-    map.getPane("labelPane").style.zIndex = 500;
-    map.createPane("cityPane");
-    map.getPane("cityPane").style.zIndex = 650;
-    map.createPane("airportPane");
-    map.getPane("airportPane").style.zIndex = 670;
-    map.createPane("tooltipPane");
-    map.getPane("tooltipPane").style.zIndex = 700;
+    const map = new maplibregl.Map({
+      container: "travelMap",
+      style: TRAVEL_MAP_CONFIG.styleUrl,
+      center: defaultCenter,
+      zoom: defaultZoom,
+      attributionControl: false,
+      maxPitch: 0,
+      dragRotate: false,
+      touchZoomRotate: true
+    });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-      subdomains: "abcd",
-      maxZoom: 8
-    }).addTo(map);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-      subdomains: "abcd",
-      maxZoom: 8,
-      pane: "labelPane"
-    }).addTo(map);
-
-    const layers = {
-      country: L.layerGroup().addTo(map),
-      city: L.layerGroup(),
-      airport: L.layerGroup(),
-      route: L.layerGroup()
+    const layerState = {
+      country: true,
+      city: false,
+      airport: false,
+      route: false
     };
 
-    const registries = {
-      countries: [],
-      cities: [],
-      airports: [],
-      routes: []
-    };
+    const popup = createPopup();
+    let cleanupRouteAnimation = null;
 
     const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
-
     const cityCountryLookup = Object.fromEntries(
-      cityData.map(city => [
-        normaliseText(city.name),
-        canonicaliseCountryName(city.country || "")
-      ])
+      cityData.map(city => [normaliseText(city.name), canonicaliseCountryName(city.country || "")])
     );
 
     const counters = {
@@ -1840,127 +1993,377 @@ function initAbsenceTracker() {
       routePairs: 0
     };
 
-    // Base layer styles. These are reused when hover state is cleared.
-    const styles = {
-      countryBase() {
-        return { color: "#1d4ed8", weight: 1.5, fillColor: "#93c5fd", fillOpacity: 0.6, opacity: 1 };
-      },
-      cityBase() {
-        return { radius: 2.5, color: "#b45309", weight: 1, fillColor: "#fbbf24", fillOpacity: 1, opacity: 1 };
-      },
-      airportBase() {
-        return { radius: 1.5, color: "#ffffff", weight: 0.5, fillColor: "#14b8a6", fillOpacity: 0.8, opacity: 1 };
-      }
-    };
-
     function updateStatusText() {
       if (statusText) statusText.textContent = "";
       debugLog("Travel map counters updated", counters);
 
-      const heroCountryCount = document.getElementById("heroCountryCount");
+      const heroCountryCount = getElementOrWarn("heroCountryCount");
       if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
 
-      const heroCityCount = document.getElementById("heroCityCount");
+      const heroCityCount = getElementOrWarn("heroCityCount");
       if (heroCityCount) heroCityCount.textContent = String(counters.visitedCities);
 
-      const heroAirportCount = document.getElementById("heroAirportCount");
+      const heroAirportCount = getElementOrWarn("heroAirportCount");
       if (heroAirportCount) heroAirportCount.textContent = String(counters.visitedAirports);
 
-      const heroFlightCount = document.getElementById("heroFlightCount");
+      const heroFlightCount = getElementOrWarn("heroFlightCount");
       if (heroFlightCount) heroFlightCount.textContent = String(counters.flightsTaken);
 
-      const heroRouteCount = document.getElementById("heroRouteCount");
+      const heroRouteCount = getElementOrWarn("heroRouteCount");
       if (heroRouteCount) heroRouteCount.textContent = String(counters.routePairs);
     }
 
     function applyHoverHighlight(activeCountry) {
       const hoveredCountry = activeCountry ? canonicaliseCountryName(activeCountry) : null;
+      const hasHover = Boolean(hoveredCountry);
 
-      registries.countries.forEach(entry => {
-        const related = hoveredCountry && entry.country === hoveredCountry;
-        entry.layer.setStyle(
-          hoveredCountry
-            ? (related
-                ? { color: "#1d4ed8", weight: 2.4, fillColor: "#60a5fa", fillOpacity: 0.82, opacity: 1 }
-                : { color: "#1d4ed8", weight: 1, fillColor: "#93c5fd", fillOpacity: 0.18, opacity: 0.22 })
-            : styles.countryBase()
-        );
-      });
+      if (!map.isStyleLoaded()) return;
 
-      registries.cities.forEach(entry => {
-        const related = hoveredCountry && entry.country === hoveredCountry;
-        entry.marker.setStyle(
-          hoveredCountry
-            ? (related
-                ? { radius: 3.64, color: "#92400e", weight: 1.54, fillColor: "#f59e0b", fillOpacity: 1, opacity: 1 }
-                : { radius: 2.1, color: "#b45309", weight: 0.84, fillColor: "#fbbf24", fillOpacity: 0.28, opacity: 0.28 })
-            : styles.cityBase()
-        );
-      });
+      // Fade base layers when there is an active hover target.
+      map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
+      map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
+      map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
+      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
+      map.setPaintProperty("cities-glow", "circle-opacity", hasHover ? 0.12 : 0.55);
+      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
+      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
+      map.setPaintProperty("airports-glow", "circle-opacity", hasHover ? 0.12 : 0.45);
+      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.12 : 0.76);
+      map.setPaintProperty("routes-glow", "line-opacity", hasHover ? 0.08 : 0.3);
+      map.setPaintProperty("routes-animated", "line-opacity", hasHover ? 0.08 : 0.85);
 
-      registries.airports.forEach(entry => {
-        const related = hoveredCountry && entry.country === hoveredCountry;
-        entry.marker.setStyle(
-          hoveredCountry
-            ? (related
-                ? { radius: 2.94, color: "#ffffff", weight: 1.26, fillColor: "#0ea5a4", fillOpacity: 1, opacity: 1 }
-                : { radius: 1.54, color: "#ffffff", weight: 0.7, fillColor: "#99f6e4", fillOpacity: 0.2, opacity: 0.22 })
-            : styles.airportBase()
-        );
-      });
-
-      registries.routes.forEach(entry => {
-        const related = hoveredCountry && entry.countries.includes(hoveredCountry);
-        const routeStyle = hoveredCountry
-          ? (related ? { weight: 2.2, opacity: 1 } : { weight: 0.6, opacity: 0.18 })
-          : { weight: 1.2, opacity: 0.8 };
-
-        entry.polylines.forEach(polyline => polyline.setStyle(routeStyle));
-      });
+      // Apply hover filters to dedicated highlight layers.
+      map.setFilter("countries-hover-fill", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("countries-hover-line", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("cities-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("cities-hover-glow", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("airports-hover", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("airports-hover-glow", hoveredCountry ? ["==", ["get", "country"], hoveredCountry] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("routes-hover", hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
+      map.setFilter("routes-hover-glow", hoveredCountry ? ["in", hoveredCountry, ["get", "countries"]] : ["==", ["get", "country"], "___none___"]);
     }
 
-    function bindToggleButtons() {
+    function addGeoJsonLayers(countryGeoJson, cityGeoJson, airportGeoJson, routeGeoJson) {
+      // Countries
+      map.addSource("visited-countries", {
+        type: "geojson",
+        data: countryGeoJson,
+        promoteId: "country"
+      });
+
+      map.addLayer({
+        id: "countries-fill",
+        type: "fill",
+        source: "visited-countries",
+        paint: {
+          "fill-color": MAP_THEME.countries.fill,
+          "fill-opacity": 0.78,
+          "fill-outline-color": MAP_THEME.countries.line,
+          "fill-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "countries-line",
+        type: "line",
+        source: "visited-countries",
+        paint: {
+          "line-color": MAP_THEME.countries.line,
+          "line-width": 1.4,
+          "line-opacity": 1,
+          "line-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "countries-hover-fill",
+        type: "fill",
+        source: "visited-countries",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "fill-color": MAP_THEME.countries.hoverFill,
+          "fill-opacity": 0.96,
+          "fill-outline-color": MAP_THEME.countries.hoverLine
+        }
+      });
+
+      map.addLayer({
+        id: "countries-hover-line",
+        type: "line",
+        source: "visited-countries",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "line-color": MAP_THEME.countries.hoverLine,
+          "line-width": 2.3,
+          "line-opacity": 1
+        }
+      });
+
+      // Cities
+      map.addSource("visited-cities", {
+        type: "geojson",
+        data: cityGeoJson
+      });
+
+      map.addLayer({
+        id: "cities-glow",
+        type: "circle",
+        source: "visited-cities",
+        paint: {
+          "circle-radius": 10,
+          "circle-color": MAP_THEME.cities.fill,
+          "circle-opacity": 0.55,
+          "circle-blur": 0.85,
+          "circle-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "cities-base",
+        type: "circle",
+        source: "visited-cities",
+        paint: {
+          "circle-radius": 4.6,
+          "circle-color": MAP_THEME.cities.fill,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.4,
+          "circle-opacity": 1,
+          "circle-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "cities-hover-glow",
+        type: "circle",
+        source: "visited-cities",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "circle-radius": 13,
+          "circle-color": MAP_THEME.cities.hoverFill,
+          "circle-opacity": 0.72,
+          "circle-blur": 0.9
+        }
+      });
+
+      map.addLayer({
+        id: "cities-hover",
+        type: "circle",
+        source: "visited-cities",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "circle-radius": 5.8,
+          "circle-color": MAP_THEME.cities.hoverFill,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.8,
+          "circle-opacity": 1
+        }
+      });
+
+      // Airports
+      map.addSource("visited-airports", {
+        type: "geojson",
+        data: airportGeoJson
+      });
+
+      map.addLayer({
+        id: "airports-glow",
+        type: "circle",
+        source: "visited-airports",
+        paint: {
+          "circle-radius": 8,
+          "circle-color": MAP_THEME.airports.fill,
+          "circle-opacity": 0.45,
+          "circle-blur": 0.9,
+          "circle-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "airports-base",
+        type: "circle",
+        source: "visited-airports",
+        paint: {
+          "circle-radius": 3.6,
+          "circle-color": MAP_THEME.airports.fill,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.2,
+          "circle-opacity": 0.96,
+          "circle-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "airports-hover-glow",
+        type: "circle",
+        source: "visited-airports",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "circle-radius": 10,
+          "circle-color": MAP_THEME.airports.hoverFill,
+          "circle-opacity": 0.72,
+          "circle-blur": 0.9
+        }
+      });
+
+      map.addLayer({
+        id: "airports-hover",
+        type: "circle",
+        source: "visited-airports",
+        filter: ["==", ["get", "country"], "___none___"],
+        paint: {
+          "circle-radius": 4.8,
+          "circle-color": MAP_THEME.airports.hoverFill,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.5,
+          "circle-opacity": 1
+        }
+      });
+
+      // Routes
+      map.addSource("flight-routes", {
+        type: "geojson",
+        data: routeGeoJson,
+        lineMetrics: true
+      });
+
+      map.addLayer({
+        id: "routes-glow",
+        type: "line",
+        source: "flight-routes",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": ["get", "colour"],
+          "line-width": 5.2,
+          "line-opacity": 0.3,
+          "line-blur": 1.2,
+          "line-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "routes-base",
+        type: "line",
+        source: "flight-routes",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": ["get", "colour"],
+          "line-width": 2.1,
+          "line-opacity": 0.76,
+          "line-opacity-transition": { duration: 220, delay: 0 }
+        }
+      });
+
+      map.addLayer({
+        id: "routes-hover-glow",
+        type: "line",
+        source: "flight-routes",
+        filter: ["==", ["get", "country"], "___none___"],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": ["get", "colour"],
+          "line-width": 6.4,
+          "line-opacity": 0.55,
+          "line-blur": 1.4
+        }
+      });
+
+      map.addLayer({
+        id: "routes-hover",
+        type: "line",
+        source: "flight-routes",
+        filter: ["==", ["get", "country"], "___none___"],
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-color": ["get", "colour"],
+          "line-width": 2.8,
+          "line-opacity": 0.96
+        }
+      });
+
+      map.addLayer({
+        id: "routes-animated",
+        type: "line",
+        source: "flight-routes",
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-width": 2.4,
+          "line-opacity": 0.85,
+          "line-gradient": [
+            "interpolate",
+            ["linear"],
+            ["line-progress"],
+            0, "rgba(255,255,255,0)",
+            0.5, "rgba(255,255,255,0.9)",
+            1, "rgba(255,255,255,0)"
+          ]
+        }
+      });
+
+      // Layer visibility defaults to match the current toggle buttons
+      setLayerVisibility(map, ["cities-glow", "cities-base", "cities-hover-glow", "cities-hover"], layerState.city);
+      setLayerVisibility(map, ["airports-glow", "airports-base", "airports-hover-glow", "airports-hover"], layerState.airport);
+      setLayerVisibility(map, ["routes-glow", "routes-base", "routes-hover-glow", "routes-hover", "routes-animated"], layerState.route);
+    }
+
+    function bindLegendButtons() {
       document.querySelectorAll(".map-toggle-btn").forEach(button => {
         button.addEventListener("click", () => {
           const key = button.dataset.layer;
-          const layer = layers[key];
-          if (!layer) return;
+          layerState[key] = !layerState[key];
+          button.classList.toggle("active", layerState[key]);
 
-          if (map.hasLayer(layer)) {
-            map.removeLayer(layer);
-            button.classList.remove("active");
-          } else {
-            map.addLayer(layer);
-            button.classList.add("active");
+          if (key === "country") {
+            setLayerVisibility(map, ["countries-fill", "countries-line", "countries-hover-fill", "countries-hover-line"], layerState.country);
+          } else if (key === "city") {
+            setLayerVisibility(map, ["cities-glow", "cities-base", "cities-hover-glow", "cities-hover"], layerState.city);
+          } else if (key === "airport") {
+            setLayerVisibility(map, ["airports-glow", "airports-base", "airports-hover-glow", "airports-hover"], layerState.airport);
+          } else if (key === "route") {
+            setLayerVisibility(map, ["routes-glow", "routes-base", "routes-hover-glow", "routes-hover", "routes-animated"], layerState.route);
           }
         });
       });
     }
 
-    function addCityMarkers() {
-      cityData.forEach(city => {
-        const marker = L.circleMarker([city.lat, city.lng], { ...styles.cityBase(), pane: "cityPane" })
-          .addTo(layers.city)
-          .bindTooltip(`${city.name}, ${city.country}`, {
-            sticky: true,
-            direction: "top",
-            className: "country-tooltip",
-            pane: "tooltipPane"
-          })
-          .on("click", () => map.setView([city.lat, city.lng], 7));
-
-        registries.cities.push({
-          country: resolveTravelCountry({
-            city: city.name,
-            country: city.country,
-            cityCountryLookup
-          }),
-          marker
+    function bindHoverAndPopups() {
+      ["countries-fill", "countries-hover-fill"].forEach(layerId => {
+        map.on("mousemove", layerId, event => {
+          const feature = event.features && event.features[0];
+          if (!feature) return;
+          const country = feature.properties.country;
+          applyHoverHighlight(country);
+          map.getCanvas().style.cursor = "pointer";
+          popup.setLngLat(event.lngLat).setHTML(country).addTo(map);
         });
+        map.on("mouseleave", layerId, () => {
+          map.getCanvas().style.cursor = "";
+          popup.remove();
+          applyHoverHighlight(null);
+        });
+      });
+
+      bindPopupForLayer(map, popup, "cities-base", feature => `${feature.properties.name}, ${feature.properties.country}`);
+      bindPopupForLayer(map, popup, "cities-hover", feature => `${feature.properties.name}, ${feature.properties.country}`);
+
+      bindPopupForLayer(map, popup, "airports-base", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
+      bindPopupForLayer(map, popup, "airports-hover", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
+
+      bindPopupForLayer(map, popup, "routes-base", feature => feature.properties.tooltipHtml);
+      bindPopupForLayer(map, popup, "routes-hover", feature => feature.properties.tooltipHtml);
+
+      map.on("click", "countries-fill", event => {
+        const feature = event.features && event.features[0];
+        if (!feature) return;
+        const bbox = new maplibregl.LngLatBounds();
+        const coords = feature.geometry.type === "MultiPolygon"
+          ? feature.geometry.coordinates.flat(2)
+          : feature.geometry.coordinates.flat(1);
+        coords.forEach(coord => bbox.extend(coord));
+        if (!bbox.isEmpty()) map.fitBounds(bbox, { padding: 24, duration: 700 });
       });
     }
 
-    async function loadVisitedCountries() {
+    async function buildCountryGeoJson() {
       debugLog("Loading visited country polygons");
       const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
       const visitedCountries = Array.isArray(window.VISITED_COUNTRIES_DATA) ? window.VISITED_COUNTRIES_DATA : [];
@@ -1969,45 +2372,41 @@ function initAbsenceTracker() {
         return getExpansionTargets(canonical);
       });
 
-      const features = geoJson.features.filter(feature => matchesVisitedCountry(feature, targetNames));
+      const features = geoJson.features
+        .filter(feature => matchesVisitedCountry(feature, targetNames))
+        .map(feature => ({
+          ...feature,
+          properties: {
+            ...feature.properties,
+            country: canonicaliseCountryName(resolvePolygonCountry(feature))
+          },
+          id: canonicaliseCountryName(resolvePolygonCountry(feature))
+        }));
+
       counters.visitedCountries = Array.isArray(window.VISITED_NATIONS_DATA) ? window.VISITED_NATIONS_DATA.length : 0;
-
-      const visitedLayer = L.geoJSON(
-        { type: "FeatureCollection", features },
-        {
-          pane: "countryPane",
-          style: styles.countryBase,
-          onEachFeature(feature, layer) {
-            const displayName = resolvePolygonCountry(feature);
-
-            layer.bindTooltip(displayName, {
-              sticky: true,
-              direction: "top",
-              className: "country-tooltip",
-              pane: "tooltipPane"
-            });
-
-            registries.countries.push({
-              country: canonicaliseCountryName(displayName),
-              layer
-            });
-
-            layer.on("mouseover", () => applyHoverHighlight(displayName));
-            layer.on("mouseout", () => applyHoverHighlight(null));
-            layer.on("click", () => {
-              const bounds = layer.getBounds();
-              if (bounds.isValid()) map.fitBounds(bounds.pad(0.5));
-            });
-          }
-        }
-      ).addTo(layers.country);
-
-      addCityMarkers();
-
-      const bounds = visitedLayer.getBounds();
+      return toFeatureCollection(features);
     }
 
-    async function loadFlightHistory() {
+    function buildCityGeoJson() {
+      const features = cityData.map(city => ({
+        type: "Feature",
+        properties: {
+          name: city.name,
+          country: resolveTravelCountry({
+            city: city.name,
+            country: city.country,
+            cityCountryLookup
+          })
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [Number(city.lng), Number(city.lat)]
+        }
+      }));
+      return toFeatureCollection(features);
+    }
+
+    async function buildFlightGeoJson() {
       debugLog("Loading flight history and airport datasets");
       const [csvText, mwggAirports, openFlightsData] = await Promise.all([
         fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
@@ -2035,25 +2434,17 @@ function initAbsenceTracker() {
         )
       );
 
-      const uniqueAirportMarkers = new Map();
+      const uniqueAirports = [];
       const routePairs = new Map();
 
       flights.forEach(flight => {
         const originAirport = getAirportRecord(
-          flight.fromIcao,
-          flight.fromIata,
-          mwggAirports,
-          openFlightsAirports,
-          mwggIataIndex,
-          openFlightsIataIndex
+          flight.fromIcao, flight.fromIata,
+          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
         );
         const destinationAirport = getAirportRecord(
-          flight.toIcao,
-          flight.toIata,
-          mwggAirports,
-          openFlightsAirports,
-          mwggIataIndex,
-          openFlightsIataIndex
+          flight.toIcao, flight.toIata,
+          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
         );
 
         if (!originAirport || !destinationAirport) return;
@@ -2078,6 +2469,26 @@ function initAbsenceTracker() {
 
         counters.flightsTaken += 1;
 
+        uniqueAirports.push({
+          key: flight.fromIcao,
+          lng: Number(originAirport.lon),
+          lat: Number(originAirport.lat),
+          city: flight.fromCity,
+          iata: flight.fromIata,
+          airportName: flight.fromAirport,
+          country: originCountry
+        });
+
+        uniqueAirports.push({
+          key: flight.toIcao,
+          lng: Number(destinationAirport.lon),
+          lat: Number(destinationAirport.lat),
+          city: flight.toCity,
+          iata: flight.toIata,
+          airportName: flight.toAirport,
+          country: destinationCountry
+        });
+
         const pairKey = [flight.fromIcao, flight.toIcao].sort().join("__");
         const directionKey = `${flight.fromIcao}__${flight.toIcao}`;
 
@@ -2087,8 +2498,8 @@ function initAbsenceTracker() {
             fromLng: Number(originAirport.lon),
             toLat: Number(destinationAirport.lat),
             toLng: Number(destinationAirport.lon),
-            directions: new Map(),
-            countries: Array.from(new Set([originCountry, destinationCountry].filter(Boolean)))
+            countries: Array.from(new Set([originCountry, destinationCountry].filter(Boolean))),
+            directions: new Map()
           });
         }
 
@@ -2108,55 +2519,27 @@ function initAbsenceTracker() {
           date: flight.date,
           airline: flight.airline
         });
-
-        const airportEndpoints = [
-          {
-            key: flight.fromIcao,
-            lat: Number(originAirport.lat),
-            lng: Number(originAirport.lon),
-            city: flight.fromCity,
-            iata: flight.fromIata,
-            airportName: flight.fromAirport,
-            country: originCountry
-          },
-          {
-            key: flight.toIcao,
-            lat: Number(destinationAirport.lat),
-            lng: Number(destinationAirport.lon),
-            city: flight.toCity,
-            iata: flight.toIata,
-            airportName: flight.toAirport,
-            country: destinationCountry
-          }
-        ];
-
-        airportEndpoints.forEach(endpoint => {
-          if (uniqueAirportMarkers.has(endpoint.key)) return;
-
-          const marker = L.circleMarker([endpoint.lat, endpoint.lng], {
-            ...styles.airportBase(),
-            pane: "airportPane"
-          })
-          .addTo(layers.airport)
-          .bindTooltip(`${endpoint.city} · ${endpoint.iata}<br>${endpoint.airportName}`, {
-            sticky: true,
-            direction: "top",
-            className: "country-tooltip",
-            pane: "tooltipPane"
-          });
-
-          registries.airports.push({
-            country: endpoint.country,
-            marker
-          });
-
-          uniqueAirportMarkers.set(endpoint.key, marker);
-        });
       });
 
-      counters.visitedAirports = uniqueAirportMarkers.size;
+      const airportFeatures = uniqueBy(uniqueAirports, airport => airport.key).map(airport => ({
+        type: "Feature",
+        properties: {
+          key: airport.key,
+          city: airport.city,
+          iata: airport.iata,
+          airportName: airport.airportName,
+          country: airport.country
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [airport.lng, airport.lat]
+        }
+      }));
+
+      counters.visitedAirports = airportFeatures.length;
       counters.routePairs = routePairs.size;
 
+      const routeFeatures = [];
       routePairs.forEach(routePair => {
         const points = interpolateGreatCircle(
           routePair.fromLat,
@@ -2166,11 +2549,10 @@ function initAbsenceTracker() {
           72
         );
 
-        const routeSegments = splitPolylineAtDateLine(points);
+        const routeSegments = splitLineAtDateLine(points);
         const totalFlightsOnPair = Array.from(routePair.directions.values())
           .reduce((sum, direction) => sum + direction.flights.length, 0);
 
-        const routeColor = getRouteColor(totalFlightsOnPair);
         const tooltipHtml = Array.from(routePair.directions.values())
           .map(direction =>
             `${direction.fromAirport} (${direction.fromIata}) → ${direction.toAirport} (${direction.toIata})<br>` +
@@ -2180,161 +2562,57 @@ function initAbsenceTracker() {
           )
           .join("<br>──────────<br>");
 
-        const polylines = routeSegments.map(segment => {
-          const polyline = L.polyline(segment, {
-            pane: "routePane",
-            color: routeColor,
-            weight: 1.2,
-            opacity: 0.8,
-            smoothFactor: 1,
-            noClip: true
-          })
-          .addTo(layers.route)
-          .bindTooltip(tooltipHtml, {
-            sticky: true,
-            direction: "top",
-            className: "country-tooltip",
-            pane: "tooltipPane"
+        routeSegments.forEach((segment, index) => {
+          routeFeatures.push({
+            type: "Feature",
+            properties: {
+              routeId: `${routePair.countries.join("_")}_${index}`,
+              countries: routePair.countries,
+              colour: getRouteColor(totalFlightsOnPair),
+              count: totalFlightsOnPair,
+              tooltipHtml
+            },
+            geometry: {
+              type: "LineString",
+              coordinates: segment
+            }
           });
-
-          polyline.on("mouseover", () => polyline.setStyle({ weight: 3.1, opacity: 1 }));
-          polyline.on("mouseout", () => applyHoverHighlight(null));
-
-          return polyline;
-        });
-
-        registries.routes.push({
-          countries: routePair.countries,
-          polylines
         });
       });
+
+      return {
+        airportGeoJson: toFeatureCollection(airportFeatures),
+        routeGeoJson: toFeatureCollection(routeFeatures)
+      };
     }
 
-    bindToggleButtons();
+    map.on("load", async () => {
+      debugLog("MapLibre style loaded");
+      if (statusText) statusText.textContent = "Loading travel map…";
 
-    Promise.all([loadVisitedCountries(), loadFlightHistory()])
-      .then(updateStatusText)
-      .catch(error => {
-        statusText.textContent = "Unable to load the travel map right now.";
+      try {
+        const [countryGeoJson, flightData] = await Promise.all([
+          buildCountryGeoJson(),
+          buildFlightGeoJson()
+        ]);
+        const cityGeoJson = buildCityGeoJson();
+
+        addGeoJsonLayers(countryGeoJson, cityGeoJson, flightData.airportGeoJson, flightData.routeGeoJson);
+        bindLegendButtons();
+        bindHoverAndPopups();
+        updateStatusText();
+
+        if (cleanupRouteAnimation) cleanupRouteAnimation();
+        cleanupRouteAnimation = animateRoutePulse(map);
+
+        if (statusText) statusText.textContent = "";
+      } catch (error) {
+        if (statusText) statusText.textContent = "Unable to load the travel map right now.";
         mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
         debugError("Travel map load failed", error);
-      });
-  }
-
+      }
+    });
+  };
 })();
 </script>
 
-<!-- Behaviour: initial data loading and startup -->
-<script>
-/*
-  ============================================================================
-  SITE DATA BOOTSTRAP
-  ----------------------------------------------------------------------------
-  Loads JSON data files from /data and only starts the page once all required
-  datasets are available.
-
-  Expected file structure:
-    /data/absence_ranges.json
-    /data/day_links.json
-    /data/city_pins.json
-  ============================================================================
-*/
-/**
- * Load one local JSON file.
- * A dedicated helper means every JSON file passes through the same error and
- * debug checkpoint.
- */
-async function fetchLocalJson(path) {
-  debugLog(`Loading local JSON: ${path}`);
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-/**
- * Main startup function for the whole site.
- * Nothing should render until the required data files are ready.
- */
-async function initSiteData() {
-  try {
-    const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
-      fetchLocalJson("./data/absence_ranges.json"),
-      fetchLocalJson("./data/day_links.json"),
-      fetchLocalJson("./data/city_pins.json"),
-      fetchLocalJson("./data/visited_countries.json")
-    ]);
-
-    ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
-    debugLog("Primary JSON datasets loaded", {
-      absenceRanges: ABSENCE_RANGES_DATA.length,
-      dayLinks: Object.keys(dayLinks || {}).length,
-      cityPins: Array.isArray(cityPins) ? cityPins.length : 0,
-      visitedCountriesRaw: Array.isArray(visitedCountries) ? visitedCountries.length : 0
-    });
-    DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
-    window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
-
-    const visitedCountryRows = Array.isArray(visitedCountries) ? visitedCountries : [];
-    window.VISITED_NATIONS_DATA = visitedCountryRows
-      .filter(row => row && row.visited === true)
-      .map(row => row.country);
-    window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(window.VISITED_TERRITORIES_DATA || []);
-
-    try {
-      initAbsenceTracker();
-    } catch (error) {
-      debugError("Absence tracker init failed", error);
-      const months = document.getElementById("months");
-      if (months) {
-        months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
-      }
-    }
-
-    try {
-      if (typeof window.initTravelMap === "function") {
-        window.initTravelMap();
-      } else {
-        throw new Error("initTravelMap is not available");
-      }
-    } catch (error) {
-      debugError("Travel map init failed", error);
-      const travelMapStatus = document.getElementById("travelMapStatusText");
-      if (travelMapStatus) {
-        travelMapStatus.textContent = "Unable to load the travel map right now."; console.error(error);
-      }
-      const travelMap = document.getElementById("travelMap");
-      if (travelMap) {
-        travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-      }
-    }
-  } catch (error) {
-    debugError("Initial data load failed", error);
-
-    const months = document.getElementById("months");
-    if (months) {
-      months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
-    }
-
-    const travelMapStatus = document.getElementById("travelMapStatusText");
-    if (travelMapStatus) {
-      travelMapStatus.textContent = "Unable to load the travel map right now."; console.error(error);
-    }
-
-    const travelMap = document.getElementById("travelMap");
-    if (travelMap) {
-      travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-    }
-  }
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSiteData);
-} else {
-  initSiteData();
-}
-</script>
-
-</body>
-</html>
