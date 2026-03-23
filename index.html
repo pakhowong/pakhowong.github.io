@@ -232,8 +232,9 @@
     margin-top:12px;
   }
   .external-links button{
-    background:rgba(235,242,255,.82);
-    color:var(--accent);
+    background:var(--accent);
+    border-color:var(--border);
+    color:white;
     box-shadow:0 8px 18px rgba(15,23,42,.05);
   }
 
@@ -816,7 +817,7 @@
                   </div>
                 </div>
                 <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Final 12 months</div>
+                  <div class="summary-gauge-label">Final 12 months (citizenship)</div>
                   <div class="gauge" id="summaryCitFinalGauge">
                     <div class="gauge-text">
                       <div class="gauge-number" id="summaryCitFinal">--</div>
@@ -840,7 +841,7 @@
                   <div class="mini-value" id="summaryTotalAbsent">--</div>
                 </div>
                 <div class="summary-mini-card">
-                  <div class="mini-label">Flight tickets</div>
+                  <div class="mini-label">Flight log</div>
                   <div class="mini-value" id="summarySupportingDocs">--</div>
                 </div>
               </div>
@@ -855,7 +856,7 @@
           <h3 class="panel-subtitle">Travel Map</h3>
         </div>
         <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor</button>
+          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
           <button onclick="openExternal('flightradar')">myFlightradar24</button>
         </div>
       </div>
@@ -942,7 +943,7 @@ function getElementOrWarn(id) {
 
 window.TRAVEL_MAP_STYLE = {
   version: 8,
-  name: "Travel Anime Map Fallback",
+  name: "Travel Map Fallback",
   metadata: {
     theme: {
       countries: {
@@ -1328,7 +1329,7 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroIlrValue = document.getElementById("heroIlrValue");
   if (heroIlrIcon && heroIlrValue) {
     heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "Pass" : "Risk";
+    heroIlrValue.textContent = isIlrCompliant ? "OK" : "FAIL";
     heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
     heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
     heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
@@ -1338,17 +1339,17 @@ function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
   const heroCitValue = document.getElementById("heroCitValue");
   if (heroCitIcon && heroCitValue) {
     heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
-    heroCitValue.textContent = isCitizenshipCompliant ? "Pass" : "Risk";
+    heroCitValue.textContent = isCitizenshipCompliant ? "OK" : "FAIL";
     heroCitValue.className = `stat-value ${isCitizenshipCompliant ? "bool-ok" : "bool-bad"}`;
     heroCitIcon.style.background = isCitizenshipCompliant ? "#dcfce7" : "#fee2e2";
     heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
   }
 
   const heroIlrWindow = document.getElementById("heroIlrWindow");
-  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sep 2029";
+  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sept 2029";
 
   const heroCitWindow = document.getElementById("heroCitWindow");
-  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sep 2030";
+  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sept 2030";
 
   const heroDaysValue = document.getElementById("heroDaysValue");
   if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
@@ -1468,7 +1469,7 @@ function populateYearPicker() {
 
 function populateMonthPicker() {
   const picker = document.getElementById("monthPicker");
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   monthNames.forEach((name, index) => {
     const option = document.createElement("option");
@@ -1547,7 +1548,6 @@ function initAbsenceTracker() {
 </script>
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-
 
 <script>
 /*
@@ -2193,8 +2193,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 28] : [7, 28];
-    const defaultZoom = isMobile ? 1.05 : 1.2;
+    const defaultCenter = isMobile ? [7, 28] : [12, 28];
+    const defaultZoom = isMobile ? 0.7 : 0.8;
 
     const map = new maplibregl.Map({
       container: "travelMap",
