@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "Anime Travel Map",
+  "name": "Travel Map",
   "sources": {
     "basemap": {
       "type": "vector",
