@@ -66,12 +66,13 @@
       },
       "baseMap": {
         "water": "#f8fbff",
-        "land": "#e7f6ff",
-        "landShadow": "#e6edf7",
-        "border": "#eef2f7",
+        "land": "#dff0ff",
+        "landShadow": "#bcd2f7",
+        "border": "#94aeea",
         "waterway": "#b9ddff",
         "label": "#6b7da3",
-        "subLabel": "#8b9bb8"
+        "subLabel": "#8b9bb8",
+        "coastline": "#7da2e3"
       }
     }
   },
@@ -100,18 +101,18 @@
       "source": "maplibre-world",
       "source-layer": "countries",
       "paint": {
-        "fill-color": "#dfeeff",
+        "fill-color": "#dff0ff",
         "fill-opacity": 1.0,
-        "fill-outline-color": "#dbeafe"
+        "fill-outline-color": "#bcd2f7"
       }
     },
     {
-      "id": "basemap-countries-line",
+      "id": "basemap-coastline",
       "type": "line",
       "source": "maplibre-world",
-      "source-layer": "countries",
+      "source-layer": "coastline",
       "paint": {
-        "line-color": "#c9d8f2",
+        "line-color": "#7da2e3",
         "line-width": [
           "interpolate",
           [
@@ -121,13 +122,38 @@
             "zoom"
           ],
           0,
-          0.25,
+          0.8,
           3,
-          0.5,
+          1.5,
           6,
-          0.8
+          2.2
         ],
-        "line-opacity": 0.75
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "basemap-countries-line",
+      "type": "line",
+      "source": "maplibre-world",
+      "source-layer": "countries",
+      "paint": {
+        "line-color": "#94aeea",
+        "line-width": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          0,
+          0.6,
+          3,
+          1.2,
+          6,
+          1.8
+        ],
+        "line-opacity": 0.9
       }
     }
   ]
