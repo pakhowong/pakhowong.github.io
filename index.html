@@ -1548,7 +1548,6 @@ function initAbsenceTracker() {
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 
-
 <script>
 /*
   ============================================================================
@@ -2193,8 +2192,8 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 28] : [7, 28];
-    const defaultZoom = isMobile ? 1.05 : 1.2;
+    const defaultCenter = isMobile ? [7, 28] : [12, 28];
+    const defaultZoom = isMobile ? 0.8 : 0.7;
 
     const map = new maplibregl.Map({
       container: "travelMap",
