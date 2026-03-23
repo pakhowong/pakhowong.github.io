@@ -1597,82 +1597,50 @@ function initAbsenceTracker() {
   // --------------------------------------------------------------------------
   // 2) Theme colours kept in one place for easier maintenance
   // --------------------------------------------------------------------------
-  const MAP_THEME = (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {
-    countries: {
-      fill: "#2f6fff",
-      line: "#1847b8",
-      hoverFill: "#1748d8",
-      hoverLine: "#103aab",
-      fadedFill: "#e8f0ff",
-      fadedLine: "#d7e4ff"
-    },
-    cities: {
-      fill: "#24c483",
-      hoverFill: "#149d67",
-      fadedFill: "#b7f0d6"
-    },
-    airports: {
-      fill: "#13b8a6",
-      hoverFill: "#0d9488",
-      fadedFill: "#99f6e4"
-    },
-    routes: {
-      level1: "#f7b267",
-      level2: "#f79d65",
-      level3: "#f97316",
-      level4: "#e11d48",
-      level5: "#7c3aed"
-    },
-    ui: {
-      bgTop: "#eef6ff",
-      bgBottom: "#dfeeff"
-    },
-    sizes: {
+  function getMapTheme() {
+    return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {
       countries: {
-        lineWidth: 1.4,
-        hoverLineWidth: 2.3,
-        fillOpacity: 0.78,
-        hoverFillOpacity: 0.96
+        fill: "#2f6fff",
+        line: "#1847b8",
+        hoverFill: "#1748d8",
+        hoverLine: "#103aab",
+        fadedFill: "#e8f0ff",
+        fadedLine: "#d7e4ff"
       },
       cities: {
-        glowRadius: 10,
-        glowOpacity: 0.55,
-        glowBlur: 0.85,
-        baseRadius: 4.6,
-        baseStrokeWidth: 1.4,
-        hoverRadius: 5.8,
-        hoverStrokeWidth: 1.8,
-        hoverGlowRadius: 13,
-        hoverGlowOpacity: 0.72,
-        hoverGlowBlur: 0.9
+        fill: "#24c483",
+        hoverFill: "#149d67",
+        fadedFill: "#b7f0d6"
       },
       airports: {
-        glowRadius: 8,
-        glowOpacity: 0.45,
-        glowBlur: 0.9,
-        baseRadius: 3.6,
-        baseStrokeWidth: 1.2,
-        hoverRadius: 4.8,
-        hoverStrokeWidth: 1.5,
-        hoverGlowRadius: 10,
-        hoverGlowOpacity: 0.72,
-        hoverGlowBlur: 0.9
+        fill: "#13b8a6",
+        hoverFill: "#0d9488",
+        fadedFill: "#99f6e4"
       },
       routes: {
-        baseWidth: 2.1,
-        baseOpacity: 0.85,
-        hoverWidth: 2.8,
-        hoverOpacity: 0.96,
-        animatedWidth: 2.4,
-        animatedOpacity: 0.85
+        level1: "#f59e0b",
+        level2: "#f97316",
+        level3: "#ef4444",
+        level4: "#c026d3",
+        level5: "#7c3aed"
+      },
+      ui: {
+        bgTop: "#eef6ff",
+        bgBottom: "#dfeeff"
+      },
+      sizes: {
+        countries: { lineWidth: 1.4, hoverLineWidth: 2.3, fillOpacity: 0.78, hoverFillOpacity: 0.96 },
+        cities: { baseRadius: 4.6, baseStrokeWidth: 1.4, hoverRadius: 5.8, hoverStrokeWidth: 1.8 },
+        airports: { baseRadius: 3.6, baseStrokeWidth: 1.2, hoverRadius: 4.8, hoverStrokeWidth: 1.5 },
+        routes: { baseWidth: 2.1, baseOpacity: 0.85, hoverWidth: 2.8, hoverOpacity: 0.96 }
       }
-    }
-  };
-  const MAP_SIZES = MAP_THEME.sizes || {};
-  const COUNTRY_SIZES = MAP_SIZES.countries || {};
-  const CITY_SIZES = MAP_SIZES.cities || {};
-  const AIRPORT_SIZES = MAP_SIZES.airports || {};
-  const ROUTE_SIZES = MAP_SIZES.routes || {};
+    };
+  }
+  function getMapSizes() { return getMapTheme().sizes || {}; }
+  function getCountrySizes() { return getMapSizes().countries || {}; }
+  function getCitySizes() { return getMapSizes().cities || {}; }
+  function getAirportSizes() { return getMapSizes().airports || {}; }
+  function getRouteSizes() { return getMapSizes().routes || {}; }
 
 
   // --------------------------------------------------------------------------
@@ -2095,6 +2063,7 @@ function initAbsenceTracker() {
   }
 
   function getRouteColor(flightCount) {
+    const MAP_THEME = getMapTheme();
     if (flightCount >= 5) return MAP_THEME.routes.level5;
     if (flightCount === 4) return MAP_THEME.routes.level4;
     if (flightCount === 3) return MAP_THEME.routes.level3;
@@ -2161,7 +2130,7 @@ function initAbsenceTracker() {
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [15, 43] : [15, 38];
+    const defaultCenter = isMobile ? [15, 42] : [15, 38];
     const defaultZoom = isMobile ? -0.4 : 0.1;
 
     const map = new maplibregl.Map({
@@ -2243,6 +2212,11 @@ function initAbsenceTracker() {
     }
 
     function addGeoJsonLayers(countryGeoJson, cityGeoJson, airportGeoJson, routeGeoJson) {
+      const MAP_THEME = getMapTheme();
+      const COUNTRY_SIZES = getCountrySizes();
+      const CITY_SIZES = getCitySizes();
+      const AIRPORT_SIZES = getAirportSizes();
+      const ROUTE_SIZES = getRouteSizes();
       // Countries
       map.addSource("visited-countries", {
         type: "geojson",
@@ -2440,6 +2414,7 @@ function initAbsenceTracker() {
     }
 
     function bindHoverAndPopups() {
+      const MAP_THEME = getMapTheme();
       ["countries-fill", "countries-hover-fill"].forEach(layerId => {
         map.on("mousemove", layerId, event => {
           const feature = event.features && event.features[0];
