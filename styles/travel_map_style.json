@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "Travel Map",
+  "name": "Travel Anime Map",
   "metadata": {
     "theme": {
       "countries": {
@@ -31,6 +31,46 @@
       "ui": {
         "bgTop": "#eef6ff",
         "bgBottom": "#dfeeff"
+      },
+      "sizes": {
+        "countries": {
+          "lineWidth": 1.4,
+          "hoverLineWidth": 2.3,
+          "fillOpacity": 0.78,
+          "hoverFillOpacity": 0.96
+        },
+        "cities": {
+          "glowRadius": 10,
+          "glowOpacity": 0.55,
+          "glowBlur": 0.85,
+          "baseRadius": 4.6,
+          "baseStrokeWidth": 1.4,
+          "hoverRadius": 5.8,
+          "hoverStrokeWidth": 1.8,
+          "hoverGlowRadius": 13,
+          "hoverGlowOpacity": 0.72,
+          "hoverGlowBlur": 0.9
+        },
+        "airports": {
+          "glowRadius": 8,
+          "glowOpacity": 0.45,
+          "glowBlur": 0.9,
+          "baseRadius": 3.6,
+          "baseStrokeWidth": 1.2,
+          "hoverRadius": 4.8,
+          "hoverStrokeWidth": 1.5,
+          "hoverGlowRadius": 10,
+          "hoverGlowOpacity": 0.72,
+          "hoverGlowBlur": 0.9
+        },
+        "routes": {
+          "baseWidth": 2.1,
+          "baseOpacity": 0.85,
+          "hoverWidth": 2.8,
+          "hoverOpacity": 0.96,
+          "animatedWidth": 2.4,
+          "animatedOpacity": 0.85
+        }
       }
     }
   },
