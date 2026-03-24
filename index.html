@@ -33,30 +33,46 @@
     --shadow:0 16px 40px rgba(37,99,235,.10);
   }
   * { box-sizing:border-box; }
-  html, body { 
+  html, body{
     min-height:100%;
     width:100%;
-    overflow-x:hidden;
     max-width:100vw;
+    margin:0;
+    overflow-x:hidden;
     background-color:#eaf3ff;
   }
-  body {
-    margin:0;
+  html{
+    -webkit-text-size-adjust:100%;
+    scroll-behavior:auto;
+  }
+  body{
     min-height:100vh;
     font-family:Arial, Helvetica, sans-serif;
     color:var(--text);
     background:transparent;
     position:relative;
+    isolation:isolate;
+    overflow-x:hidden;
   }
   .site-bg{
     position:fixed;
-    inset:0;
-    z-index:0;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    height:100lvh;
+    z-index:-1;
     pointer-events:none;
     background:
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
       url("./images/travel-bg.png") center center / cover no-repeat;
     background-color:#eaf3ff;
+    -webkit-transform:translate3d(0,0,0);
+    transform:translate3d(0,0,0);
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    will-change:transform;
+    contain:paint;
   }
   .site-bg::before{
     content:"";
@@ -66,14 +82,20 @@
       radial-gradient(circle at top left, rgba(255,255,255,.42), transparent 24%),
       radial-gradient(circle at top right, rgba(191,219,254,.24), transparent 20%);
   }
+  @supports (-webkit-touch-callout:none){
+    .site-bg{
+      background-attachment:scroll;
+    }
+  }
 
-  .container {
+  .container{
     position:relative;
     z-index:1;
     max-width:720px;
     margin:0 auto;
     padding:18px 14px 28px;
     overflow:visible;
+    isolation:isolate;
   }
   .page-girl{
     position:absolute;
@@ -3078,6 +3100,23 @@ if (document.readyState === "loading") {
     applyTheme();
     const btn = document.getElementById("themeSwitchBtn");
     if (btn) btn.addEventListener("click", window.toggleSiteTheme);
+  });
+})();
+</script>
+
+<script>
+(function () {
+  function stabilizeFixedBackground() {
+    var bg = document.querySelector('.site-bg');
+    if (!bg) return;
+    bg.style.display = 'none';
+    bg.offsetHeight;
+    bg.style.display = '';
+  }
+  window.addEventListener('load', stabilizeFixedBackground, { once:true });
+  window.addEventListener('pageshow', stabilizeFixedBackground);
+  window.addEventListener('resize', function () {
+    window.requestAnimationFrame(stabilizeFixedBackground);
   });
 })();
 </script>
