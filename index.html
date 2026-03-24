@@ -1020,7 +1020,9 @@
 
       <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
       <div id="travelMap" class="country-visited-map"></div>
-      <div class="bottom-grid">    </div>
+      <div class="theme-switch-wrap">
+        <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
+      </div>
     </section>
 
     <div class="hidden-support">
@@ -3178,10 +3180,6 @@ if (document.readyState === "loading") {
   initSiteData();
 }
 </script>
-
-<div class="theme-switch-wrap">
-  <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
-</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
