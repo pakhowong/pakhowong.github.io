@@ -796,8 +796,9 @@
     display:none !important;
   }
   body.theme-dark .container{
-    max-width:100vw;
+    max-width:720px;
     width:100%;
+    margin:0 auto;
     padding:18px 14px 28px;
   }
   body.theme-dark .hero-panel{
@@ -872,6 +873,14 @@
   }
   body.theme-dark .theme-switch-btn{ color:#cbd5e1; }
   body.theme-dark .theme-switch-btn:hover{ color:#ffffff; }
+
+  @media (max-width: 560px){
+    body.theme-dark .container{
+      max-width:100vw;
+      width:100%;
+      padding:0px 16px 24px;
+    }
+  }
 
 </style>
 
@@ -1314,6 +1323,30 @@ function applyTravelMapThemeToCss(theme) {
     root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
     root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
   }
+}
+
+function buildVectorStyleForCurrentTheme() {
+  const theme = getTravelMapTheme();
+  const styleClone = JSON.parse(JSON.stringify(window.TRAVEL_MAP_STYLE || {}));
+  styleClone.layers = (styleClone.layers || []).map(layer => {
+    const next = JSON.parse(JSON.stringify(layer));
+    if (next.id === "background") {
+      next.paint = next.paint || {};
+      next.paint["background-color"] = theme.baseMap?.water || "#cfe8ff";
+    } else if (next.id === "basemap-countries-fill") {
+      next.paint = next.paint || {};
+      next.paint["fill-color"] = theme.baseMap?.land || "#fff4dc";
+      next.paint["fill-outline-color"] = theme.baseMap?.landShadow || "#f3e5c8";
+    } else if (next.id === "basemap-countries-line") {
+      next.paint = next.paint || {};
+      next.paint["line-color"] = theme.baseMap?.border || "#d6e4f5";
+    } else if (next.id === "basemap-coastline") {
+      next.paint = next.paint || {};
+      next.paint["line-color"] = theme.baseMap?.coastline || theme.baseMap?.border || "#7da2e3";
+    }
+    return next;
+  });
+  return styleClone;
 }
 
 async function loadTravelMapStyle() {
@@ -2498,7 +2531,7 @@ function initAbsenceTracker() {
 
     const map = new maplibregl.Map({
       container: "travelMap",
-      style: window.TRAVEL_MAP_STYLE,
+      style: buildVectorStyleForCurrentTheme(),
       center: defaultCenter,
       zoom: defaultZoom,
       attributionControl: false,
@@ -3084,6 +3117,7 @@ function initAbsenceTracker() {
         addGeoJsonLayers(countryGeoJson, cityGeoJson, flightData.airportGeoJson, flightData.routeGeoJson);
         bindLegendButtons();
         bindHoverAndPopups();
+        refreshTravelMapTheme();
         updateStatusText();
 
         if (statusText) statusText.textContent = "";
