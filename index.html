@@ -39,14 +39,14 @@
     overflow-x:hidden;
     max-width:100vw;
     background:transparent;
-    overscroll-behavior-y:none;
   }
   html{
     background:
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
       url("./images/travel-bg.png") center center / cover no-repeat;
-    background-color:#eaf3ff;
+    background-color:transparent;
     background-attachment:scroll;
+    overscroll-behavior-y:none;
   }
   body {
     margin:0;
@@ -56,16 +56,18 @@
     color:var(--text);
     background:transparent;
     position:relative;
-    overscroll-behavior-y:none;
+    overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
   .site-bg{
     position:fixed;
-    top:calc(var(--bg-bleed-top, 12) * -1px);
+    top:-16svh;
+    top:-16lvh;
     left:0;
     width:100%;
-    height:calc(var(--app-vh, 1vh) * 100 + var(--bg-bleed-top, 12px) + var(--bg-bleed-bottom, 28px));
-    min-height:112vh;
+    height:132svh;
+    height:132lvh;
+    min-height:132vh;
     z-index:0;
     pointer-events:none;
     background:
@@ -77,6 +79,7 @@
     backface-visibility:hidden;
     -webkit-backface-visibility:hidden;
     contain:paint;
+    background-position:center center;
   }
   .site-bg::before{
     content:"";
