@@ -47,28 +47,20 @@
     color:var(--text);
     background:transparent;
     position:relative;
+    isolation:isolate;
   }
-  .site-bg{
+  html::before{
+    content:"";
     position:fixed;
-    top:0;
-    left:0;
-    width:100vw;
-    height:100svh;
-    min-height:100%;
-    z-index:-3;
+    inset:0;
+    z-index:-1;
     pointer-events:none;
     background:
+      radial-gradient(circle at top left, rgba(255,255,255,.42), transparent 24%),
+      radial-gradient(circle at top right, rgba(191,219,254,.24), transparent 20%),
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
       url("./images/travel-bg.png") center center / cover no-repeat;
     background-color:#eaf3ff;
-  }
-  .site-bg::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(circle at top left, rgba(255,255,255,.42), transparent 24%),
-      radial-gradient(circle at top right, rgba(191,219,254,.24), transparent 20%);
   }
 
   .container {
@@ -760,8 +752,6 @@
 </head>
 
 <body>
-<!-- Stable fixed background layer: avoids Safari/iPad repaint jumps from background-attachment: fixed. -->
-<div class="site-bg" aria-hidden="true"></div>
 <div class="container">
   <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
@@ -910,6 +900,8 @@
       <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
       <div id="travelMap" class="country-visited-map"></div>
     </section>
+
+    <div class="bottom-grid">    </div>
 
     <div class="hidden-support">
       <div id="ilrPill"></div>
