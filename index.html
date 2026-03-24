@@ -34,41 +34,28 @@
   }
   * { box-sizing:border-box; }
   html, body { 
-    min-height:100%;
+    min-height:100%; 
     overflow-x:hidden;
     max-width:100vw;
-    background-color:#eaf3ff;
-  }
-  html{
-    background-color:#eaf3ff;
   }
   body {
     margin:0;
     min-height:100vh;
     font-family:Arial, Helvetica, sans-serif;
     color:var(--text);
-    background:transparent;
-  }
-
-  .site-bg{
-    position:fixed;
-    inset:0;
-    z-index:-3;
-    pointer-events:none;
     background:
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
-      url("./images/travel-bg.png") center center / cover no-repeat;
-    background-color:#eaf3ff;
+      url("./images/travel-bg.png") center/cover fixed no-repeat;
   }
-
-  .site-bg-overlay{
+  body::before{
+    content:"";
     position:fixed;
     inset:0;
-    z-index:-2;
-    pointer-events:none;
     background:
       radial-gradient(circle at top left, rgba(255,255,255,.42), transparent 24%),
       radial-gradient(circle at top right, rgba(191,219,254,.24), transparent 20%);
+    pointer-events:none;
+    z-index:-2;
   }
 
   .container {
@@ -337,7 +324,7 @@
   .swatch { display:inline-block; width:16px; height:16px; border:1px solid rgba(148,163,184,.5); border-radius:4px; vertical-align:middle; }
   .country-swatch-visited { background:var(--map-country-fill, #2f6fff); border-color:var(--map-country-line, #1847b8); }
   .country-swatch-city { background:var(--map-city-fill, #24c483); border-color:var(--map-city-hover, #149d67); border-radius:50%; }
-  .flight-route-swatch { background:var(--map-route-level1, #f79d65); border-color:var(--map-route-level2, #e11d48); }
+  .flight-route-swatch { background:var(--map-route-level2, #f79d65); border-color:var(--map-route-level4, #e11d48); }
   .flight-airport-swatch { background:var(--map-airport-fill, #13b8a6); border-color:var(--map-airport-hover, #0d9488); border-radius:50%; }
   .swatch.absent { background:var(--absent-bg); border-color:var(--absent-border); }
   .swatch.today { background:var(--today-bg); border-color:var(--accent); }
@@ -679,7 +666,7 @@
   .rolling { font-size:9px; line-height:1.2; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .star { color:var(--link); font-weight:700; margin-left:2px; }
 
-  .maplibregl-popup {
+    .maplibregl-popup {
     z-index: 800;
   }
   .maplibregl-popup-content {
@@ -755,172 +742,11 @@
     .bottom-grid{ gap:12px; }
     .day, .empty{ min-height:48px; }
   }
-
-  .theme-switch-wrap{
-    display:flex;
-    justify-content:center;
-    margin:12px 0 4px;
-    position:relative;
-    z-index:3;
-  }
-  .theme-switch-btn{
-    appearance:none;
-    border:0;
-    background:transparent;
-    color:#64748b;
-    font-size:12px;
-    line-height:1;
-    letter-spacing:.02em;
-    padding:6px 8px;
-    cursor:pointer;
-    text-decoration:underline;
-    text-underline-offset:3px;
-  }
-  .theme-switch-btn:hover{ color:#334155; }
-
-  body.theme-dark{
-    background-color:#020617 !important;
-    --text:#e5eefc;
-    --muted:#94a3b8;
-    --border:rgba(148,163,184,.18);
-    --card:rgba(15,23,42,.82);
-    --card-strong:rgba(15,23,42,.9);
-    --accent:#7dd3fc;
-    --ok:#4ade80;
-    --bad:#f87171;
-    --link:#c4b5fd;
-    --absent-bg:rgba(127,29,29,.40);
-    --absent-border:#f87171;
-    --today-bg:rgba(30,41,59,.92);
-    --shadow:0 18px 42px rgba(2,6,23,.45);
-    background:#020617 !important;
-  }
-
-
-
-  body.theme-dark .site-bg{
-    background:
-      linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98)) !important;
-    background-color:#020617 !important;
-  }
-  body.theme-dark .site-bg-glow{
-    background:
-      radial-gradient(circle at top left, rgba(56,189,248,.08), transparent 22%),
-      radial-gradient(circle at top right, rgba(99,102,241,.08), transparent 18%),
-      linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98)) !important;
-  }
-
-  body.theme-dark .site-bg{
-    background:
-      linear-gradient(rgba(2,6,23,.94), rgba(15,23,42,.96)) !important;
-    background-color:#020617 !important;
-  }
-  body.theme-dark .site-bg-overlay{
-    background:
-      radial-gradient(circle at top left, rgba(56,189,248,.08), transparent 22%),
-      radial-gradient(circle at top right, rgba(99,102,241,.08), transparent 18%);
-  }
-
-  body.theme-dark .page-girl,
-  body.theme-dark .header-banner{
-    display:none !important;
-  }
-  body.theme-dark .container{
-    max-width:720px;
-    width:100%;
-    margin:0 auto;
-    padding:18px 14px 28px;
-  }
-  body.theme-dark .hero-panel{
-    min-height:auto;
-    padding:0;
-    margin-left:0;
-  }
-  body.theme-dark .hero-copy,
-  body.theme-dark .hero-stats,
-  body.theme-dark .hero-calendar-wrap{
-    max-width:none;
-    width:100%;
-  }
-  body.theme-dark .glass,
-  body.theme-dark .stat-card,
-  body.theme-dark .panel{
-    background:var(--card) !important;
-    border-color:rgba(148,163,184,.12) !important;
-    box-shadow:0 12px 30px rgba(2,6,23,.24);
-  }
-  body.theme-dark .hero-panel{
-    background:transparent !important;
-    border-color:transparent !important;
-    box-shadow:none !important;
-  }
-  body.theme-dark .panel-title,
-  body.theme-dark .panel-subtitle,
-  body.theme-dark .stat-top,
-  body.theme-dark .stat-label,
-  body.theme-dark .kpi-label,
-  body.theme-dark .day-num,
-  body.theme-dark .weekday,
-  body.theme-dark .legend-row,
-  body.theme-dark .summary-heading,
-  body.theme-dark .mini-label{
-    color:var(--text) !important;
-  }
-  body.theme-dark .status-line,
-  body.theme-dark .stat-sub,
-  body.theme-dark .small,
-  body.theme-dark .muted,
-  body.theme-dark .kpi-value,
-  body.theme-dark .mini-value,
-  body.theme-dark .summary-window{
-    color:var(--muted) !important;
-  }
-  body.theme-dark .kpi-item,
-  body.theme-dark .summary-gauge-card,
-  body.theme-dark .summary-mini-card,
-  body.theme-dark .day,
-  body.theme-dark .empty,
-  body.theme-dark .map-toggle-btn,
-  body.theme-dark .external-links button,
-  body.theme-dark select,
-  body.theme-dark .calendar-nav-btn{
-    background:rgba(30,41,59,.72) !important;
-    color:var(--text) !important;
-    border-color:rgba(148,163,184,.16) !important;
-  }
-  body.theme-dark .map-toggle-btn.active{
-    background:rgba(37,99,235,.28) !important;
-    color:#dbeafe !important;
-    border-color:rgba(96,165,250,.42) !important;
-  }
-  body.theme-dark .day.today{
-    background:rgba(30,41,59,.96) !important;
-    outline-color:#7dd3fc !important;
-  }
-  body.theme-dark .day.absent{
-    background:rgba(127,29,29,.42) !important;
-    border-color:#f87171 !important;
-  }
-  body.theme-dark .theme-switch-btn{ color:#cbd5e1; }
-  body.theme-dark .theme-switch-btn:hover{ color:#ffffff; }
-
-  @media (max-width: 560px){
-    body.theme-dark .container{
-      max-width:100vw;
-      width:100%;
-      padding:0px 16px 24px;
-    }
-  }
-
 </style>
 
 </head>
 
 <body>
-<!-- Fixed full-viewport background layers. These prevent white gaps and stop the background from shifting during scroll. -->
-<div class="site-bg" aria-hidden="true"></div>
-<div class="site-bg-glow" aria-hidden="true"></div>
-  
 <div class="container">
   <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
@@ -1070,9 +896,7 @@
       <div id="travelMap" class="country-visited-map"></div>
     </section>
 
-    <div class="theme-switch-wrap">
-      <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
-    </div>
+    <div class="bottom-grid">    </div>
 
     <div class="hidden-support">
       <div id="ilrPill"></div>
@@ -1117,212 +941,115 @@ function getElementOrWarn(id) {
 }
 
 window.TRAVEL_MAP_STYLE = {
-  "version": 8,
-  "name": "Travel Map",
-  "metadata": {
-    "theme": {
-      "countries": {
-        "fill": "#93c5fd",
-        "line": "#1d4ed8",
-        "hoverFill": "#1748d8",
-        "hoverLine": "#103aab",
-        "fadedFill": "#e8f0ff",
-        "fadedLine": "#d7e4ff"
+  version: 8,
+  name: "Travel Map Fallback",
+  metadata: {
+    theme: {
+      countries: {
+        fill: "#2f6fff",
+        line: "#1847b8",
+        hoverFill: "#1748d8",
+        hoverLine: "#103aab",
+        fadedFill: "#e8f0ff",
+        fadedLine: "#d7e4ff"
       },
-      "cities": {
-        "fill": "#fbbf24",
-        "hoverFill": "#f59e0b",
-        "fadedFill": "#fbbf24",
-        "line": "#b45309",
-        "hoverLine": "#b45309",
-        "fadedLine": "#d9efe5"
+      cities: {
+        fill: "#24c483",
+        hoverFill: "#149d67",
+        fadedFill: "#b7f0d6"
       },
-      "airports": {
-        "fill": "#13b8a6",
-        "hoverFill": "#0d9488",
-        "fadedFill": "#99f6e4",
-        "line": "#ffffff",
-        "hoverLine": "#ffffff",
-        "fadedLine": "#d7f7f1"
+      airports: {
+        fill: "#13b8a6",
+        hoverFill: "#0d9488",
+        fadedFill: "#99f6e4"
       },
-      "routes": {
-        "level1": "#f59e0b",
-        "level2": "#f97316",
-        "level3": "#ef4444",
-        "level4": "#c026d3",
-        "level5": "#7c3aed"
+      routes: {
+        level1: "#f7b267",
+        level2: "#f79d65",
+        level3: "#f97316",
+        level4: "#e11d48",
+        level5: "#7c3aed"
       },
-      "ui": {
-        "bgTop": "#eef6ff",
-        "bgBottom": "#dfeeff"
+      ui: {
+        bgTop: "#eef6ff",
+        bgBottom: "#dfeeff"
       },
-      "sizes": {
-        "countries": {
-          "lineWidth": 1.4,
-          "hoverLineWidth": 2.3,
-          "fillOpacity": 0.78,
-          "hoverFillOpacity": 0.96
+      sizes: {
+        countries: {
+          lineWidth: 1.4,
+          hoverLineWidth: 2.3,
+          fillOpacity: 0.78,
+          hoverFillOpacity: 0.96
         },
-        "cities": {
-          "baseRadius": 2.5,
-          "baseStrokeWidth": 1,
-          "hoverRadius": 3.5,
-          "hoverStrokeWidth": 1.5
+        cities: {
+          glowRadius: 10,
+          glowOpacity: 0.55,
+          glowBlur: 0.85,
+          baseRadius: 4.6,
+          baseStrokeWidth: 1.4,
+          hoverRadius: 5.8,
+          hoverStrokeWidth: 1.8,
+          hoverGlowRadius: 13,
+          hoverGlowOpacity: 0.72,
+          hoverGlowBlur: 0.9
         },
-        "airports": {
-          "baseRadius": 2,
-          "baseStrokeWidth": 0.8,
-          "hoverRadius": 3,
-          "hoverStrokeWidth": 1.2
+        airports: {
+          glowRadius: 8,
+          glowOpacity: 0.45,
+          glowBlur: 0.9,
+          baseRadius: 3.6,
+          baseStrokeWidth: 1.2,
+          hoverRadius: 4.8,
+          hoverStrokeWidth: 1.5,
+          hoverGlowRadius: 10,
+          hoverGlowOpacity: 0.72,
+          hoverGlowBlur: 0.9
         },
-        "routes": {
-          "baseWidth": 2.3,
-          "baseOpacity": 0.85,
-          "hoverWidth": 2.8,
-          "hoverOpacity": 0.96
-        }
-      },
-      "baseMap": {
-        "water": "#f8fbff",
-        "land": "#dff0ff",
-        "landShadow": "#bcd2f7",
-        "border": "#94aeea",
-        "waterway": "#b9ddff",
-        "label": "#6b7da3",
-        "subLabel": "#8b9bb8",
-        "coastline": "#7da2e3"
-      },
-      "darkMode": {
-        "countries": {
-          "fill": "#2563eb",
-          "line": "#60a5fa",
-          "hoverFill": "#3b82f6",
-          "hoverLine": "#bfdbfe",
-          "fadedFill": "#1e293b",
-          "fadedLine": "#334155"
-        },
-        "cities": {
-          "fill": "#fbbf24",
-          "line": "#fde68a",
-          "hoverFill": "#f59e0b",
-          "hoverLine": "#ffffff",
-          "fadedFill": "#475569",
-          "fadedLine": "#64748b"
-        },
-        "airports": {
-          "fill": "#2dd4bf",
-          "line": "#99f6e4",
-          "hoverFill": "#14b8a6",
-          "hoverLine": "#ffffff",
-          "fadedFill": "#334155",
-          "fadedLine": "#64748b"
-        },
-        "routes": {
-          "level1": "#fbbf24",
-          "level2": "#fb923c",
-          "level3": "#f87171",
-          "level4": "#e879f9",
-          "level5": "#a78bfa"
-        },
-        "baseMap": {
-          "water": "#020617",
-          "land": "#0f172a",
-          "landShadow": "#334155",
-          "border": "#475569",
-          "waterway": "#1e293b",
-          "label": "#cbd5e1",
-          "subLabel": "#94a3b8",
-          "coastline": "#64748b"
-        },
-        "ui": {
-          "bgTop": "#0f172a",
-          "bgBottom": "#020617"
+        routes: {
+          baseWidth: 2.1,
+          baseOpacity: 0.85,
+          hoverWidth: 2.8,
+          hoverOpacity: 0.96,
+          animatedWidth: 2.4,
+          animatedOpacity: 0.85
         }
       }
     }
   },
-  "transition": {
-    "duration": 250,
-    "delay": 0
-  },
-  "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
-  "sources": {
-    "maplibre-world": {
-      "type": "vector",
-      "url": "https://demotiles.maplibre.org/tiles/tiles.json"
+  transition: { duration: 250, delay: 0 },
+  sources: {
+    "voyager-base": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
+      ],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+    },
+    "voyager-labels": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
+      ],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
     }
   },
-  "layers": [
-    {
-      "id": "background",
-      "type": "background",
-      "paint": {
-        "background-color": "#cfe8ff"
-      }
-    },
-    {
-      "id": "basemap-countries-fill",
-      "type": "fill",
-      "source": "maplibre-world",
-      "source-layer": "countries",
-      "paint": {
-        "fill-color": "#fff4dc",
-        "fill-opacity": 1.0,
-        "fill-outline-color": "#f3e5c8"
-      }
-    },
-    {
-      "id": "basemap-countries-line",
-      "type": "line",
-      "source": "maplibre-world",
-      "source-layer": "countries",
-      "paint": {
-        "line-color": "#d6e4f5",
-        "line-width": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "zoom"
-          ],
-          0,
-          0.25,
-          3,
-          0.5,
-          6,
-          0.8
-        ],
-        "line-opacity": 0.75
-      }
-    }
+  layers: [
+    { id: "background", type: "background", paint: { "background-color": "#eaf6ff" } },
+    { id: "voyager-base", type: "raster", source: "voyager-base", paint: { "raster-opacity": 0.92, "raster-saturation": 0.15 } },
+    { id: "voyager-labels", type: "raster", source: "voyager-labels", paint: { "raster-opacity": 0.82 } }
   ]
 };
 
-function deepMergeTheme(base, overrides) {
-  if (!overrides || typeof overrides !== "object") return JSON.parse(JSON.stringify(base || {}));
-  const result = JSON.parse(JSON.stringify(base || {}));
-  Object.keys(overrides).forEach(key => {
-    const value = overrides[key];
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      result[key] = deepMergeTheme(result[key] || {}, value);
-    } else {
-      result[key] = value;
-    }
-  });
-  return result;
-}
-
-window.APP_THEME_MODE = localStorage.getItem("pakho-theme-mode") || "anime";
-
 function getTravelMapTheme() {
-  const rootTheme = (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
-  if (window.APP_THEME_MODE === "dark" && rootTheme.darkMode) {
-    const merged = deepMergeTheme(rootTheme, rootTheme.darkMode);
-    delete merged.darkMode;
-    return merged;
-  }
-  return rootTheme;
+  return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
 }
 
 function applyTravelMapThemeToCss(theme) {
@@ -1335,25 +1062,16 @@ function applyTravelMapThemeToCss(theme) {
   if (theme.cities) {
     root.style.setProperty("--map-city-fill", theme.cities.fill || "#24c483");
     root.style.setProperty("--map-city-hover", theme.cities.hoverFill || "#149d67");
-    root.style.setProperty("--map-city-line", theme.cities.line || "#ffffff");
-    root.style.setProperty("--map-city-hover-line", theme.cities.hoverLine || "#ffffff");
-    root.style.setProperty("--map-city-faded-line", theme.cities.fadedLine || "#d9efe5");
   }
   if (theme.airports) {
     root.style.setProperty("--map-airport-fill", theme.airports.fill || "#13b8a6");
     root.style.setProperty("--map-airport-hover", theme.airports.hoverFill || "#0d9488");
-    root.style.setProperty("--map-airport-line", theme.airports.line || "#ffffff");
-    root.style.setProperty("--map-airport-hover-line", theme.airports.hoverLine || "#ffffff");
-    root.style.setProperty("--map-airport-faded-line", theme.airports.fadedLine || "#d7f7f1");
   }
   if (theme.routes) {
     root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
     root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
   }
-  if (theme.baseMap) {
-    root.style.setProperty("--map-bg-top", theme.baseMap.water || "#cfe8ff");
-    root.style.setProperty("--map-bg-bottom", theme.baseMap.land || "#fff4dc");
-  } else if (theme.ui) {
+  if (theme.ui) {
     root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
     root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
   }
@@ -1365,119 +1083,12 @@ async function loadTravelMapStyle() {
     if (!response.ok) throw new Error(`Failed to load style JSON: HTTP ${response.status}`);
     const styleJson = await response.json();
     window.TRAVEL_MAP_STYLE = styleJson;
-    applyCurrentTheme();
+    applyTravelMapThemeToCss(getTravelMapTheme());
     debugLog("Travel map style JSON loaded", styleJson.metadata?.theme || {});
   } catch (error) {
     debugWarn("Using fallback travel map style", error);
-    applyCurrentTheme();
+    applyTravelMapThemeToCss(getTravelMapTheme());
   }
-}
-
-
-function applyCurrentTheme() {
-  document.body.classList.toggle("theme-dark", window.APP_THEME_MODE === "dark");
-  applyTravelMapThemeToCss(getTravelMapTheme());
-  const btn = document.getElementById("themeSwitchBtn");
-  if (btn) btn.setAttribute("aria-pressed", window.APP_THEME_MODE === "dark" ? "true" : "false");
-}
-
-function refreshTravelMapTheme() {
-  const map = window.travelMapInstance;
-  if (!map || !map.isStyleLoaded()) return;
-  const theme = getMapTheme();
-  const sizes = getMapSizes();
-  const countrySizes = sizes.countries || {};
-  const citySizes = sizes.cities || {};
-  const airportSizes = sizes.airports || {};
-  const routeSizes = sizes.routes || {};
-
-  if (map.getLayer("basemap-countries-fill")) {
-    map.setPaintProperty("basemap-countries-fill", "fill-color", theme.baseMap?.land || "#fff4dc");
-    map.setPaintProperty("basemap-countries-fill", "fill-outline-color", theme.baseMap?.landShadow || "#f3e5c8");
-  }
-  if (map.getLayer("basemap-countries-line")) {
-    map.setPaintProperty("basemap-countries-line", "line-color", theme.baseMap?.border || "#d6e4f5");
-  }
-  if (map.getLayer("basemap-coastline")) {
-    map.setPaintProperty("basemap-coastline", "line-color", theme.baseMap?.coastline || "#7da2e3");
-  }
-  if (map.getLayer("background")) {
-    map.setPaintProperty("background", "background-color", theme.baseMap?.water || "#cfe8ff");
-  }
-
-  if (map.getLayer("countries-fill")) {
-    map.setPaintProperty("countries-fill", "fill-color", theme.countries.fill);
-    map.setPaintProperty("countries-fill", "fill-outline-color", theme.countries.line);
-    map.setPaintProperty("countries-fill", "fill-opacity", countrySizes.fillOpacity ?? 0.78);
-  }
-  if (map.getLayer("countries-line")) {
-    map.setPaintProperty("countries-line", "line-color", theme.countries.line);
-    map.setPaintProperty("countries-line", "line-width", countrySizes.lineWidth ?? 1.4);
-  }
-  if (map.getLayer("countries-hover-fill")) {
-    map.setPaintProperty("countries-hover-fill", "fill-color", theme.countries.hoverFill);
-    map.setPaintProperty("countries-hover-fill", "fill-outline-color", theme.countries.hoverLine);
-    map.setPaintProperty("countries-hover-fill", "fill-opacity", countrySizes.hoverFillOpacity ?? 0.96);
-  }
-  if (map.getLayer("countries-hover-line")) {
-    map.setPaintProperty("countries-hover-line", "line-color", theme.countries.hoverLine);
-    map.setPaintProperty("countries-hover-line", "line-width", countrySizes.hoverLineWidth ?? 2.3);
-  }
-
-  if (map.getLayer("cities-base")) {
-    map.setPaintProperty("cities-base", "circle-color", theme.cities.fill);
-    map.setPaintProperty("cities-base", "circle-stroke-color", theme.cities.line);
-    map.setPaintProperty("cities-base", "circle-radius", citySizes.baseRadius ?? 2.5);
-    map.setPaintProperty("cities-base", "circle-stroke-width", citySizes.baseStrokeWidth ?? 1);
-  }
-  if (map.getLayer("cities-hover")) {
-    map.setPaintProperty("cities-hover", "circle-color", theme.cities.hoverFill);
-    map.setPaintProperty("cities-hover", "circle-stroke-color", theme.cities.hoverLine);
-    map.setPaintProperty("cities-hover", "circle-radius", citySizes.hoverRadius ?? 3.5);
-    map.setPaintProperty("cities-hover", "circle-stroke-width", citySizes.hoverStrokeWidth ?? 1.5);
-  }
-
-  if (map.getLayer("airports-base")) {
-    map.setPaintProperty("airports-base", "circle-color", theme.airports.fill);
-    map.setPaintProperty("airports-base", "circle-stroke-color", theme.airports.line);
-    map.setPaintProperty("airports-base", "circle-radius", airportSizes.baseRadius ?? 2);
-    map.setPaintProperty("airports-base", "circle-stroke-width", airportSizes.baseStrokeWidth ?? 0.8);
-  }
-  if (map.getLayer("airports-hover")) {
-    map.setPaintProperty("airports-hover", "circle-color", theme.airports.hoverFill);
-    map.setPaintProperty("airports-hover", "circle-stroke-color", theme.airports.hoverLine);
-    map.setPaintProperty("airports-hover", "circle-radius", airportSizes.hoverRadius ?? 3);
-    map.setPaintProperty("airports-hover", "circle-stroke-width", airportSizes.hoverStrokeWidth ?? 1.2);
-  }
-
-  const recolorExpr = [
-    "match",
-    ["get", "count"],
-    1, theme.routes.level1,
-    2, theme.routes.level2,
-    3, theme.routes.level3,
-    4, theme.routes.level4,
-    theme.routes.level5
-  ];
-  if (map.getLayer("routes-base")) {
-    map.setPaintProperty("routes-base", "line-color", recolorExpr);
-    map.setPaintProperty("routes-base", "line-opacity", routeSizes.baseOpacity ?? 0.85);
-  }
-  if (map.getLayer("routes-hover")) {
-    map.setPaintProperty("routes-hover", "line-color", recolorExpr);
-    map.setPaintProperty("routes-hover", "line-opacity", routeSizes.hoverOpacity ?? 0.96);
-  }
-
-  if (window.travelMapApplyHoverHighlight) {
-    window.travelMapApplyHoverHighlight(null);
-  }
-}
-
-function toggleSiteTheme() {
-  window.APP_THEME_MODE = window.APP_THEME_MODE === "dark" ? "anime" : "dark";
-  localStorage.setItem("pakho-theme-mode", window.APP_THEME_MODE);
-  applyCurrentTheme();
-  refreshTravelMapTheme();
 }
 
 async function fetchLocalJson(path) {
@@ -1944,10 +1555,11 @@ function initAbsenceTracker() {
   This block renders the travel map with MapLibre GL JS.
 
   What changed compared with the older Leaflet version:
-  - the base map now uses a dedicated MapLibre vector style JSON at /styles/travel_map_style.json
+  - the base map now uses a dedicated MapLibre style JSON at /styles/travel_map_style.json
   - countries, cities, airports and routes are converted into GeoJSON sources
   - hover highlighting is handled with native MapLibre layers and filters
-  - flight routes are curved great-circle arcs
+  - glow effects use GPU-accelerated line/circle blur layers
+  - flight routes are curved great-circle arcs with a moving highlight animation
   ============================================================================
 */
 (function () {
@@ -1984,7 +1596,7 @@ function initAbsenceTracker() {
   // 2) Theme colours kept in one place for easier maintenance
   // --------------------------------------------------------------------------
   function getMapTheme() {
-    return getTravelMapTheme() || {
+    return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {
       countries: {
         fill: "#2f6fff",
         line: "#1847b8",
@@ -1994,20 +1606,14 @@ function initAbsenceTracker() {
         fadedLine: "#d7e4ff"
       },
       cities: {
-        fill: "#fbbf24",
-        line: "#ffffff",
-        hoverFill: "#f59e0b",
-        hoverLine: "#ffffff",
-        fadedFill: "#fbbf24",
-        fadedLine: "#d9efe5"
+        fill: "#24c483",
+        hoverFill: "#149d67",
+        fadedFill: "#b7f0d6"
       },
       airports: {
         fill: "#13b8a6",
-        line: "#ffffff",
         hoverFill: "#0d9488",
-        hoverLine: "#ffffff",
-        fadedFill: "#99f6e4",
-        fadedLine: "#d7f7f1"
+        fadedFill: "#99f6e4"
       },
       routes: {
         level1: "#f59e0b",
@@ -2015,15 +1621,6 @@ function initAbsenceTracker() {
         level3: "#ef4444",
         level4: "#c026d3",
         level5: "#7c3aed"
-      },
-      baseMap: {
-        water: "#cfe8ff",
-        land: "#fff4dc",
-        landShadow: "#f3e5c8",
-        border: "#d6e4f5",
-        waterway: "#b9ddff",
-        label: "#6b7da3",
-        subLabel: "#8b9bb8"
       },
       ui: {
         bgTop: "#eef6ff",
@@ -2529,14 +2126,8 @@ function initAbsenceTracker() {
     const statusText = getElementOrWarn("travelMapStatusText");
     if (!mapContainer || typeof maplibregl === "undefined") return;
 
-    /* 
-      setView function (set the default map view)
-        var 1: longtitude (lower = map moves right) 
-        var 2: latitude (lower = map moves upwards)
-        var 3: zoom level (lower = map zooms out)
-    */
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [5, 45] : [15, 38];
+    const defaultCenter = isMobile ? [15, 42] : [15, 38];
     const defaultZoom = isMobile ? -0.4 : 0.1;
 
     const map = new maplibregl.Map({
@@ -2559,7 +2150,6 @@ function initAbsenceTracker() {
       route: false
     };
 
-    window.travelMapInstance = map;
     const popup = createPopup();
 
     const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
@@ -2605,15 +2195,11 @@ function initAbsenceTracker() {
       map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
       map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
 
-      const MAP_THEME = getMapTheme();
-
       map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
       map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-color", hasHover ? (MAP_THEME.cities.fadedLine || MAP_THEME.cities.line || "#ffffff") : (MAP_THEME.cities.line || "#ffffff"));
 
       map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
       map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
-      map.setPaintProperty("airports-base", "circle-stroke-color", hasHover ? (MAP_THEME.airports.fadedLine || MAP_THEME.airports.line || "#ffffff") : (MAP_THEME.airports.line || "#ffffff"));
 
       map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
 
@@ -2706,7 +2292,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (CITY_SIZES.baseRadius ?? 4.6),
           "circle-color": MAP_THEME.cities.fill,
-          "circle-stroke-color": MAP_THEME.cities.line,
+          "circle-stroke-color": "#ffffff",
           "circle-stroke-width": (CITY_SIZES.baseStrokeWidth ?? 1.4),
           "circle-opacity": 1,
           "circle-opacity-transition": { duration: 220, delay: 0 }
@@ -2721,7 +2307,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (CITY_SIZES.hoverRadius ?? 5.8),
           "circle-color": MAP_THEME.cities.hoverFill,
-          "circle-stroke-color": MAP_THEME.cities.hoverLine,
+          "circle-stroke-color": "#ffffff",
           "circle-stroke-width": (CITY_SIZES.hoverStrokeWidth ?? 1.8),
           "circle-opacity": 1
         }
@@ -2740,7 +2326,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (AIRPORT_SIZES.baseRadius ?? 3.6),
           "circle-color": MAP_THEME.airports.fill,
-          "circle-stroke-color": MAP_THEME.airports.line,
+          "circle-stroke-color": "#ffffff",
           "circle-stroke-width": (AIRPORT_SIZES.baseStrokeWidth ?? 1.2),
           "circle-opacity": 0.96,
           "circle-opacity-transition": { duration: 220, delay: 0 }
@@ -2755,7 +2341,7 @@ function initAbsenceTracker() {
         paint: {
           "circle-radius": (AIRPORT_SIZES.hoverRadius ?? 4.8),
           "circle-color": MAP_THEME.airports.hoverFill,
-          "circle-stroke-color": MAP_THEME.airports.hoverLine,
+          "circle-stroke-color": "#ffffff",
           "circle-stroke-width": (AIRPORT_SIZES.hoverStrokeWidth ?? 1.5),
           "circle-opacity": 1
         }
@@ -2887,8 +2473,6 @@ function initAbsenceTracker() {
         if (!bbox.isEmpty()) map.fitBounds(bbox, { padding: 24, duration: 700 });
       });
     }
-
-    window.travelMapApplyHoverHighlight = applyHoverHighlight;
 
     async function buildCountryGeoJson() {
       debugLog("Loading visited country polygons");
@@ -3228,14 +2812,6 @@ if (document.readyState === "loading") {
 } else {
   initSiteData();
 }
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  applyCurrentTheme();
-  const btn = document.getElementById('themeSwitchBtn');
-  if (btn) btn.addEventListener('click', toggleSiteTheme);
-});
 </script>
 </body>
 </html>
