@@ -741,6 +741,142 @@
     .bottom-grid{ gap:12px; }
     .day, .empty{ min-height:48px; }
   }
+
+  .theme-switch-wrap{
+    display:flex;
+    justify-content:center;
+    margin:12px 0 2px;
+    position:relative;
+    z-index:3;
+  }
+  .theme-switch-btn{
+    appearance:none;
+    border:0;
+    background:transparent;
+    color:#64748b;
+    font-size:12px;
+    line-height:1;
+    letter-spacing:.02em;
+    padding:6px 8px;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .theme-switch-btn:hover{ color:#334155; }
+
+  body.theme-dark{
+    --text:#e5eefc;
+    --muted:#94a3b8;
+    --border:rgba(148,163,184,.18);
+    --card:rgba(15,23,42,.78);
+    --card-strong:rgba(15,23,42,.88);
+    --accent:#7dd3fc;
+    --ok:#4ade80;
+    --bad:#f87171;
+    --link:#c4b5fd;
+    --absent-bg:rgba(127,29,29,.40);
+    --absent-border:#f87171;
+    --today-bg:rgba(30,41,59,.92);
+    --shadow:0 18px 42px rgba(2,6,23,.45);
+    background:#020617 !important;
+  }
+  body.theme-dark::before{
+    background:
+      radial-gradient(circle at top left, rgba(56,189,248,.08), transparent 22%),
+      radial-gradient(circle at top right, rgba(99,102,241,.08), transparent 18%),
+      linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98));
+  }
+  body.theme-dark .page-girl,
+  body.theme-dark .header-banner{
+    display:none !important;
+  }
+  body.theme-dark .container{
+    max-width:100vw;
+    width:100%;
+    padding:18px 14px 28px;
+  }
+  body.theme-dark .hero-panel{
+    min-height:auto;
+    padding:0;
+    margin-left:0;
+  }
+  body.theme-dark .hero-copy,
+  body.theme-dark .hero-stats,
+  body.theme-dark .hero-calendar-wrap{
+    max-width:none;
+    width:100%;
+  }
+  body.theme-dark .stack{
+    gap:12px;
+  }
+  body.theme-dark .glass,
+  body.theme-dark .stat-card,
+  body.theme-dark .panel{
+    background:var(--card);
+    backdrop-filter:blur(14px);
+    border-color:rgba(148,163,184,.12);
+    box-shadow:0 12px 30px rgba(2,6,23,.24);
+  }
+  body.theme-dark .hero-panel{
+    background:transparent !important;
+    border-color:transparent !important;
+    box-shadow:none !important;
+  }
+  body.theme-dark .stat-top,
+  body.theme-dark .stat-label,
+  body.theme-dark .panel-title,
+  body.theme-dark .panel-subtitle,
+  body.theme-dark .legend-row,
+  body.theme-dark .kpi-label,
+  body.theme-dark .summary-gauge-label,
+  body.theme-dark .mini-label,
+  body.theme-dark .weekday,
+  body.theme-dark .rolling{
+    color:var(--text) !important;
+  }
+  body.theme-dark .status-line,
+  body.theme-dark .stat-sub,
+  body.theme-dark .mini-panel .small,
+  body.theme-dark .kpi-item,
+  body.theme-dark .kpi-value,
+  body.theme-dark .summary-mini-card,
+  body.theme-dark .summary-gauge-card{
+    color:var(--text);
+  }
+  body.theme-dark .kpi-strip,
+  body.theme-dark .legend,
+  body.theme-dark .summary-gauge-card,
+  body.theme-dark .summary-mini-card,
+  body.theme-dark .controls .month-nav-btn,
+  body.theme-dark select,
+  body.theme-dark .map-toggle-btn,
+  body.theme-dark .external-links button,
+  body.theme-dark .day,
+  body.theme-dark .empty{
+    background:rgba(30,41,59,.72) !important;
+    color:var(--text) !important;
+    border-color:rgba(148,163,184,.16) !important;
+  }
+  body.theme-dark .map-toggle-btn.active{
+    background:rgba(37,99,235,.28) !important;
+    color:#dbeafe !important;
+    border-color:rgba(96,165,250,.42) !important;
+  }
+  body.theme-dark .day.today{
+    outline-color:#7dd3fc;
+    background:rgba(30,41,59,.96) !important;
+  }
+  body.theme-dark .day.absent{
+    background:rgba(127,29,29,.42) !important;
+    border-color:#f87171 !important;
+  }
+  body.theme-dark .theme-switch-btn{
+    color:#cbd5e1;
+  }
+  body.theme-dark .theme-switch-btn:hover{
+    color:#ffffff;
+  }
+
 </style>
 
 </head>
@@ -908,6 +1044,11 @@
       <div id="currentDateText"></div>
     </div>
   </div>
+
+<div class="theme-switch-wrap">
+  <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
+</div>
+
 </div>
 
 <script>
@@ -1013,6 +1154,53 @@ window.TRAVEL_MAP_STYLE = {
         "waterway": "#b9ddff",
         "label": "#6b7da3",
         "subLabel": "#8b9bb8"
+      },
+      "darkMode": {
+        "countries": {
+          "fill": "#2563eb",
+          "line": "#60a5fa",
+          "hoverFill": "#3b82f6",
+          "hoverLine": "#93c5fd",
+          "fadedFill": "#1e293b",
+          "fadedLine": "#334155"
+        },
+        "cities": {
+          "fill": "#fbbf24",
+          "hoverFill": "#f59e0b",
+          "fadedFill": "#475569",
+          "line": "#fef3c7",
+          "hoverLine": "#ffffff",
+          "fadedLine": "#64748b"
+        },
+        "airports": {
+          "fill": "#2dd4bf",
+          "hoverFill": "#14b8a6",
+          "fadedFill": "#334155",
+          "line": "#ccfbf1",
+          "hoverLine": "#ffffff",
+          "fadedLine": "#64748b"
+        },
+        "routes": {
+          "level1": "#fbbf24",
+          "level2": "#fb923c",
+          "level3": "#f87171",
+          "level4": "#e879f9",
+          "level5": "#a78bfa"
+        },
+        "ui": {
+          "bgTop": "#0f172a",
+          "bgBottom": "#020617"
+        },
+        "baseMap": {
+          "water": "#020617",
+          "land": "#0f172a",
+          "landShadow": "#334155",
+          "border": "#475569",
+          "waterway": "#1e293b",
+          "label": "#cbd5e1",
+          "subLabel": "#94a3b8",
+          "coastline": "#64748b"
+        }
       }
     }
   },
@@ -1100,8 +1288,9 @@ function applyTravelMapThemeToCss(theme) {
     root.style.setProperty("--map-airport-faded-line", theme.airports.fadedLine || "#d7f7f1");
   }
   if (theme.routes) {
-    root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
-    root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
+    root.style.setProperty("--map-route-level1", theme.routes.level1 || "#f59e0b");
+    root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f97316");
+    root.style.setProperty("--map-route-level4", theme.routes.level4 || "#c026d3");
   }
   if (theme.baseMap) {
     root.style.setProperty("--map-bg-top", theme.baseMap.water || "#cfe8ff");
@@ -1118,12 +1307,144 @@ async function loadTravelMapStyle() {
     if (!response.ok) throw new Error(`Failed to load style JSON: HTTP ${response.status}`);
     const styleJson = await response.json();
     window.TRAVEL_MAP_STYLE = styleJson;
-    applyTravelMapThemeToCss(getTravelMapTheme());
+    applyCurrentTheme();
     debugLog("Travel map style JSON loaded", styleJson.metadata?.theme || {});
   } catch (error) {
     debugWarn("Using fallback travel map style", error);
-    applyTravelMapThemeToCss(getTravelMapTheme());
+    applyCurrentTheme();
   }
+}
+
+
+function buildVectorStyleForCurrentTheme() {
+  const theme = getMapTheme();
+  const styleClone = JSON.parse(JSON.stringify(window.TRAVEL_MAP_STYLE || {}));
+  styleClone.metadata = styleClone.metadata || {};
+  styleClone.metadata.theme = styleClone.metadata.theme || {};
+  styleClone.layers = (styleClone.layers || []).map(layer => {
+    const next = JSON.parse(JSON.stringify(layer));
+    if (next.id === "background") {
+      next.paint = next.paint || {};
+      next.paint["background-color"] = theme.baseMap?.water || "#cfe8ff";
+    } else if (next.id === "basemap-countries-fill") {
+      next.paint = next.paint || {};
+      next.paint["fill-color"] = theme.baseMap?.land || "#fff4dc";
+      next.paint["fill-outline-color"] = theme.baseMap?.landShadow || "#f3e5c8";
+    } else if (next.id === "basemap-countries-line") {
+      next.paint = next.paint || {};
+      next.paint["line-color"] = theme.baseMap?.border || "#d6e4f5";
+    } else if (next.id === "basemap-coastline") {
+      next.paint = next.paint || {};
+      next.paint["line-color"] = theme.baseMap?.coastline || theme.baseMap?.border || "#7da2e3";
+    }
+    return next;
+  });
+  return styleClone;
+}
+
+function applyCurrentTheme() {
+  document.body.classList.toggle("theme-dark", window.APP_THEME_MODE === "dark");
+  applyTravelMapThemeToCss(getMapTheme());
+  const btn = document.getElementById("themeSwitchBtn");
+  if (btn) {
+    btn.setAttribute("aria-pressed", window.APP_THEME_MODE === "dark" ? "true" : "false");
+  }
+}
+
+function refreshTravelMapTheme() {
+  const map = window.travelMapInstance;
+  if (!map || !map.isStyleLoaded()) return;
+  const theme = getMapTheme();
+  const sizes = getMapSizes();
+  const countrySizes = sizes.countries || {};
+  const citySizes = sizes.cities || {};
+  const airportSizes = sizes.airports || {};
+  const routeSizes = sizes.routes || {};
+
+  if (map.getLayer("countries-fill")) {
+    map.setPaintProperty("countries-fill", "fill-color", theme.countries.fill);
+    map.setPaintProperty("countries-fill", "fill-outline-color", theme.countries.line);
+    map.setPaintProperty("countries-fill", "fill-opacity", countrySizes.fillOpacity ?? 0.78);
+  }
+  if (map.getLayer("countries-line")) {
+    map.setPaintProperty("countries-line", "line-color", theme.countries.line);
+    map.setPaintProperty("countries-line", "line-width", countrySizes.lineWidth ?? 1.4);
+  }
+  if (map.getLayer("countries-hover-fill")) {
+    map.setPaintProperty("countries-hover-fill", "fill-color", theme.countries.hoverFill);
+    map.setPaintProperty("countries-hover-fill", "fill-outline-color", theme.countries.hoverLine);
+    map.setPaintProperty("countries-hover-fill", "fill-opacity", countrySizes.hoverFillOpacity ?? 0.96);
+  }
+  if (map.getLayer("countries-hover-line")) {
+    map.setPaintProperty("countries-hover-line", "line-color", theme.countries.hoverLine);
+    map.setPaintProperty("countries-hover-line", "line-width", countrySizes.hoverLineWidth ?? 2.3);
+  }
+
+  if (map.getLayer("cities-base")) {
+    map.setPaintProperty("cities-base", "circle-color", theme.cities.fill);
+    map.setPaintProperty("cities-base", "circle-stroke-color", theme.cities.line);
+    map.setPaintProperty("cities-base", "circle-radius", citySizes.baseRadius ?? 2.5);
+    map.setPaintProperty("cities-base", "circle-stroke-width", citySizes.baseStrokeWidth ?? 1);
+  }
+  if (map.getLayer("cities-hover")) {
+    map.setPaintProperty("cities-hover", "circle-color", theme.cities.hoverFill);
+    map.setPaintProperty("cities-hover", "circle-stroke-color", theme.cities.hoverLine);
+    map.setPaintProperty("cities-hover", "circle-radius", citySizes.hoverRadius ?? 3.5);
+    map.setPaintProperty("cities-hover", "circle-stroke-width", citySizes.hoverStrokeWidth ?? 1.5);
+  }
+  if (map.getLayer("airports-base")) {
+    map.setPaintProperty("airports-base", "circle-color", theme.airports.fill);
+    map.setPaintProperty("airports-base", "circle-stroke-color", theme.airports.line);
+    map.setPaintProperty("airports-base", "circle-radius", airportSizes.baseRadius ?? 2);
+    map.setPaintProperty("airports-base", "circle-stroke-width", airportSizes.baseStrokeWidth ?? 0.8);
+  }
+  if (map.getLayer("airports-hover")) {
+    map.setPaintProperty("airports-hover", "circle-color", theme.airports.hoverFill);
+    map.setPaintProperty("airports-hover", "circle-stroke-color", theme.airports.hoverLine);
+    map.setPaintProperty("airports-hover", "circle-radius", airportSizes.hoverRadius ?? 3);
+    map.setPaintProperty("airports-hover", "circle-stroke-width", airportSizes.hoverStrokeWidth ?? 1.2);
+  }
+
+  if (map.getLayer("routes-base")) {
+    map.setPaintProperty("routes-base", "line-width", [
+      "interpolate", ["linear"], ["zoom"],
+      1, Math.max(1, (routeSizes.baseWidth ?? 2.3) - 0.9),
+      5, (routeSizes.baseWidth ?? 2.3),
+      10, (routeSizes.baseWidth ?? 2.3) + 0.9
+    ]);
+    map.setPaintProperty("routes-base", "line-opacity", routeSizes.baseOpacity ?? 0.85);
+  }
+  if (map.getLayer("routes-hover")) {
+    map.setPaintProperty("routes-hover", "line-width", [
+      "interpolate", ["linear"], ["zoom"],
+      1, Math.max(1.2, (routeSizes.hoverWidth ?? 2.8) - 0.8),
+      5, (routeSizes.hoverWidth ?? 2.8),
+      10, (routeSizes.hoverWidth ?? 2.8) + 0.8
+    ]);
+    map.setPaintProperty("routes-hover", "line-opacity", routeSizes.hoverOpacity ?? 0.96);
+  }
+
+  if (map.getLayer("basemap-countries-fill")) {
+    map.setPaintProperty("basemap-countries-fill", "fill-color", theme.baseMap?.land || "#fff4dc");
+    map.setPaintProperty("basemap-countries-fill", "fill-outline-color", theme.baseMap?.landShadow || "#f3e5c8");
+  }
+  if (map.getLayer("basemap-countries-line")) {
+    map.setPaintProperty("basemap-countries-line", "line-color", theme.baseMap?.border || "#d6e4f5");
+  }
+  if (map.getLayer("basemap-coastline")) {
+    map.setPaintProperty("basemap-coastline", "line-color", theme.baseMap?.coastline || theme.baseMap?.border || "#7da2e3");
+  }
+
+  if (window.travelMapApplyHoverHighlight) {
+    window.travelMapApplyHoverHighlight(null);
+  }
+}
+
+function toggleSiteTheme() {
+  window.APP_THEME_MODE = window.APP_THEME_MODE === "dark" ? "anime" : "dark";
+  localStorage.setItem("pakho-theme-mode", window.APP_THEME_MODE);
+  applyCurrentTheme();
+  refreshTravelMapTheme();
 }
 
 async function fetchLocalJson(path) {
@@ -1629,1106 +1950,30 @@ function initAbsenceTracker() {
   // --------------------------------------------------------------------------
   // 2) Theme colours kept in one place for easier maintenance
   // --------------------------------------------------------------------------
-  function getMapTheme() {
-    return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) 
-  }
-  function getMapSizes() { return getMapTheme().sizes || {}; }
-  function getCountrySizes() { return getMapSizes().countries || {}; }
-  function getCitySizes() { return getMapSizes().cities || {}; }
-  function getAirportSizes() { return getMapSizes().airports || {}; }
-  function getRouteSizes() { return getMapSizes().routes || {}; }
-
-  // --------------------------------------------------------------------------
-  // 3) Canonical country model
-  // --------------------------------------------------------------------------
-  const COUNTRY_ALIASES = {
-    "Bahamas": "The Bahamas",
-    "Congo (Congo-Brazzaville)": "Republic of the Congo",
-    "Côte D'Ivoire": "Ivory Coast",
-    "Czech Republic": "Czechia",
-    "Eswatini": "eSwatini",
-    "Micronesia": "Federated States of Micronesia",
-    "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara",
-    "Sao Tome and Principe": "São Tomé and Principe",
-    "Serbia": "Republic of Serbia",
-    "Tanzania": "United Republic of Tanzania",
-    "Timor-Leste": "East Timor",
-    "United States": "United States of America",
-    "Vatican City": "Vatican"
-  };
-
-  const REVERSE_COUNTRY_ALIASES = {
-    "The Bahamas": "Bahamas",
-    "Republic of the Congo": "Congo (Congo-Brazzaville)",
-    "Ivory Coast": "Côte D'Ivoire",
-    "Czechia": "Czech Republic",
-    "eSwatini": "Eswatini",
-    "Federated States of Micronesia": "Micronesia",
-    "São Tomé and Principe": "Sao Tome and Principe",
-    "Republic of Serbia": "Serbia",
-    "United Republic of Tanzania": "Tanzania",
-    "East Timor": "Timor-Leste",
-    "United States of America": "United States",
-    "Vatican": "Vatican City",
-    "Hong Kong": "Hong Kong S.A.R.",
-    "Macau": "Macao S.A.R.",
-    "Macao": "Macao S.A.R.",
-    "Svalbard and Jan Mayen": "Svalbard",
-    "Svalbard & Jan Mayen": "Svalbard"
-  };
-
-  const COUNTRY_EXPANSIONS = {
-    "Cyprus": ["Cyprus", "Cyprus No Mans Area", "Northern Cyprus"],
-    "Kazakhstan": ["Baykonur Cosmodrome", "Kazakhstan"],
-    "Somalia": ["Somalia", "Somaliland"]
-  };
-
-  const AIRPORT_CODE_OVERRIDES = {
-    HKG: "Hong Kong S.A.R.", VHHH: "Hong Kong S.A.R.",
-    MFM: "Macao S.A.R.", VMMC: "Macao S.A.R.",
-    SJU: "Puerto Rico", TJSJ: "Puerto Rico",
-    BQN: "Puerto Rico", TJPS: "Puerto Rico",
-    GUM: "Guam", PGUM: "Guam",
-    LYR: "Svalbard", ENSB: "Svalbard",
-    AKT: "Akrotiri Sovereign Base Area", LCRA: "Akrotiri Sovereign Base Area",
-    RAR: "Cook Islands", NCRG: "Cook Islands",
-    IUE: "Niue", NIUE: "Niue",
-    APW: "Samoa", NSFA: "Samoa",
-    TBU: "Tonga", NFTF: "Tonga",
-    BGI: "Barbados", TBPB: "Barbados",
-    GND: "Grenada", TGPY: "Grenada",
-    DOM: "Dominica", TDPD: "Dominica",
-    ANU: "Antigua and Barbuda", TAPA: "Antigua and Barbuda",
-    SKB: "Saint Kitts and Nevis", TKPK: "Saint Kitts and Nevis",
-    UVF: "Saint Lucia", TLPL: "Saint Lucia",
-    SLU: "Saint Lucia", TLPC: "Saint Lucia",
-    MLE: "Maldives", VRMM: "Maldives",
-    SIN: "Singapore", WSSS: "Singapore",
-    XSP: "Singapore", WSSL: "Singapore",
-    MLA: "Malta", LMML: "Malta",
-    KEF: "Iceland", BIKF: "Iceland",
-    RKV: "Iceland", BIRK: "Iceland",
-    ARN: "Sweden", ESSA: "Sweden",
-    BMA: "Sweden", ESSB: "Sweden"
-  };
-
-  const CITY_OVERRIDES = {
-    "Hong Kong": "Hong Kong S.A.R.",
-    "Macau": "Macao S.A.R.",
-    "Macao": "Macao S.A.R.",
-    "Longyearbyen": "Svalbard",
-    "San Juan": "Puerto Rico",
-    "Tamuning": "Guam",
-    "Hagatna": "Guam",
-    "Rarotonga": "Cook Islands",
-    "Alofi": "Niue",
-    "Apia": "Samoa",
-    "Nuku'alofa": "Tonga",
-    "Bridgetown": "Barbados",
-    "St. George's": "Grenada",
-    "Saint George's": "Grenada",
-    "Roseau": "Dominica",
-    "St. John's": "Antigua and Barbuda",
-    "Saint John's": "Antigua and Barbuda",
-    "Basseterre": "Saint Kitts and Nevis",
-    "Castries": "Saint Lucia",
-    "Male": "Maldives",
-    "Malé": "Maldives",
-    "Singapore": "Singapore",
-    "Luqa": "Malta",
-    "Reykjavik": "Iceland",
-    "Stockholm": "Sweden"
-  };
-
-  const AIRPORT_NAME_OVERRIDES = {
-    "Antigua": "Antigua and Barbuda",
-    "Barbados": "Barbados",
-    "Grenada": "Grenada",
-    "Dominica": "Dominica",
-    "St Lucia": "Saint Lucia",
-    "Saint Lucia": "Saint Lucia",
-    "St Kitts": "Saint Kitts and Nevis",
-    "Saint Kitts": "Saint Kitts and Nevis",
-    "Cook Islands": "Cook Islands",
-    "Niue": "Niue",
-    "Samoa": "Samoa",
-    "Tonga": "Tonga",
-    "Maldives": "Maldives",
-    "Singapore": "Singapore",
-    "Malta": "Malta",
-    "Iceland": "Iceland",
-    "Sweden": "Sweden"
-  };
-
-  const COUNTRY_VALUE_OVERRIDES = {
-    "St Lucia": "Saint Lucia",
-    "Saint Lucia": "Saint Lucia",
-    "Antigua": "Antigua and Barbuda",
-    "St Kitts": "Saint Kitts and Nevis",
-    "Saint Kitts": "Saint Kitts and Nevis",
-    "Cook Islands": "Cook Islands",
-    "Niue": "Niue",
-    "Samoa": "Samoa",
-    "Tonga": "Tonga",
-    "Barbados": "Barbados",
-    "Grenada": "Grenada",
-    "Dominica": "Dominica",
-    "Maldives": "Maldives",
-    "Singapore": "Singapore",
-    "Malta": "Malta",
-    "Iceland": "Iceland",
-    "Sweden": "Sweden"
-  };
-
-  // --------------------------------------------------------------------------
-  // 4) Generic helpers
-  // --------------------------------------------------------------------------
-  function normaliseText(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[()'.,]/g, "")
-      .replace(/&/g, "and")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-  }
-
-  function canonicaliseCountryName(value) {
-    const raw = String(value || "").trim();
-    return REVERSE_COUNTRY_ALIASES[raw] || raw;
-  }
-
-  function getCanonicalVisitedCountry(name) {
-    return COUNTRY_ALIASES[name] || name;
-  }
-
-  function getExpansionTargets(countryName) {
-    return COUNTRY_EXPANSIONS[countryName] || [countryName];
-  }
-
-  function getFeatureDisplayName(feature) {
-    const props = feature.properties || {};
-    return props.ADMIN || props.NAME_LONG || props.NAME || props.GEOUNIT || props.BRK_NAME || props.FORMAL_EN || props.NAME_EN || "Unknown";
-  }
-
-  function getFeatureCandidateNames(feature) {
-    const props = feature.properties || {};
-    return [props.ADMIN, props.NAME_LONG, props.NAME, props.GEOUNIT, props.BRK_NAME, props.FORMAL_EN, props.NAME_EN].filter(Boolean);
-  }
-
-  function matchesVisitedCountry(feature, targetNames) {
-    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
-    return targetNames.some(name => candidateNames.includes(normaliseText(name)));
-  }
-
-  function resolvePolygonCountry(feature) {
-    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
-    for (const country of (window.VISITED_COUNTRIES_DATA || [])) {
-      const canonical = getCanonicalVisitedCountry(country);
-      const expandedNames = getExpansionTargets(canonical).map(normaliseText);
-      if (expandedNames.some(name => candidateNames.includes(name))) return canonical;
+  function deepMergeTheme(base, overrides) {
+  if (!overrides || typeof overrides !== "object") return JSON.parse(JSON.stringify(base || {}));
+  const result = JSON.parse(JSON.stringify(base || {}));
+  Object.keys(overrides).forEach(key => {
+    const value = overrides[key];
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      result[key] = deepMergeTheme(result[key] || {}, value);
+    } else {
+      result[key] = value;
     }
-    return getFeatureDisplayName(feature);
+  });
+  return result;
+}
+
+window.APP_THEME_MODE = localStorage.getItem("pakho-theme-mode") || "anime";
+
+function getMapTheme() {
+  const rootTheme = (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
+  if (window.APP_THEME_MODE === "dark" && rootTheme.darkMode) {
+    const merged = deepMergeTheme(rootTheme, rootTheme.darkMode);
+    delete merged.darkMode;
+    return merged;
   }
-
-  async function fetchJsonWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw lastError || new Error("Unable to load JSON data.");
-  }
-
-  async function fetchTextWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.text();
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw lastError || new Error("Unable to load text data.");
-  }
-
-  function parseCsv(text) {
-    const rows = [];
-    let row = [];
-    let value = "";
-    let inQuotes = false;
-
-    for (let i = 0; i < text.length; i += 1) {
-      const char = text[i];
-      const next = text[i + 1];
-
-      if (char === '"') {
-        if (inQuotes && next === '"') {
-          value += '"';
-          i += 1;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (char === "," && !inQuotes) {
-        row.push(value);
-        value = "";
-      } else if ((char === "\n" || char === "\r") && !inQuotes) {
-        if (char === "\r" && next === "\n") i += 1;
-        row.push(value);
-        value = "";
-        if (row.some(cell => cell !== "")) rows.push(row);
-        row = [];
-      } else {
-        value += char;
-      }
-    }
-
-    row.push(value);
-    if (row.some(cell => cell !== "")) rows.push(row);
-    return rows;
-  }
-
-  function loadFlightHistoryFromCsv(csvText) {
-    const rows = parseCsv(csvText);
-    if (!rows.length) return [];
-
-    const header = rows[0];
-    const indexByColumn = Object.fromEntries(header.map((name, index) => [name, index]));
-    const fromToPattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
-
-    return rows.slice(1).map(cells => {
-      const get = name => (cells[indexByColumn[name]] || "").trim();
-      const fromMatch = get("From").match(fromToPattern);
-      const toMatch = get("To").match(fromToPattern);
-      if (!fromMatch || !toMatch) return null;
-
-      const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
-      const [, toCity, toAirport, toIata, toIcao] = toMatch;
-
-      return {
-        date: get("Date"),
-        airline: get("Airline"),
-        flightNumber: get("Flight number"),
-        fromCity: fromCity.trim(),
-        fromAirport: fromAirport.trim(),
-        fromIata: fromIata.trim(),
-        fromIcao: fromIcao.trim(),
-        toCity: toCity.trim(),
-        toAirport: toAirport.trim(),
-        toIata: toIata.trim(),
-        toIcao: toIcao.trim()
-      };
-    }).filter(Boolean);
-  }
-
-  function buildIataIndex(airportsByIcao) {
-    const byIata = {};
-    Object.values(airportsByIcao).forEach(airport => {
-      const iata = String(airport.iata || "").trim();
-      const lat = Number(airport.lat);
-      const lon = Number(airport.lon);
-      if (!iata || iata === "\\N" || !Number.isFinite(lat) || !Number.isFinite(lon)) return;
-
-      if (!byIata[iata]) {
-        byIata[iata] = {
-          name: airport.name || "",
-          city: airport.city || "",
-          country: airport.country || "",
-          iata,
-          icao: airport.icao || "",
-          lat,
-          lon
-        };
-      }
-    });
-    return byIata;
-  }
-
-  function normaliseAirportRecord(record, fallbackIcao = "") {
-    if (!record) return null;
-    const lat = Number(record.lat);
-    const lon = Number(record.lon);
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-
-    return {
-      name: record.name || "",
-      city: record.city || "",
-      country: record.country || "",
-      iata: record.iata || "",
-      icao: record.icao || fallbackIcao,
-      lat,
-      lon
-    };
-  }
-
-  function getAirportRecord(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
-    return (
-      normaliseAirportRecord(mwggAirports[icao], icao) ||
-      normaliseAirportRecord(openFlightsAirports[icao], icao) ||
-      (iata ? normaliseAirportRecord(mwggIataIndex[iata]) : null) ||
-      (iata ? normaliseAirportRecord(openFlightsIataIndex[iata]) : null) ||
-      null
-    );
-  }
-
-  function resolveTravelCountry({ country = "", city = "", airportName = "", iata = "", icao = "", cityCountryLookup = {} }) {
-    const cityKey = normaliseText(city);
-    const iataCode = String(iata).trim().toUpperCase();
-    const icaoCode = String(icao).trim().toUpperCase();
-
-    if (cityKey && cityCountryLookup[cityKey]) return cityCountryLookup[cityKey];
-    if (iataCode && AIRPORT_CODE_OVERRIDES[iataCode]) return AIRPORT_CODE_OVERRIDES[iataCode];
-    if (icaoCode && AIRPORT_CODE_OVERRIDES[icaoCode]) return AIRPORT_CODE_OVERRIDES[icaoCode];
-    if (city && CITY_OVERRIDES[city]) return CITY_OVERRIDES[city];
-    if (airportName && AIRPORT_NAME_OVERRIDES[airportName]) return AIRPORT_NAME_OVERRIDES[airportName];
-    if (country && COUNTRY_VALUE_OVERRIDES[country]) return COUNTRY_VALUE_OVERRIDES[country];
-    if (country) return canonicaliseCountryName(country);
-    if (city) return canonicaliseCountryName(city);
-    if (airportName) return canonicaliseCountryName(airportName);
-    return "";
-  }
-
-  function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
-    const toRad = degrees => degrees * Math.PI / 180;
-    const toDeg = radians => radians * 180 / Math.PI;
-
-    const phi1 = toRad(lat1);
-    const lambda1 = toRad(lon1);
-    const phi2 = toRad(lat2);
-    const lambda2 = toRad(lon2);
-
-    const distance = 2 * Math.asin(Math.sqrt(
-      Math.sin((phi2 - phi1) / 2) ** 2 +
-      Math.cos(phi1) * Math.cos(phi2) * Math.sin((lambda2 - lambda1) / 2) ** 2
-    ));
-
-    if (!isFinite(distance) || distance === 0) {
-      return [[lon1, lat1], [lon2, lat2]];
-    }
-
-    const points = [];
-    let previousLng = null;
-
-    for (let i = 0; i <= steps; i += 1) {
-      const fraction = i / steps;
-      const a = Math.sin((1 - fraction) * distance) / Math.sin(distance);
-      const b = Math.sin(fraction * distance) / Math.sin(distance);
-
-      const x = a * Math.cos(phi1) * Math.cos(lambda1) + b * Math.cos(phi2) * Math.cos(lambda2);
-      const y = a * Math.cos(phi1) * Math.sin(lambda1) + b * Math.cos(phi2) * Math.sin(lambda2);
-      const z = a * Math.sin(phi1) + b * Math.sin(phi2);
-
-      const phi = Math.atan2(z, Math.sqrt(x * x + y * y));
-      let lng = toDeg(Math.atan2(y, x));
-
-      if (previousLng !== null) {
-        while (lng - previousLng > 180) lng -= 360;
-        while (lng - previousLng < -180) lng += 360;
-      }
-
-      previousLng = lng;
-      points.push([lng, toDeg(phi)]);
-    }
-
-    return points;
-  }
-
-  function splitLineAtDateLine(points) {
-    if (!Array.isArray(points) || points.length === 0) return [];
-    const segments = [[points[0]]];
-    for (let i = 1; i < points.length; i += 1) {
-      const previous = points[i - 1];
-      const current = points[i];
-      if (Math.abs(current[0] - previous[0]) > 180) {
-        segments.push([current]);
-      } else {
-        segments[segments.length - 1].push(current);
-      }
-    }
-    return segments.filter(segment => segment.length >= 2);
-  }
-
-  function getRouteColor(flightCount) {
-    const MAP_THEME = getMapTheme();
-    if (flightCount >= 5) return MAP_THEME.routes.level5;
-    if (flightCount === 4) return MAP_THEME.routes.level4;
-    if (flightCount === 3) return MAP_THEME.routes.level3;
-    if (flightCount === 2) return MAP_THEME.routes.level2;
-    return MAP_THEME.routes.level1;
-  }
-
-  function toFeatureCollection(features) {
-    return { type: "FeatureCollection", features };
-  }
-
-  function uniqueBy(array, keyFn) {
-    const seen = new Set();
-    return array.filter(item => {
-      const key = keyFn(item);
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }
-
-  function setLayerVisibility(map, layerIds, isVisible) {
-    layerIds.forEach(layerId => {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, "visibility", isVisible ? "visible" : "none");
-      }
-    });
-  }
-
-  function createPopup() {
-    return new maplibregl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 12,
-      maxWidth: "320px"
-    });
-  }
-
-  function bindPopupForLayer(map, popup, layerId, htmlBuilder) {
-    map.on("mousemove", layerId, event => {
-      const feature = event.features && event.features[0];
-      if (!feature) return;
-      map.getCanvas().style.cursor = "pointer";
-      popup
-        .setLngLat(event.lngLat)
-        .setHTML(htmlBuilder(feature))
-        .addTo(map);
-    });
-
-    map.on("mouseleave", layerId, () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
-    });
-  }
-
-  /**
-   * Build the interactive travel map with MapLibre GL JS.
-   */
-  window.initTravelMap = function initTravelMap() {
-    debugLog("Initialising travel map (MapLibre)");
-
-    const mapContainer = getElementOrWarn("travelMap");
-    const statusText = getElementOrWarn("travelMapStatusText");
-    if (!mapContainer || typeof maplibregl === "undefined") return;
-
-    /* 
-      setView function (set the default map view)
-        var 1: longtitude (lower = map moves right) 
-        var 2: latitude (lower = map moves upwards)
-        var 3: zoom level (lower = map zooms out)
-    */
-    const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [7, 45] : [15, 38];
-    const defaultZoom = isMobile ? -0.4 : 0.1;
-
-    const map = new maplibregl.Map({
-      container: "travelMap",
-      style: window.TRAVEL_MAP_STYLE,
-      center: defaultCenter,
-      zoom: defaultZoom,
-      attributionControl: false,
-      maxPitch: 0,
-      dragRotate: false,
-      touchZoomRotate: true
-    });
-
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-
-    const layerState = {
-      country: true,
-      city: false,
-      airport: false,
-      route: false
-    };
-
-    const popup = createPopup();
-
-    const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
-    const cityCountryLookup = Object.fromEntries(
-      cityData.map(city => [normaliseText(city.name), canonicaliseCountryName(city.country || "")])
-    );
-
-    const counters = {
-      visitedCountries: (window.VISITED_NATIONS_DATA || []).length,
-      visitedCities: cityData.length,
-      visitedAirports: 0,
-      flightsTaken: 0,
-      routePairs: 0
-    };
-
-    function updateStatusText() {
-      if (statusText) statusText.textContent = "";
-      debugLog("Travel map counters updated", counters);
-
-      const heroCountryCount = getElementOrWarn("heroCountryCount");
-      if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
-
-      const heroCityCount = getElementOrWarn("heroCityCount");
-      if (heroCityCount) heroCityCount.textContent = String(counters.visitedCities);
-
-      const heroAirportCount = getElementOrWarn("heroAirportCount");
-      if (heroAirportCount) heroAirportCount.textContent = String(counters.visitedAirports);
-
-      const heroFlightCount = getElementOrWarn("heroFlightCount");
-      if (heroFlightCount) heroFlightCount.textContent = String(counters.flightsTaken);
-
-      const heroRouteCount = getElementOrWarn("heroRouteCount");
-      if (heroRouteCount) heroRouteCount.textContent = String(counters.routePairs);
-    }
-
-    function applyHoverHighlight(activeCountry) {
-      const ROUTE_SIZES = getRouteSizes();
-      const hoveredCountry = activeCountry ? canonicaliseCountryName(activeCountry) : null;
-      const hasHover = Boolean(hoveredCountry);
-
-      if (!map.isStyleLoaded()) return;
-
-      map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
-      map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
-
-      const MAP_THEME = getMapTheme();
-
-      map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-color", hasHover ? (MAP_THEME.cities.fadedLine || MAP_THEME.cities.line || "#ffffff") : (MAP_THEME.cities.line || "#ffffff"));
-
-      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
-      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
-      map.setPaintProperty("airports-base", "circle-stroke-color", hasHover ? (MAP_THEME.airports.fadedLine || MAP_THEME.airports.line || "#ffffff") : (MAP_THEME.airports.line || "#ffffff"));
-
-      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
-
-      const countryFilter = hoveredCountry
-        ? ["==", ["get", "country"], hoveredCountry]
-        : ["==", ["get", "country"], "___none___"];
-
-      const routeFilter = hoveredCountry
-        ? ["in", hoveredCountry, ["get", "countries"]]
-        : ["==", ["get", "routeId"], "___none___"];
-
-      map.setFilter("countries-hover-fill", countryFilter);
-      map.setFilter("countries-hover-line", countryFilter);
-      map.setFilter("cities-hover", countryFilter);
-      map.setFilter("airports-hover", countryFilter);
-      map.setFilter("routes-hover", routeFilter);
-    }
-
-    function addGeoJsonLayers(countryGeoJson, cityGeoJson, airportGeoJson, routeGeoJson) {
-      const MAP_THEME = getMapTheme();
-      const COUNTRY_SIZES = getCountrySizes();
-      const CITY_SIZES = getCitySizes();
-      const AIRPORT_SIZES = getAirportSizes();
-      const ROUTE_SIZES = getRouteSizes();
-      // Countries
-      map.addSource("visited-countries", {
-        type: "geojson",
-        data: countryGeoJson,
-        promoteId: "country"
-      });
-
-      map.addLayer({
-        id: "countries-fill",
-        type: "fill",
-        source: "visited-countries",
-        paint: {
-          "fill-color": MAP_THEME.countries.fill,
-          "fill-opacity": (COUNTRY_SIZES.fillOpacity ?? 0.78),
-          "fill-outline-color": MAP_THEME.countries.line,
-          "fill-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "countries-line",
-        type: "line",
-        source: "visited-countries",
-        paint: {
-          "line-color": MAP_THEME.countries.line,
-          "line-width": (COUNTRY_SIZES.lineWidth ?? 1.4),
-          "line-opacity": 1,
-          "line-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "countries-hover-fill",
-        type: "fill",
-        source: "visited-countries",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "fill-color": MAP_THEME.countries.hoverFill,
-          "fill-opacity": (COUNTRY_SIZES.hoverFillOpacity ?? 0.96),
-          "fill-outline-color": MAP_THEME.countries.hoverLine
-        }
-      });
-
-      map.addLayer({
-        id: "countries-hover-line",
-        type: "line",
-        source: "visited-countries",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "line-color": MAP_THEME.countries.hoverLine,
-          "line-width": (COUNTRY_SIZES.hoverLineWidth ?? 2.3),
-          "line-opacity": 1
-        }
-      });
-
-      // Cities
-      map.addSource("visited-cities", {
-        type: "geojson",
-        data: cityGeoJson
-      });
-
-      map.addLayer({
-        id: "cities-base",
-        type: "circle",
-        source: "visited-cities",
-        paint: {
-          "circle-radius": (CITY_SIZES.baseRadius ?? 4.6),
-          "circle-color": MAP_THEME.cities.fill,
-          "circle-stroke-color": MAP_THEME.cities.line,
-          "circle-stroke-width": (CITY_SIZES.baseStrokeWidth ?? 1.4),
-          "circle-opacity": 1,
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "cities-hover",
-        type: "circle",
-        source: "visited-cities",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (CITY_SIZES.hoverRadius ?? 5.8),
-          "circle-color": MAP_THEME.cities.hoverFill,
-          "circle-stroke-color": MAP_THEME.cities.hoverLine,
-          "circle-stroke-width": (CITY_SIZES.hoverStrokeWidth ?? 1.8),
-          "circle-opacity": 1
-        }
-      });
-
-      // Airports
-      map.addSource("visited-airports", {
-        type: "geojson",
-        data: airportGeoJson
-      });
-
-      map.addLayer({
-        id: "airports-base",
-        type: "circle",
-        source: "visited-airports",
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.baseRadius ?? 3.6),
-          "circle-color": MAP_THEME.airports.fill,
-          "circle-stroke-color": MAP_THEME.airports.line,
-          "circle-stroke-width": (AIRPORT_SIZES.baseStrokeWidth ?? 1.2),
-          "circle-opacity": 0.96,
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "airports-hover",
-        type: "circle",
-        source: "visited-airports",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.hoverRadius ?? 4.8),
-          "circle-color": MAP_THEME.airports.hoverFill,
-          "circle-stroke-color": MAP_THEME.airports.hoverLine,
-          "circle-stroke-width": (AIRPORT_SIZES.hoverStrokeWidth ?? 1.5),
-          "circle-opacity": 1
-        }
-      });
-
-      // Routes
-      map.addSource("flight-routes", {
-        type: "geojson",
-        data: routeGeoJson,
-        lineMetrics: true
-      });
-
-      map.addLayer({
-        id: "routes-base",
-        type: "line",
-        source: "flight-routes",
-        layout: { "line-cap": "round", "line-join": "round" },
-        paint: {
-          "line-color": ["get", "colour"],
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            1, Math.max(1, (ROUTE_SIZES.baseWidth ?? 2.1) - 0.9),
-            5, (ROUTE_SIZES.baseWidth ?? 2.1),
-            10, (ROUTE_SIZES.baseWidth ?? 2.1) + 0.9
-          ],
-          "line-opacity": (ROUTE_SIZES.baseOpacity ?? 0.85),
-          "line-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "routes-hover",
-        type: "line",
-        source: "flight-routes",
-        filter: ["==", ["get", "country"], "___none___"],
-        layout: { "line-cap": "round", "line-join": "round" },
-        paint: {
-          "line-color": ["get", "colour"],
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            1, Math.max(1.2, (ROUTE_SIZES.hoverWidth ?? 2.8) - 0.8),
-            5, (ROUTE_SIZES.hoverWidth ?? 2.8),
-            10, (ROUTE_SIZES.hoverWidth ?? 2.8) + 0.8
-          ],
-          "line-opacity": (ROUTE_SIZES.hoverOpacity ?? 0.96)
-        }
-      });
-
-      // Layer visibility defaults to match the current toggle buttons
-      setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
-      setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
-      setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
-    }
-
-    function bindLegendButtons() {
-      document.querySelectorAll(".map-toggle-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          const key = button.dataset.layer;
-          layerState[key] = !layerState[key];
-          button.classList.toggle("active", layerState[key]);
-
-          if (key === "country") {
-            setLayerVisibility(map, ["countries-fill", "countries-line", "countries-hover-fill", "countries-hover-line"], layerState.country);
-          } else if (key === "city") {
-            setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
-          } else if (key === "airport") {
-            setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
-          } else if (key === "route") {
-            setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
-          }
-        });
-      });
-    }
-
-    function bindHoverAndPopups() {
-      const MAP_THEME = getMapTheme();
-      ["countries-fill", "countries-hover-fill"].forEach(layerId => {
-        map.on("mousemove", layerId, event => {
-          const feature = event.features && event.features[0];
-          if (!feature) return;
-          const country = feature.properties.country;
-          applyHoverHighlight(country);
-          map.getCanvas().style.cursor = "pointer";
-          popup.setLngLat(event.lngLat).setHTML(country).addTo(map);
-        });
-        map.on("mouseleave", layerId, () => {
-          map.getCanvas().style.cursor = "";
-          popup.remove();
-          applyHoverHighlight(null);
-        });
-      });
-
-      map.on("mousemove", event => {
-        const features = map.queryRenderedFeatures(event.point, { layers: ["countries-fill", "countries-hover-fill"] });
-        if (!features || !features.length) {
-          popup.remove();
-          applyHoverHighlight(null);
-          map.getCanvas().style.cursor = "";
-        }
-      });
-
-      map.on("mouseout", () => {
-        popup.remove();
-        applyHoverHighlight(null);
-        map.getCanvas().style.cursor = "";
-      });
-
-      bindPopupForLayer(map, popup, "cities-base", feature => `${feature.properties.name}, ${feature.properties.country}`);
-      bindPopupForLayer(map, popup, "cities-hover", feature => `${feature.properties.name}, ${feature.properties.country}`);
-
-      bindPopupForLayer(map, popup, "airports-base", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
-      bindPopupForLayer(map, popup, "airports-hover", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
-
-      bindPopupForLayer(map, popup, "routes-base", feature => feature.properties.tooltipHtml);
-      bindPopupForLayer(map, popup, "routes-hover", feature => feature.properties.tooltipHtml);
-
-      map.on("click", "countries-fill", event => {
-        const feature = event.features && event.features[0];
-        if (!feature) return;
-        const bbox = new maplibregl.LngLatBounds();
-        const coords = feature.geometry.type === "MultiPolygon"
-          ? feature.geometry.coordinates.flat(2)
-          : feature.geometry.coordinates.flat(1);
-        coords.forEach(coord => bbox.extend(coord));
-        if (!bbox.isEmpty()) map.fitBounds(bbox, { padding: 24, duration: 700 });
-      });
-    }
-
-    async function buildCountryGeoJson() {
-      debugLog("Loading visited country polygons");
-      const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
-      const visitedCountries = Array.isArray(window.VISITED_COUNTRIES_DATA) ? window.VISITED_COUNTRIES_DATA : [];
-      const targetNames = visitedCountries.flatMap(country => {
-        const canonical = getCanonicalVisitedCountry(country);
-        return getExpansionTargets(canonical);
-      });
-
-      const features = geoJson.features
-        .filter(feature => matchesVisitedCountry(feature, targetNames))
-        .map(feature => ({
-          ...feature,
-          properties: {
-            ...feature.properties,
-            country: canonicaliseCountryName(resolvePolygonCountry(feature))
-          },
-          id: canonicaliseCountryName(resolvePolygonCountry(feature))
-        }));
-
-      counters.visitedCountries = Array.isArray(window.VISITED_NATIONS_DATA) ? window.VISITED_NATIONS_DATA.length : 0;
-      return toFeatureCollection(features);
-    }
-
-    function buildCityGeoJson() {
-      const features = cityData.map(city => ({
-        type: "Feature",
-        properties: {
-          name: city.name,
-          country: resolveTravelCountry({
-            city: city.name,
-            country: city.country,
-            cityCountryLookup
-          })
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [Number(city.lng), Number(city.lat)]
-        }
-      }));
-      return toFeatureCollection(features);
-    }
-
-    async function buildFlightGeoJson() {
-      debugLog("Loading flight history and airport datasets");
-      const [csvText, mwggAirports, openFlightsData] = await Promise.all([
-        fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
-        fetchJsonWithFallback(TRAVEL_MAP_CONFIG.mwggAirportUrls),
-        fetchJsonWithFallback([TRAVEL_MAP_CONFIG.openFlightsJsonUrl]).catch(() => ({ by_icao: {}, by_iata: {} }))
-      ]);
-
-      const flights = loadFlightHistoryFromCsv(csvText);
-      const openFlightsAirports = openFlightsData.by_icao || {};
-      const openFlightsIataIndex = openFlightsData.by_iata || {};
-      const mwggIataIndex = buildIataIndex(
-        Object.fromEntries(
-          Object.entries(mwggAirports).map(([icao, airport]) => [
-            icao,
-            {
-              name: airport.name || "",
-              city: airport.city || "",
-              country: airport.country || "",
-              iata: airport.iata || "",
-              icao: airport.icao || icao,
-              lat: Number(airport.lat),
-              lon: Number(airport.lon)
-            }
-          ])
-        )
-      );
-
-      const uniqueAirports = [];
-      const routePairs = new Map();
-
-      flights.forEach(flight => {
-        const originAirport = getAirportRecord(
-          flight.fromIcao, flight.fromIata,
-          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
-        );
-        const destinationAirport = getAirportRecord(
-          flight.toIcao, flight.toIata,
-          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
-        );
-
-        if (!originAirport || !destinationAirport) return;
-
-        const originCountry = resolveTravelCountry({
-          country: originAirport.country,
-          city: flight.fromCity,
-          airportName: flight.fromAirport,
-          iata: flight.fromIata,
-          icao: flight.fromIcao,
-          cityCountryLookup
-        });
-
-        const destinationCountry = resolveTravelCountry({
-          country: destinationAirport.country,
-          city: flight.toCity,
-          airportName: flight.toAirport,
-          iata: flight.toIata,
-          icao: flight.toIcao,
-          cityCountryLookup
-        });
-
-        counters.flightsTaken += 1;
-
-        uniqueAirports.push({
-          key: flight.fromIcao,
-          lng: Number(originAirport.lon),
-          lat: Number(originAirport.lat),
-          city: flight.fromCity,
-          iata: flight.fromIata,
-          airportName: flight.fromAirport,
-          country: originCountry
-        });
-
-        uniqueAirports.push({
-          key: flight.toIcao,
-          lng: Number(destinationAirport.lon),
-          lat: Number(destinationAirport.lat),
-          city: flight.toCity,
-          iata: flight.toIata,
-          airportName: flight.toAirport,
-          country: destinationCountry
-        });
-
-        const pairKey = [flight.fromIcao, flight.toIcao].sort().join("__");
-        const directionKey = `${flight.fromIcao}__${flight.toIcao}`;
-
-        if (!routePairs.has(pairKey)) {
-          routePairs.set(pairKey, {
-            fromLat: Number(originAirport.lat),
-            fromLng: Number(originAirport.lon),
-            toLat: Number(destinationAirport.lat),
-            toLng: Number(destinationAirport.lon),
-            countries: Array.from(new Set([originCountry, destinationCountry].filter(Boolean))),
-            directions: new Map()
-          });
-        }
-
-        const pair = routePairs.get(pairKey);
-
-        if (!pair.directions.has(directionKey)) {
-          pair.directions.set(directionKey, {
-            fromAirport: flight.fromAirport,
-            fromIata: flight.fromIata,
-            toAirport: flight.toAirport,
-            toIata: flight.toIata,
-            flights: []
-          });
-        }
-
-        pair.directions.get(directionKey).flights.push({
-          date: flight.date,
-          airline: flight.airline
-        });
-      });
-
-      const airportFeatures = uniqueBy(uniqueAirports, airport => airport.key).map(airport => ({
-        type: "Feature",
-        properties: {
-          key: airport.key,
-          city: airport.city,
-          iata: airport.iata,
-          airportName: airport.airportName,
-          country: airport.country
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [airport.lng, airport.lat]
-        }
-      }));
-
-      counters.visitedAirports = airportFeatures.length;
-      counters.routePairs = routePairs.size;
-
-      const routeFeatures = [];
-      routePairs.forEach(routePair => {
-        const points = interpolateGreatCircle(
-          routePair.fromLat,
-          routePair.fromLng,
-          routePair.toLat,
-          routePair.toLng,
-          72
-        );
-
-        const routeSegments = splitLineAtDateLine(points);
-        const totalFlightsOnPair = Array.from(routePair.directions.values())
-          .reduce((sum, direction) => sum + direction.flights.length, 0);
-
-        const tooltipHtml = Array.from(routePair.directions.values())
-          .map(direction =>
-            `${direction.fromAirport} (${direction.fromIata}) → ${direction.toAirport} (${direction.toIata})<br>` +
-            direction.flights
-              .map((flight, index) => `#${index + 1} ${flight.date}${flight.airline ? ` | ${flight.airline}` : ""}`)
-              .join("<br>")
-          )
-          .join("<br>──────────<br>");
-
-        routeSegments.forEach((segment, index) => {
-          routeFeatures.push({
-            type: "Feature",
-            properties: {
-              routeId: `${routePair.countries.join("_")}_${index}`,
-              countries: routePair.countries,
-              colour: getRouteColor(totalFlightsOnPair),
-              count: totalFlightsOnPair,
-              tooltipHtml
-            },
-            geometry: {
-              type: "LineString",
-              coordinates: segment
-            }
-          });
-        });
-      });
-
-      return {
-        airportGeoJson: toFeatureCollection(airportFeatures),
-        routeGeoJson: toFeatureCollection(routeFeatures)
-      };
-    }
-
-    map.on("load", async () => {
-      debugLog("MapLibre style loaded");
-      if (statusText) statusText.textContent = "Loading travel map…";
-
-      try {
-        const [countryGeoJson, flightData] = await Promise.all([
-          buildCountryGeoJson(),
-          buildFlightGeoJson()
-        ]);
-        const cityGeoJson = buildCityGeoJson();
-
-        addGeoJsonLayers(countryGeoJson, cityGeoJson, flightData.airportGeoJson, flightData.routeGeoJson);
-        bindLegendButtons();
-        bindHoverAndPopups();
-        updateStatusText();
-
-        if (statusText) statusText.textContent = "";
-      } catch (error) {
-        if (statusText) statusText.textContent = "Unable to load the travel map right now.";
-        mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-        debugError("Travel map load failed", error);
-      }
-    });
-  };
+  return rootTheme;
 })();
 </script>
 
@@ -2821,5 +2066,16 @@ if (document.readyState === "loading") {
   initSiteData();
 }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  applyCurrentTheme();
+  const themeBtn = document.getElementById("themeSwitchBtn");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", toggleSiteTheme);
+  }
+});
+</script>
+
 </body>
 </html>
