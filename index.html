@@ -2126,12 +2126,12 @@ function initAbsenceTracker() {
 
     /* 
       setView function (set the default map view)
-        var 1: longtitude (lower = map moves left) 
-        var 2: latitude (lower = map moves upwards)
+        var 1: longtitude (lower = map moves right) 
+        var 2: latitude (lower = map moves upwards) was 42
         var 3: zoom level (lower = map zooms out)
     */
     const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [25, 42] : [15, 38];
+    const defaultCenter = isMobile ? [12, 35] : [15, 38];
     const defaultZoom = isMobile ? -0.4 : 0.1;
 
     const map = new maplibregl.Map({
