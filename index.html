@@ -795,8 +795,9 @@
     display:none !important;
   }
   body.theme-dark .container{
-    max-width:100vw;
+    max-width:720px;
     width:100%;
+    margin:0 auto;
     padding:18px 14px 28px;
   }
   body.theme-dark .hero-panel{
@@ -871,6 +872,13 @@
   }
   body.theme-dark .theme-switch-btn{ color:#cbd5e1; }
   body.theme-dark .theme-switch-btn:hover{ color:#ffffff; }
+
+  @media (max-width: 560px){
+    body.theme-dark .container{
+      max-width:100vw;
+      padding:0px 16px 24px;
+    }
+  }
 
 </style>
 
