@@ -37,27 +37,37 @@
     min-height:100%;
     overflow-x:hidden;
     max-width:100vw;
+    background-color:#eaf3ff;
+  }
+  html{
+    background-color:#eaf3ff;
   }
   body {
     margin:0;
     min-height:100vh;
     font-family:Arial, Helvetica, sans-serif;
     color:var(--text);
+    background:transparent;
+  }
+  .site-bg{
+    position:fixed;
+    inset:0;
+    z-index:-3;
+    pointer-events:none;
     background:
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
-      url("./images/travel-bg.png") center/cover fixed no-repeat;
+      url("./images/travel-bg.png") center center / cover no-repeat;
     background-color:#eaf3ff;
   }
-
-  body::before{
+  .site-bg-overlay{
     content:"";
     position:fixed;
     inset:0;
+    z-index:-2;
+    pointer-events:none;
     background:
       radial-gradient(circle at top left, rgba(255,255,255,.42), transparent 24%),
       radial-gradient(circle at top right, rgba(191,219,254,.24), transparent 20%);
-    pointer-events:none;
-    z-index:-2;
   }
 
   .container {
@@ -752,11 +762,36 @@
     }
   }
 
+
+  .theme-switch-wrap{
+    display:flex;
+    justify-content:center;
+    margin:12px 0 4px;
+    position:relative;
+    z-index:3;
+  }
+  .theme-switch-btn{
+    appearance:none;
+    border:0;
+    background:transparent;
+    color:#64748b;
+    font-size:12px;
+    line-height:1;
+    letter-spacing:.02em;
+    padding:6px 8px;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .theme-switch-btn:hover{ color:#334155; }
+
 </style>
 
 </head>
 
 <body>
+<div class="site-bg" aria-hidden="true"></div>
+<div class="site-bg-overlay" aria-hidden="true"></div>
 <div class="container">
   <div class="page-girl" aria-hidden="true"></div>
   <div class="stack">
@@ -907,6 +942,11 @@
     </section>
 
     <div class="bottom-grid">    </div>
+
+
+    <div class="theme-switch-wrap">
+      <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
+    </div>
 
     <div class="hidden-support">
       <div id="ilrPill"></div>
@@ -2823,5 +2863,28 @@ if (document.readyState === "loading") {
   initSiteData();
 }
 </script>
+
+<script>
+(function () {
+  const STORAGE_KEY = "pakho-theme-mode";
+  function applyTheme() {
+    const isDark = localStorage.getItem(STORAGE_KEY) === "dark";
+    document.body.classList.toggle("theme-dark", isDark);
+    const btn = document.getElementById("themeSwitchBtn");
+    if (btn) btn.setAttribute("aria-pressed", isDark ? "true" : "false");
+  }
+  window.toggleSiteTheme = function () {
+    const next = localStorage.getItem(STORAGE_KEY) === "dark" ? "anime" : "dark";
+    localStorage.setItem(STORAGE_KEY, next);
+    applyTheme();
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    applyTheme();
+    const btn = document.getElementById("themeSwitchBtn");
+    if (btn) btn.addEventListener("click", window.toggleSiteTheme);
+  });
+})();
+</script>
+
 </body>
 </html>
