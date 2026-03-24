@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Favicon (standard browsers) -->
-  <link rel="icon" href="/icons/favicon.ico">
-  <!-- PNG favicons -->
-  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-  <!-- Apple (iPhone / iPad home screen) -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-  <!-- Android / Chrome -->
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/icons/android-chrome-512x512.png">
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Travel History</title>
-
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
 <style>
   :root{
     --text:#1d2942;
@@ -38,20 +27,11 @@
     width:100%;
     overflow-x:hidden;
     max-width:100vw;
-    margin:0;
-    background:transparent;
-  }
-  html{
-    background:
-      linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
-      url("./images/travel-bg.png") center center / cover no-repeat;
     background-color:#eaf3ff;
-    -webkit-text-size-adjust:100%;
   }
   body {
     margin:0;
     min-height:100vh;
-    min-height:100svh;
     font-family:Arial, Helvetica, sans-serif;
     color:var(--text);
     background:transparent;
@@ -59,21 +39,13 @@
   }
   .site-bg{
     position:fixed;
-    left:0;
-    right:0;
-    top:-12svh;
-    bottom:-12svh;
+    inset:0;
     z-index:0;
     pointer-events:none;
     background:
       linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
       url("./images/travel-bg.png") center center / cover no-repeat;
-    background-color:transparent;
-    transform:translate3d(0,0,0);
-    -webkit-transform:translate3d(0,0,0);
-    will-change:transform;
-    backface-visibility:hidden;
-    -webkit-backface-visibility:hidden;
+    background-color:#eaf3ff;
   }
   .site-bg::before{
     content:"";
@@ -792,7 +764,6 @@
   }
   .theme-switch-btn:hover{ color:#334155; }
 
-  html.theme-dark,
   body.theme-dark{
     --text:#e5eefc;
     --muted:#94a3b8;
@@ -807,19 +778,12 @@
     --absent-border:#f87171;
     --today-bg:rgba(30,41,59,.92);
     --shadow:0 18px 42px rgba(2,6,23,.45);
-  }
-  html.theme-dark{
-    background:
-      linear-gradient(rgba(2,6,23,.94), rgba(15,23,42,.96));
     background-color:#020617;
-  }
-  body.theme-dark{
-    background:transparent;
   }
   body.theme-dark .site-bg{
     background:
       linear-gradient(rgba(2,6,23,.94), rgba(15,23,42,.96));
-    background-color:transparent;
+    background-color:#020617;
   }
   body.theme-dark .site-bg::before{
     background:
@@ -916,124 +880,172 @@
 
 </style>
 
-</head>
+<style>
+html, body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+  background: transparent;
+}
+html{
+  background:
+    linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.54)),
+    url("./images/travel-bg.png") center center / cover no-repeat;
+}
+.site-bg{
+  position: fixed;
+  top: -10vh;
+  left: 0;
+  width: 100%;
+  height: 120lvh;
+  min-height: 120svh;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255,255,255,.34), rgba(255,255,255,.52)),
+    url("./images/travel-bg.png") center center / cover no-repeat;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+body { background: transparent; position: relative; }
+body.theme-dark, html.theme-dark{
+  background:
+    linear-gradient(rgba(2,6,23,.94), rgba(15,23,42,.96)),
+    url("./images/travel-bg.png") center center / cover no-repeat;
+}
+body.theme-dark .site-bg{
+  background:
+    linear-gradient(rgba(2,6,23,.88), rgba(15,23,42,.94)),
+    url("./images/travel-bg.png") center center / cover no-repeat;
+}
+.gauge {
+  --gauge-fill: 0%;
+  position: relative;
+  overflow: hidden;
+}
+.gauge::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, rgba(37,99,235,.22) var(--gauge-fill), rgba(255,255,255,.08) var(--gauge-fill));
+  border-radius: inherit;
+  pointer-events:none;
+}
+.gauge-text{ position: relative; z-index: 1; }
+.hidden-support{ display:none; }
+</style>
 
+</head>
 <body>
-<!-- Stable fixed background layer: avoids Safari/iPad repaint jumps from background-attachment: fixed. -->
-<div class="site-bg" aria-hidden="true"></div>
+
+<div aria-hidden="true" class="site-bg"></div>
 <div class="container">
-  <div class="page-girl" aria-hidden="true"></div>
+  <div aria-hidden="true" class="page-girl"></div>
   <div class="stack">
     <section class="panel hero-panel">
       <div class="hero-copy">
         <div class="tagline">
-          <img src="images/travel-header.png" alt="Pakho Travel" class="header-banner">
+          <img alt="Pakho Travel" class="header-banner" src="images/travel-header.png"/>
         </div>
-
         <div class="hero-stats">
           <div class="stat-card">
             <div class="stat-top">ILR</div>
             <div><span class="stat-icon" id="heroIlrIcon">…</span> <span class="stat-value" id="heroIlrValue">--</span></div>
-            <div class="stat-sub" id="heroIlrWindow">--</div>
+            <div class="stat-sub" id="heroIlrWindow">Rolling 12-month peak</div>
           </div>
           <div class="stat-card">
             <div class="stat-top">Citizenship</div>
             <div><span class="stat-icon" id="heroCitIcon">…</span> <span class="stat-value" id="heroCitValue">--</span></div>
-            <div class="stat-sub" id="heroCitWindow">--</div>
+            <div class="stat-sub" id="heroCitWindow">Total + final 12 months</div>
           </div>
           <div class="stat-card">
             <div class="stat-top"><span>Travel Quota</span></div>
             <div class="stat-value" id="heroDaysValue">--</div>
-            <div class="stat-label">days remaining</div>
+            <div class="stat-label">days remaining today</div>
           </div>
         </div>
       </div>
-    
-        <div class="hero-calendar-wrap">
-          <section class="panel glass mini-panel">
-            <div class="panel-header" style="margin-bottom:8px;">
-              <h3 style="margin:0; font-size:20px; font-weight:800;"></h3>
-              <div class="controls" style="margin:0;">
-                <div class="controls-row">
-                  <button type="button" class="month-nav-btn" id="prevMonthBtn" aria-label="Previous month">‹</button>
-                  <div class="month-selectors">
-                    <select id="monthPicker"></select>
-                    <select id="yearPicker"></select>
-                  </div>
-                  <button type="button" class="month-nav-btn" id="nextMonthBtn" aria-label="Next month">›</button>
+
+      <div class="hero-calendar-wrap">
+        <section class="panel glass mini-panel">
+          <div class="panel-header" style="margin-bottom:8px;">
+            <h3 style="margin:0; font-size:20px; font-weight:800;"></h3>
+            <div class="controls" style="margin:0;">
+              <div class="controls-row">
+                <button aria-label="Previous month" class="month-nav-btn" id="prevMonthBtn" type="button">‹</button>
+                <div class="month-selectors">
+                  <select id="monthPicker"></select>
+                  <select id="yearPicker"></select>
                 </div>
+                <button aria-label="Next month" class="month-nav-btn" id="nextMonthBtn" type="button">›</button>
               </div>
             </div>
-
-            <div class="legend" style="margin-bottom:12px;">
-              <div class="legend-row">
-                <span><span class="swatch absent"></span> Absent</span>
-                <span><span class="swatch today"></span> Today</span>
-                <span><span class="swatch linked"></span> With Flight Ticket</span>
-              </div>
+          </div>
+          <div class="legend" style="margin-bottom:12px;">
+            <div class="legend-row">
+              <span><span class="swatch absent"></span> Absent</span>
+              <span><span class="swatch today"></span> Today</span>
+              <span><span class="swatch linked"></span> With Flight Ticket</span>
             </div>
+          </div>
+          <div class="months" id="months"><div class="small" style="padding:16px;">Loading calendar…</div></div>
+        </section>
 
-            <div id="months" class="months"><div class="small" style="padding:16px;">Loading calendar…</div></div>
-          </section>
-
-          <section class="panel glass mini-panel" style="margin-top:10px;">
-            <h3 class="panel-subtitle">Absence from the UK</h3>
-            <div class="summary-compact">
-              <div class="summary-gauge-grid">
-                <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Absent days (citizenship)</div>
-                  <div class="gauge" id="summaryCitGauge">
-                    <div class="gauge-text">
-                      <div class="gauge-number" id="summaryCitTotal">--</div>
-                      <div class="gauge-sub">of 450 days</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="summary-gauge-card">
-                  <div class="summary-gauge-label">Final 12 months (citizenship)</div>
-                  <div class="gauge" id="summaryCitFinalGauge">
-                    <div class="gauge-text">
-                      <div class="gauge-number" id="summaryCitFinal">--</div>
-                      <div class="gauge-sub">of 90 days</div>
-                    </div>
+        <section class="panel glass mini-panel" style="margin-top:10px;">
+          <h3 class="panel-subtitle">Absence from the UK</h3>
+          <div class="summary-compact">
+            <div class="summary-gauge-grid">
+              <div class="summary-gauge-card">
+                <div class="summary-gauge-label">Absent days (citizenship)</div>
+                <div class="gauge" id="summaryCitGauge">
+                  <div class="gauge-text">
+                    <div class="gauge-number" id="summaryCitTotal">--</div>
+                    <div class="gauge-sub">of 450 days</div>
                   </div>
                 </div>
               </div>
-
-              <div class="summary-grid-four">
-                <div class="summary-mini-card">
-                  <div class="mini-label">Safety buffer</div>
-                  <div class="mini-value" id="summarySafetyRemaining">--</div>
-                </div>
-                <div class="summary-mini-card">
-                  <div class="mini-label">Trips taken</div>
-                  <div class="mini-value" id="summaryTripsTaken">--</div>
-                </div>
-                <div class="summary-mini-card">
-                  <div class="mini-label">Absent days</div>
-                  <div class="mini-value" id="summaryTotalAbsent">--</div>
-                </div>
-                <div class="summary-mini-card">
-                  <div class="mini-label">Flight logs</div>
-                  <div class="mini-value" id="summarySupportingDocs">--</div>
+              <div class="summary-gauge-card">
+                <div class="summary-gauge-label">Final 12 months (citizenship)</div>
+                <div class="gauge" id="summaryCitFinalGauge">
+                  <div class="gauge-text">
+                    <div class="gauge-number" id="summaryCitFinal">--</div>
+                    <div class="gauge-sub">of 90 days</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
-</section>
+            <div class="summary-grid-four">
+              <div class="summary-mini-card">
+                <div class="mini-label">Safety buffer</div>
+                <div class="mini-value" id="summarySafetyRemaining">--</div>
+              </div>
+              <div class="summary-mini-card">
+                <div class="mini-label">Trips taken</div>
+                <div class="mini-value" id="summaryTripsTaken">--</div>
+              </div>
+              <div class="summary-mini-card">
+                <div class="mini-label">Absent days</div>
+                <div class="mini-value" id="summaryTotalAbsent">--</div>
+              </div>
+              <div class="summary-mini-card">
+                <div class="mini-label">Flight logs</div>
+                <div class="mini-value" id="summarySupportingDocs">--</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
 
     <section class="panel glass map-panel" style="margin-top:-4px;">
       <div class="panel-header">
         <div>
           <h3 class="panel-subtitle">Travel Map</h3>
         </div>
-        <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
-          <button onclick="openExternal('flightradar')">myFlightradar24</button>
-        </div>
       </div>
-
       <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
         <div class="kpi-item">
           <div class="kpi-value" id="heroCountryCount">--</div>
@@ -1056,26 +1068,29 @@
           <div class="kpi-label">Routes Flown</div>
         </div>
       </div>
-
       <div class="travel-map-controls">
         <div class="legend-row">
-          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Countries</button>
-          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>Cities</button>
-          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airports</button>
-          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flights</button>
+          <button class="map-toggle-btn active" data-layer="country" type="button">
+            <span class="swatch country-swatch-visited"></span>
+            Countries
+          </button>
+          <button class="map-toggle-btn active" data-layer="city" type="button">
+            <span class="swatch country-swatch-city"></span>
+            Cities
+          </button>
+          <button class="map-toggle-btn active" data-layer="airport" type="button">
+            <span class="swatch flight-airport-swatch"></span>
+            Airports
+          </button>
+          <button class="map-toggle-btn active" data-layer="route" type="button">
+            <span class="swatch flight-route-swatch"></span>
+            Flights
+          </button>
         </div>
       </div>
-
-      <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
-      <div id="travelMap" class="country-visited-map"></div>
+      <div class="status-line" id="travelMapStatusText">Loading travel map…</div>
+      <div class="country-visited-map" id="travelMap"></div>
     </section>
-
-    
-
-
-    <div class="theme-switch-wrap">
-      <button id="themeSwitchBtn" class="theme-switch-btn" type="button" aria-pressed="false">Change theme</button>
-    </div>
 
     <div class="hidden-support">
       <div id="ilrPill"></div>
@@ -1090,2046 +1105,1124 @@
   </div>
 </div>
 
-<script>
-/* Shared helpers and fallback map style */
-const SITE_DEBUG = {
-  ENABLE_DEBUG_LOGS: true,
-  PREFIX: "[Travel Site]"
-};
-
-function debugLog(step, details = null) {
-  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
-  if (details === null) console.log(`${SITE_DEBUG.PREFIX} ${step}`);
-  else console.log(`${SITE_DEBUG.PREFIX} ${step}`, details);
-}
-
-function debugWarn(step, details = null) {
-  if (!SITE_DEBUG.ENABLE_DEBUG_LOGS) return;
-  if (details === null) console.warn(`${SITE_DEBUG.PREFIX} ${step}`);
-  else console.warn(`${SITE_DEBUG.PREFIX} ${step}`, details);
-}
-
-function debugError(step, error) {
-  console.error(`${SITE_DEBUG.PREFIX} ${step}`, error);
-}
-
-function getElementOrWarn(id) {
-  const element = document.getElementById(id);
-  if (!element) debugWarn(`Missing DOM element: #${id}`);
-  return element;
-}
-
-window.TRAVEL_MAP_STYLE = {
-  version: 8,
-  name: "Travel Map Fallback",
-  metadata: {
-    theme: {
-      countries: {
-        fill: "#2f6fff",
-        line: "#1847b8",
-        hoverFill: "#1748d8",
-        hoverLine: "#103aab",
-        fadedFill: "#e8f0ff",
-        fadedLine: "#d7e4ff"
-      },
-      cities: {
-        fill: "#24c483",
-        hoverFill: "#149d67",
-        fadedFill: "#b7f0d6"
-      },
-      airports: {
-        fill: "#13b8a6",
-        hoverFill: "#0d9488",
-        fadedFill: "#99f6e4"
-      },
-      routes: {
-        level1: "#f7b267",
-        level2: "#f79d65",
-        level3: "#f97316",
-        level4: "#e11d48",
-        level5: "#7c3aed"
-      },
-      ui: {
-        bgTop: "#eef6ff",
-        bgBottom: "#dfeeff"
-      },
-      sizes: {
-        countries: {
-          lineWidth: 1.4,
-          hoverLineWidth: 2.3,
-          fillOpacity: 0.78,
-          hoverFillOpacity: 0.96
-        },
-        cities: {
-          glowRadius: 10,
-          glowOpacity: 0.55,
-          glowBlur: 0.85,
-          baseRadius: 4.6,
-          baseStrokeWidth: 1.4,
-          hoverRadius: 5.8,
-          hoverStrokeWidth: 1.8,
-          hoverGlowRadius: 13,
-          hoverGlowOpacity: 0.72,
-          hoverGlowBlur: 0.9
-        },
-        airports: {
-          glowRadius: 8,
-          glowOpacity: 0.45,
-          glowBlur: 0.9,
-          baseRadius: 3.6,
-          baseStrokeWidth: 1.2,
-          hoverRadius: 4.8,
-          hoverStrokeWidth: 1.5,
-          hoverGlowRadius: 10,
-          hoverGlowOpacity: 0.72,
-          hoverGlowBlur: 0.9
-        },
-        routes: {
-          baseWidth: 2.1,
-          baseOpacity: 0.85,
-          hoverWidth: 2.8,
-          hoverOpacity: 0.96,
-          animatedWidth: 2.4,
-          animatedOpacity: 0.85
-        }
-      }
-    }
-  },
-  transition: { duration: 250, delay: 0 },
-  sources: {
-    "voyager-base": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
-    },
-    "voyager-labels": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://b.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://c.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
-    }
-  },
-  layers: [
-    { id: "background", type: "background", paint: { "background-color": "#eaf6ff" } },
-    { id: "voyager-base", type: "raster", source: "voyager-base", paint: { "raster-opacity": 0.92, "raster-saturation": 0.15 } },
-    { id: "voyager-labels", type: "raster", source: "voyager-labels", paint: { "raster-opacity": 0.82 } }
-  ]
-};
-
-function getTravelMapTheme() {
-  return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
-}
-
-function applyTravelMapThemeToCss(theme) {
-  const root = document.documentElement;
-  if (!theme) return;
-  if (theme.countries) {
-    root.style.setProperty("--map-country-fill", theme.countries.fill || "#2f6fff");
-    root.style.setProperty("--map-country-line", theme.countries.line || "#1847b8");
-  }
-  if (theme.cities) {
-    root.style.setProperty("--map-city-fill", theme.cities.fill || "#24c483");
-    root.style.setProperty("--map-city-hover", theme.cities.hoverFill || "#149d67");
-  }
-  if (theme.airports) {
-    root.style.setProperty("--map-airport-fill", theme.airports.fill || "#13b8a6");
-    root.style.setProperty("--map-airport-hover", theme.airports.hoverFill || "#0d9488");
-  }
-  if (theme.routes) {
-    root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
-    root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
-  }
-  if (theme.ui) {
-    root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
-    root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
-  }
-}
-
-async function loadTravelMapStyle() {
-  try {
-    const response = await fetch("./styles/travel_map_style.json", { cache: "no-store" });
-    if (!response.ok) throw new Error(`Failed to load style JSON: HTTP ${response.status}`);
-    const styleJson = await response.json();
-    window.TRAVEL_MAP_STYLE = styleJson;
-    applyTravelMapThemeToCss(getTravelMapTheme());
-    debugLog("Travel map style JSON loaded", styleJson.metadata?.theme || {});
-  } catch (error) {
-    debugWarn("Using fallback travel map style", error);
-    applyTravelMapThemeToCss(getTravelMapTheme());
-  }
-}
-
-async function fetchLocalJson(path) {
-  debugLog(`Loading local JSON: ${path}`);
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
-  return response.json();
-}
-</script>
-
-<script>
-/*
-  ============================================================================
-  ABSENCE TRACKER
-  ----------------------------------------------------------------------------
-  This block powers the UK BN(O) immigration calendar and compliance summary.
-
-  Design goals:
-  - Keep all date rules in one place.
-  - Use small helper functions with clear responsibilities.
-  - Make calculations deterministic and easy to inspect.
-  ============================================================================
-*/
-
-// Data sources loaded from JSON bootstrap (see initSiteData at the end of the file).
-let ABSENCE_RANGES_DATA = [];
-let DAY_LINKS_DATA = {};
-
-// Central rule configuration.
-const IMMIGRATION_RULES = {
-  siteStart: "2024-10-01",
-  siteEnd: "2031-12-31",
-
-  ilr: {
-    start: "2024-10-01",
-    end: "2029-09-30",
-    rollingLimit: 180
-  },
-
-  citizenship: {
-    start: "2025-10-01",
-    end: "2030-09-30",
-    totalLimit: 450,
-    finalTwelveMonthsStart: "2029-10-01",
-    finalTwelveMonthsEnd: "2030-09-30",
-    finalTwelveMonthsLimit: 90
-  },
-
-  safetyBuffer: {
-    start: "2025-10-01",
-    rollingLimit: 90
-  }
-};
-
-function parseDateLocal(isoDate) {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
-function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function addDays(date, offsetDays) {
-  const copy = new Date(date);
-  copy.setDate(copy.getDate() + offsetDays);
-  return copy;
-}
-
-function buildAbsenceSet(ranges) {
-  const absentDays = new Set();
-
-  for (const [startDate, endDate] of ranges) {
-    let cursor = parseDateLocal(startDate);
-    const end = parseDateLocal(endDate);
-
-    while (cursor <= end) {
-      absentDays.add(formatDate(cursor));
-      cursor = addDays(cursor, 1);
-    }
-  }
-
-  return absentDays;
-}
-
-function buildRollingCounts(siteStart, siteEnd, absentSet, minimumIncludedDate = null) {
-  const counts = {};
-  let current = parseDateLocal(siteStart);
-  const end = parseDateLocal(siteEnd);
-  const threshold = minimumIncludedDate ? parseDateLocal(minimumIncludedDate) : null;
-
-  while (current <= end) {
-    const windowStart = addDays(current, -364);
-    let count = 0;
-
-    for (let probe = new Date(windowStart); probe <= current; probe = addDays(probe, 1)) {
-      const key = formatDate(probe);
-      if (absentSet.has(key) && (!threshold || probe >= threshold)) {
-        count += 1;
-      }
-    }
-
-    counts[formatDate(current)] = count;
-    current = addDays(current, 1);
-  }
-
-  return counts;
-}
-
-function countAbsencesBetween(absentSet, startDate, endDate) {
-  let total = 0;
-  for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
-    if (absentSet.has(formatDate(cursor))) total += 1;
-  }
-  return total;
-}
-
-function getMaxRollingCount(rollingCounts, startDate, endDate) {
-  let maxCount = -1;
-  let maxDate = "";
-
-  for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
-    const key = formatDate(cursor);
-    const value = rollingCounts[key] || 0;
-
-    if (value > maxCount) {
-      maxCount = value;
-      maxDate = key;
-    }
-  }
-
-  return { maxCount, maxDate };
-}
-
-function monthTitle(year, monthIndex) {
-  return new Date(year, monthIndex, 1).toLocaleString("en-GB", {
-    month: "long",
-    year: "numeric"
-  });
-}
-
-function setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts) {
-  const { ilr, citizenship, safetyBuffer } = IMMIGRATION_RULES;
-
-  const ilrResult = getMaxRollingCount(rollingCounts, ilr.start, ilr.end);
-  const isIlrCompliant = ilrResult.maxCount <= ilr.rollingLimit;
-
-  const citizenshipTotal = countAbsencesBetween(absentSet, citizenship.start, citizenship.end);
-  const citizenshipFinalYear = countAbsencesBetween(
-    absentSet,
-    citizenship.finalTwelveMonthsStart,
-    citizenship.finalTwelveMonthsEnd
-  );
-  const isCitizenshipCompliant =
-    citizenshipTotal <= citizenship.totalLimit &&
-    citizenshipFinalYear <= citizenship.finalTwelveMonthsLimit;
-
-  const today = new Date();
-  const todayKey = formatDate(today);
-
-  const todayRolling = rollingCounts[todayKey] || 0;
-  const remainingIlrDays = ilr.rollingLimit - todayRolling;
-
-  const safetyStartDate = parseDateLocal(safetyBuffer.start);
-  const safetyReferenceDate = today < safetyStartDate ? safetyStartDate : today;
-  const safetyReferenceKey = formatDate(safetyReferenceDate);
-  const safetyUsed = safetyRollingCounts[safetyReferenceKey] || 0;
-  const safetyRemaining = safetyBuffer.rollingLimit - safetyUsed;
-
-  const totalAbsentDays = countAbsencesBetween(absentSet, "2024-10-01", "2030-09-30");
-
-  const ilrPill = document.getElementById("ilrPill");
-  ilrPill.className = `pill ${isIlrCompliant ? "ok" : "bad"}`;
-  ilrPill.textContent = isIlrCompliant ? "ILR compliant" : "ILR not compliant";
-
-  document.getElementById("ilrText").innerHTML =
-    `Highest rolling 12-month absence count: <strong>${ilrResult.maxCount}</strong> day(s), on <strong>${ilrResult.maxDate}</strong>. Limit: ${ilr.rollingLimit}.`;
-
-  const citPill = document.getElementById("citPill");
-  citPill.className = `pill ${isCitizenshipCompliant ? "ok" : "bad"}`;
-  citPill.textContent = isCitizenshipCompliant ? "Citizenship compliant" : "Citizenship not compliant";
-
-  document.getElementById("citText").innerHTML =
-    `Total absent days in citizenship window: <strong>${citizenshipTotal}</strong> / ${citizenship.totalLimit}.<br>` +
-    `Absent days in final 12 months: <strong>${citizenshipFinalYear}</strong> / ${citizenship.finalTwelveMonthsLimit}.`;
-
-  document.getElementById("dataText").innerHTML =
-    `Trips taken: <strong>${ABSENCE_RANGES_DATA.length}</strong><br>` +
-    `Total number of absent days: <strong>${totalAbsentDays}</strong><br>` +
-    `Days with supporting documents: <strong>${Object.keys(DAY_LINKS_DATA).length}</strong>`;
-
-  document.getElementById("today180Text").innerHTML =
-    `As of <strong>${todayKey}</strong>, your rolling 12-month absence count is <strong>${todayRolling}</strong> day(s).<br>` +
-    `Remaining days available under the ILR 180-day rolling limit: <strong>${remainingIlrDays}</strong> day(s).`;
-
-  if (today < safetyStartDate) {
-    document.getElementById("today90Text").innerHTML =
-      `Your self-imposed 90-day rolling rule starts on <strong>${safetyBuffer.start}</strong>.<br>` +
-      `Using <strong>${safetyBuffer.start}</strong> as the first reference date, and ignoring all days before that date, your rolling count would be <strong>${safetyUsed}</strong> day(s).<br>` +
-      `Remaining days available under the 90-day rolling safety rule: <strong>${safetyRemaining}</strong> day(s).`;
-  } else {
-    document.getElementById("today90Text").innerHTML =
-      `As of <strong>${todayKey}</strong>, your rolling absence count is <strong>${safetyUsed}</strong> day(s).<br>` +
-      `Remaining days available under the 90-day rolling safety buffer rule: <strong>${safetyRemaining}</strong> day(s).`;
-  }
-
-  document.getElementById("currentDateText").innerHTML = `Current date: <strong>${todayKey}</strong>`;
-
-  const summaryCitTotal = document.getElementById("summaryCitTotal");
-  if (summaryCitTotal) summaryCitTotal.textContent = String(citizenshipTotal);
-
-  const summaryCitGauge = document.getElementById("summaryCitGauge");
-  if (summaryCitGauge) summaryCitGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipTotal / citizenship.totalLimit) * 100)}`);
-
-  const summaryCitFinal = document.getElementById("summaryCitFinal");
-  if (summaryCitFinal) summaryCitFinal.textContent = String(citizenshipFinalYear);
-
-  const summaryCitFinalGauge = document.getElementById("summaryCitFinalGauge");
-  if (summaryCitFinalGauge) summaryCitFinalGauge.style.setProperty("--pct", `${Math.min(100, (citizenshipFinalYear / citizenship.finalTwelveMonthsLimit) * 100)}`);
-
-  const summarySafetyRemaining = document.getElementById("summarySafetyRemaining");
-  if (summarySafetyRemaining) summarySafetyRemaining.textContent = `${safetyRemaining}d`;
-
-  const summaryTripsTaken = document.getElementById("summaryTripsTaken");
-  if (summaryTripsTaken) summaryTripsTaken.textContent = String(ABSENCE_RANGES_DATA.length);
-
-  const summaryTotalAbsent = document.getElementById("summaryTotalAbsent");
-  if (summaryTotalAbsent) summaryTotalAbsent.textContent = String(totalAbsentDays);
-
-  const summarySupportingDocs = document.getElementById("summarySupportingDocs");
-  if (summarySupportingDocs) summarySupportingDocs.textContent = String(Object.keys(DAY_LINKS_DATA).length);
-
-  const heroIlrIcon = document.getElementById("heroIlrIcon");
-  const heroIlrValue = document.getElementById("heroIlrValue");
-  if (heroIlrIcon && heroIlrValue) {
-    heroIlrIcon.textContent = isIlrCompliant ? "✓" : "✕";
-    heroIlrValue.textContent = isIlrCompliant ? "OK" : "FAIL";
-    heroIlrValue.className = `stat-value ${isIlrCompliant ? "bool-ok" : "bool-bad"}`;
-    heroIlrIcon.style.background = isIlrCompliant ? "#dcfce7" : "#fee2e2";
-    heroIlrIcon.style.color = isIlrCompliant ? "#166534" : "#b91c1c";
-  }
-
-  const heroCitIcon = document.getElementById("heroCitIcon");
-  const heroCitValue = document.getElementById("heroCitValue");
-  if (heroCitIcon && heroCitValue) {
-    heroCitIcon.textContent = isCitizenshipCompliant ? "✓" : "✕";
-    heroCitValue.textContent = isCitizenshipCompliant ? "OK" : "FAIL";
-    heroCitValue.className = `stat-value ${isCitizenshipCompliant ? "bool-ok" : "bool-bad"}`;
-    heroCitIcon.style.background = isCitizenshipCompliant ? "#dcfce7" : "#fee2e2";
-    heroCitIcon.style.color = isCitizenshipCompliant ? "#166534" : "#b91c1c";
-  }
-
-  const heroIlrWindow = document.getElementById("heroIlrWindow");
-  if (heroIlrWindow) heroIlrWindow.textContent = "1 Oct 2024 – 30 Sept 2029";
-
-  const heroCitWindow = document.getElementById("heroCitWindow");
-  if (heroCitWindow) heroCitWindow.textContent = "1 Oct 2025 – 30 Sept 2030";
-
-  const heroDaysValue = document.getElementById("heroDaysValue");
-  if (heroDaysValue) heroDaysValue.textContent = String(remainingIlrDays);
-
-  const heroDaysBottomValue = document.getElementById("heroDaysBottomValue");
-  if (heroDaysBottomValue) heroDaysBottomValue.textContent = String(remainingIlrDays);
-
-  const miniDaysRemaining = document.getElementById("miniDaysRemaining");
-  if (miniDaysRemaining) miniDaysRemaining.textContent = `${remainingIlrDays} days remaining`;
-
-  const miniDaysReference = document.getElementById("miniDaysReference");
-  if (miniDaysReference) miniDaysReference.textContent = todayKey;
-
-  const miniIlrTick = document.getElementById("miniIlrTick");
-  if (miniIlrTick) miniIlrTick.textContent = isIlrCompliant ? "✓" : "✕";
-
-  const miniCitTick = document.getElementById("miniCitTick");
-  if (miniCitTick) miniCitTick.textContent = isCitizenshipCompliant ? "✓" : "✕";
-}
-
-function createDayCell(date, absentSet, rollingCounts) {
-  const key = formatDate(date);
-  const linkMeta = DAY_LINKS_DATA[key];
-  const hasLink = Boolean(linkMeta);
-  const isToday = key === formatDate(new Date());
-
-  const cell = document.createElement("div");
-  cell.className = "day";
-  if (absentSet.has(key)) cell.classList.add("absent");
-  if (isToday) cell.classList.add("today");
-  if (hasLink) cell.classList.add("has-link");
-
-  const wrapper = hasLink ? document.createElement("a") : document.createElement("div");
-  wrapper.className = "day-link";
-
-  if (hasLink) {
-    wrapper.href = linkMeta.url;
-    wrapper.target = "_blank";
-    wrapper.rel = "noopener noreferrer";
-    wrapper.title = linkMeta.name;
-  } else {
-    wrapper.title = key;
-  }
-
-  const number = document.createElement("div");
-  number.className = "day-num";
-  number.innerHTML = hasLink
-    ? `${date.getDate()}<span class="star" title="${linkMeta.name}">★</span>`
-    : `${date.getDate()}`;
-
-  const rolling = document.createElement("div");
-  rolling.className = "rolling";
-  rolling.textContent = `(${rollingCounts[key] || 0})`;
-
-  wrapper.appendChild(number);
-  wrapper.appendChild(rolling);
-  cell.appendChild(wrapper);
-  return cell;
-}
-
-function renderMonthCalendar(year, monthIndex, absentSet, rollingCounts) {
-  const monthsEl = document.getElementById("months");
-  monthsEl.innerHTML = "";
-
-  const monthEl = document.createElement("div");
-  monthEl.className = "month";
-
-  const title = document.createElement("div");
-  title.className = "month-title";
-  title.textContent = monthTitle(year, monthIndex);
-  monthEl.appendChild(title);
-
-  const weekdays = document.createElement("div");
-  weekdays.className = "weekdays";
-  ["S", "M", "T", "W", "T", "F", "S"].forEach(label => {
-    const el = document.createElement("div");
-    el.className = "weekday";
-    el.textContent = label;
-    weekdays.appendChild(el);
-  });
-  monthEl.appendChild(weekdays);
-
-  const days = document.createElement("div");
-  days.className = "days";
-
-  const firstOfMonth = new Date(year, monthIndex, 1);
-  const firstDayIndex = firstOfMonth.getDay();
-
-  for (let i = 0; i < firstDayIndex; i += 1) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    days.appendChild(empty);
-  }
-
-  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  for (let day = 1; day <= daysInMonth; day += 1) {
-    days.appendChild(createDayCell(new Date(year, monthIndex, day), absentSet, rollingCounts));
-  }
-
-  monthEl.appendChild(days);
-  monthsEl.appendChild(monthEl);
-}
-
-function populateYearPicker() {
-  const picker = document.getElementById("yearPicker");
-
-  for (let year = 2024; year <= 2031; year += 1) {
-    const option = document.createElement("option");
-    option.value = String(year);
-    option.textContent = String(year);
-    picker.appendChild(option);
-  }
-
-  const currentYear = new Date().getFullYear();
-  picker.value = currentYear >= 2024 && currentYear <= 2031 ? String(currentYear) : "2024";
-}
-
-function populateMonthPicker() {
-  const picker = document.getElementById("monthPicker");
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-  monthNames.forEach((name, index) => {
-    const option = document.createElement("option");
-    option.value = String(index);
-    option.textContent = name;
-    picker.appendChild(option);
-  });
-
-  picker.value = String(new Date().getMonth());
-}
-
-function openExternal(type) {
-  const URLS = {
-    flightradar: "https://my.flightradar24.com/pakhowong",
-    ukvi: "https://user-auth.apply-to-visit-or-stay-in-the-uk.homeoffice.gov.uk/auth/realms/AUK/protocol/openid-connect/auth?client_id=status&redirect_uri=https%3A%2F%2Fview-immigration-status.service.gov.uk%2Fstatus%2Feua&scope=openid%20email%20profile&nonce=87e01b01e609561c463f59ca0e3e34b2&response_type=code&state=f2e4af2be78e8cd49c3d250503406055",
-    tripadvisor: "https://www.tripadvisor.com/TravelMap-a_uid.F6C602C817208086EF58C16209420541"
-  };
-
-  const url = URLS[type];
-  if (!url) return;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-
-function initAbsenceTracker() {
-  const absentSet = buildAbsenceSet(ABSENCE_RANGES_DATA);
-  const rollingCounts = buildRollingCounts(
-    IMMIGRATION_RULES.siteStart,
-    IMMIGRATION_RULES.siteEnd,
-    absentSet
-  );
-  const safetyRollingCounts = buildRollingCounts(
-    IMMIGRATION_RULES.siteStart,
-    IMMIGRATION_RULES.siteEnd,
-    absentSet,
-    IMMIGRATION_RULES.safetyBuffer.start
-  );
-
-  setComplianceSummary(absentSet, rollingCounts, safetyRollingCounts);
-  populateYearPicker();
-  populateMonthPicker();
-
-  const yearPicker = document.getElementById("yearPicker");
-  const monthPicker = document.getElementById("monthPicker");
-  const prevMonthBtn = document.getElementById("prevMonthBtn");
-  const nextMonthBtn = document.getElementById("nextMonthBtn");
-
-  const renderSelectedMonth = () => {
-    renderMonthCalendar(Number(yearPicker.value), Number(monthPicker.value), absentSet, rollingCounts);
-  };
-
-  const shiftMonth = (delta) => {
-    let year = Number(yearPicker.value);
-    let month = Number(monthPicker.value) + delta;
-    while (month < 0) {
-      month += 12;
-      year -= 1;
-    }
-    while (month > 11) {
-      month -= 12;
-      year += 1;
-    }
-    year = Math.max(2024, Math.min(2031, year));
-    yearPicker.value = String(year);
-    monthPicker.value = String(month);
-    renderSelectedMonth();
-  };
-
-  renderSelectedMonth();
-  yearPicker.addEventListener("change", renderSelectedMonth);
-  monthPicker.addEventListener("change", renderSelectedMonth);
-  if (prevMonthBtn) prevMonthBtn.addEventListener("click", () => shiftMonth(-1));
-  if (nextMonthBtn) nextMonthBtn.addEventListener("click", () => shiftMonth(1));
-}
-
-</script>
-
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-
 <script>
-/*
-  ============================================================================
-  TRAVEL MAP
-  ----------------------------------------------------------------------------
-  This block renders the travel map with MapLibre GL JS.
 
-  What changed compared with the older Leaflet version:
-  - the base map now uses a dedicated MapLibre style JSON at /styles/travel_map_style.json
-  - countries, cities, airports and routes are converted into GeoJSON sources
-  - hover highlighting is handled with native MapLibre layers and filters
-  - glow effects use GPU-accelerated line/circle blur layers
-  - flight routes are curved great-circle arcs with a moving highlight animation
-  ============================================================================
-*/
-(function () {
-  // --------------------------------------------------------------------------
-  // 1) Source data used by the Travel Map
-  // --------------------------------------------------------------------------
-
-  window.VISITED_NATIONS_DATA = [];
-  window.VISITED_TERRITORIES_DATA = [
-    "Akrotiri Sovereign Base Area",
-    "Guam",
-    "Hong Kong S.A.R.",
-    "Macao S.A.R.",
-    "Puerto Rico",
-    "Svalbard"
-  ];
-  window.VISITED_COUNTRIES_DATA = [];
-
-  const TRAVEL_MAP_CONFIG = {
-    styleUrl: "./styles/travel_map_style.json",
-    countryGeoJsonUrls: [
-      "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
-      "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
-    ],
-    flightHistoryCsvUrl: "./data/flight_history.csv",
-    openFlightsJsonUrl: "./flights/airports.json",
-    mwggAirportUrls: [
-      "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
-      "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
-    ]
-  };
-
-  // --------------------------------------------------------------------------
-  // 2) Theme colours kept in one place for easier maintenance
-  // --------------------------------------------------------------------------
-  function getMapTheme() {
-    return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {
-      countries: {
-        fill: "#2f6fff",
-        line: "#1847b8",
-        hoverFill: "#1748d8",
-        hoverLine: "#103aab",
-        fadedFill: "#e8f0ff",
-        fadedLine: "#d7e4ff"
+    const IMMIGRATION_RULES = {
+      siteStart: "2024-10-01",
+      siteEnd: "2031-12-31",
+      ilr: {
+        start: "2024-10-01",
+        end: "2029-09-30",
+        rollingLimit: 180
       },
-      cities: {
-        fill: "#24c483",
-        hoverFill: "#149d67",
-        fadedFill: "#b7f0d6"
+      citizenship: {
+        start: "2025-10-01",
+        end: "2030-09-30",
+        totalLimit: 450,
+        finalTwelveMonthsStart: "2029-10-01",
+        finalTwelveMonthsEnd: "2030-09-30",
+        finalTwelveMonthsLimit: 90
       },
-      airports: {
-        fill: "#13b8a6",
-        hoverFill: "#0d9488",
-        fadedFill: "#99f6e4"
-      },
-      routes: {
-        level1: "#f59e0b",
-        level2: "#f97316",
-        level3: "#ef4444",
-        level4: "#c026d3",
-        level5: "#7c3aed"
-      },
-      ui: {
-        bgTop: "#eef6ff",
-        bgBottom: "#dfeeff"
-      },
-      sizes: {
-        countries: { lineWidth: 1.4, hoverLineWidth: 2.3, fillOpacity: 0.78, hoverFillOpacity: 0.96 },
-        cities: { baseRadius: 4.6, baseStrokeWidth: 1.4, hoverRadius: 5.8, hoverStrokeWidth: 1.8 },
-        airports: { baseRadius: 3.6, baseStrokeWidth: 1.2, hoverRadius: 4.8, hoverStrokeWidth: 1.5 },
-        routes: { baseWidth: 2.1, baseOpacity: 0.85, hoverWidth: 2.8, hoverOpacity: 0.96 }
+      safetyBuffer: {
+        start: "2025-10-01",
+        rollingLimit: 90
       }
     };
-  }
-  function getMapSizes() { return getMapTheme().sizes || {}; }
-  function getCountrySizes() { return getMapSizes().countries || {}; }
-  function getCitySizes() { return getMapSizes().cities || {}; }
-  function getAirportSizes() { return getMapSizes().airports || {}; }
-  function getRouteSizes() { return getMapSizes().routes || {}; }
 
-  // --------------------------------------------------------------------------
-  // 3) Canonical country model
-  // --------------------------------------------------------------------------
-  const COUNTRY_ALIASES = {
-    "Bahamas": "The Bahamas",
-    "Congo (Congo-Brazzaville)": "Republic of the Congo",
-    "Côte D'Ivoire": "Ivory Coast",
-    "Czech Republic": "Czechia",
-    "Eswatini": "eSwatini",
-    "Micronesia": "Federated States of Micronesia",
-    "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara",
-    "Sao Tome and Principe": "São Tomé and Principe",
-    "Serbia": "Republic of Serbia",
-    "Tanzania": "United Republic of Tanzania",
-    "Timor-Leste": "East Timor",
-    "United States": "United States of America",
-    "Vatican City": "Vatican"
-  };
+    const DATA_PATHS = {
+      styleUrl: "./styles/travel_map_style.json",
+      countryGeoJsonUrls: [
+        "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_10m_admin_0_countries.geojson",
+        "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries.geojson"
+      ],
+      absenceRanges: "./data/absence_ranges.json",
+      dayLinks: "./data/day_links.json",
+      cityPins: "./data/city_pins.json",
+      visitedCountries: "./data/visited_countries.json",
+      flightHistoryCsv: "./data/flight_history.csv",
+      openFlightsAirports: "./flights/airports.json",
+      mwggAirportUrls: [
+        "https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json",
+        "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"
+      ]
+    };
 
-  const REVERSE_COUNTRY_ALIASES = {
-    "The Bahamas": "Bahamas",
-    "Republic of the Congo": "Congo (Congo-Brazzaville)",
-    "Ivory Coast": "Côte D'Ivoire",
-    "Czechia": "Czech Republic",
-    "eSwatini": "Eswatini",
-    "Federated States of Micronesia": "Micronesia",
-    "São Tomé and Principe": "Sao Tome and Principe",
-    "Republic of Serbia": "Serbia",
-    "United Republic of Tanzania": "Tanzania",
-    "East Timor": "Timor-Leste",
-    "United States of America": "United States",
-    "Vatican": "Vatican City",
-    "Hong Kong": "Hong Kong S.A.R.",
-    "Macau": "Macao S.A.R.",
-    "Macao": "Macao S.A.R.",
-    "Svalbard and Jan Mayen": "Svalbard",
-    "Svalbard & Jan Mayen": "Svalbard"
-  };
+    const COUNTRY_ALIASES = {
+      "Bahamas": "The Bahamas",
+      "Congo (Congo-Brazzaville)": "Republic of the Congo",
+      "Côte D'Ivoire": "Ivory Coast",
+      "Czech Republic": "Czechia",
+      "Eswatini": "eSwatini",
+      "Micronesia": "Federated States of Micronesia",
+      "Sahrawi Arab Democratic Republic (Western Sahara)": "Western Sahara",
+      "Sao Tome and Principe": "São Tomé and Principe",
+      "Serbia": "Republic of Serbia",
+      "Tanzania": "United Republic of Tanzania",
+      "Timor-Leste": "East Timor",
+      "United States": "United States of America",
+      "Vatican City": "Vatican"
+    };
+    const REVERSE_COUNTRY_ALIASES = {
+      "The Bahamas": "Bahamas",
+      "Republic of the Congo": "Congo (Congo-Brazzaville)",
+      "Ivory Coast": "Côte D'Ivoire",
+      "Czechia": "Czech Republic",
+      "eSwatini": "Eswatini",
+      "Federated States of Micronesia": "Micronesia",
+      "São Tomé and Principe": "Sao Tome and Principe",
+      "Republic of Serbia": "Serbia",
+      "United Republic of Tanzania": "Tanzania",
+      "East Timor": "Timor-Leste",
+      "United States of America": "United States",
+      "Vatican": "Vatican City",
+      "Hong Kong": "Hong Kong S.A.R.",
+      "Macau": "Macao S.A.R.",
+      "Macao": "Macao S.A.R.",
+      "Svalbard and Jan Mayen": "Svalbard",
+      "Svalbard & Jan Mayen": "Svalbard"
+    };
+    const COUNTRY_EXPANSIONS = {
+      "Cyprus": ["Cyprus", "Cyprus No Mans Area", "Northern Cyprus"],
+      "Kazakhstan": ["Baykonur Cosmodrome", "Kazakhstan"],
+      "Somalia": ["Somalia", "Somaliland"]
+    };
+    const AIRPORT_CODE_OVERRIDES = {
+      HKG: "Hong Kong S.A.R.", VHHH: "Hong Kong S.A.R.",
+      MFM: "Macao S.A.R.", VMMC: "Macao S.A.R.",
+      SJU: "Puerto Rico", TJSJ: "Puerto Rico",
+      BQN: "Puerto Rico", TJPS: "Puerto Rico",
+      GUM: "Guam", PGUM: "Guam",
+      LYR: "Svalbard", ENSB: "Svalbard",
+      AKT: "Akrotiri Sovereign Base Area", LCRA: "Akrotiri Sovereign Base Area",
+      RAR: "Cook Islands", NCRG: "Cook Islands",
+      IUE: "Niue", NIUE: "Niue",
+      APW: "Samoa", NSFA: "Samoa",
+      TBU: "Tonga", NFTF: "Tonga",
+      BGI: "Barbados", TBPB: "Barbados",
+      GND: "Grenada", TGPY: "Grenada",
+      DOM: "Dominica", TDPD: "Dominica",
+      ANU: "Antigua and Barbuda", TAPA: "Antigua and Barbuda",
+      SKB: "Saint Kitts and Nevis", TKPK: "Saint Kitts and Nevis",
+      UVF: "Saint Lucia", TLPL: "Saint Lucia",
+      SLU: "Saint Lucia", TLPC: "Saint Lucia",
+      MLE: "Maldives", VRMM: "Maldives",
+      SIN: "Singapore", WSSS: "Singapore",
+      XSP: "Singapore", WSSL: "Singapore",
+      MLA: "Malta", LMML: "Malta",
+      KEF: "Iceland", BIKF: "Iceland",
+      RKV: "Iceland", BIRK: "Iceland",
+      ARN: "Sweden", ESSA: "Sweden",
+      BMA: "Sweden", ESSB: "Sweden"
+    };
+    const CITY_OVERRIDES = {
+      "Hong Kong": "Hong Kong S.A.R.",
+      "Macau": "Macao S.A.R.",
+      "Macao": "Macao S.A.R.",
+      "Longyearbyen": "Svalbard",
+      "San Juan": "Puerto Rico",
+      "Tamuning": "Guam",
+      "Hagatna": "Guam",
+      "Rarotonga": "Cook Islands",
+      "Alofi": "Niue",
+      "Apia": "Samoa",
+      "Nuku'alofa": "Tonga",
+      "Bridgetown": "Barbados",
+      "St. George's": "Grenada",
+      "Saint George's": "Grenada",
+      "Roseau": "Dominica",
+      "St. John's": "Antigua and Barbuda",
+      "Saint John's": "Antigua and Barbuda",
+      "Basseterre": "Saint Kitts and Nevis",
+      "Castries": "Saint Lucia",
+      "Male": "Maldives",
+      "Malé": "Maldives",
+      "Singapore": "Singapore",
+      "Luqa": "Malta",
+      "Reykjavik": "Iceland",
+      "Stockholm": "Sweden"
+    };
+    const AIRPORT_NAME_OVERRIDES = {
+      "Antigua": "Antigua and Barbuda",
+      "Barbados": "Barbados",
+      "Grenada": "Grenada",
+      "Dominica": "Dominica",
+      "St Lucia": "Saint Lucia",
+      "Saint Lucia": "Saint Lucia",
+      "St Kitts": "Saint Kitts and Nevis",
+      "Saint Kitts": "Saint Kitts and Nevis",
+      "Cook Islands": "Cook Islands",
+      "Niue": "Niue",
+      "Samoa": "Samoa",
+      "Tonga": "Tonga",
+      "Maldives": "Maldives",
+      "Singapore": "Singapore",
+      "Malta": "Malta",
+      "Iceland": "Iceland",
+      "Sweden": "Sweden"
+    };
+    const COUNTRY_VALUE_OVERRIDES = {
+      "St Lucia": "Saint Lucia",
+      "Saint Lucia": "Saint Lucia",
+      "Antigua": "Antigua and Barbuda",
+      "St Kitts": "Saint Kitts and Nevis",
+      "Saint Kitts": "Saint Kitts and Nevis",
+      "Cook Islands": "Cook Islands",
+      "Niue": "Niue",
+      "Samoa": "Samoa",
+      "Tonga": "Tonga",
+      "Barbados": "Barbados",
+      "Grenada": "Grenada",
+      "Dominica": "Dominica",
+      "Maldives": "Maldives",
+      "Singapore": "Singapore",
+      "Malta": "Malta",
+      "Iceland": "Iceland",
+      "Sweden": "Sweden"
+    };
 
-  const COUNTRY_EXPANSIONS = {
-    "Cyprus": ["Cyprus", "Cyprus No Mans Area", "Northern Cyprus"],
-    "Kazakhstan": ["Baykonur Cosmodrome", "Kazakhstan"],
-    "Somalia": ["Somalia", "Somaliland"]
-  };
-
-  const AIRPORT_CODE_OVERRIDES = {
-    HKG: "Hong Kong S.A.R.", VHHH: "Hong Kong S.A.R.",
-    MFM: "Macao S.A.R.", VMMC: "Macao S.A.R.",
-    SJU: "Puerto Rico", TJSJ: "Puerto Rico",
-    BQN: "Puerto Rico", TJPS: "Puerto Rico",
-    GUM: "Guam", PGUM: "Guam",
-    LYR: "Svalbard", ENSB: "Svalbard",
-    AKT: "Akrotiri Sovereign Base Area", LCRA: "Akrotiri Sovereign Base Area",
-    RAR: "Cook Islands", NCRG: "Cook Islands",
-    IUE: "Niue", NIUE: "Niue",
-    APW: "Samoa", NSFA: "Samoa",
-    TBU: "Tonga", NFTF: "Tonga",
-    BGI: "Barbados", TBPB: "Barbados",
-    GND: "Grenada", TGPY: "Grenada",
-    DOM: "Dominica", TDPD: "Dominica",
-    ANU: "Antigua and Barbuda", TAPA: "Antigua and Barbuda",
-    SKB: "Saint Kitts and Nevis", TKPK: "Saint Kitts and Nevis",
-    UVF: "Saint Lucia", TLPL: "Saint Lucia",
-    SLU: "Saint Lucia", TLPC: "Saint Lucia",
-    MLE: "Maldives", VRMM: "Maldives",
-    SIN: "Singapore", WSSS: "Singapore",
-    XSP: "Singapore", WSSL: "Singapore",
-    MLA: "Malta", LMML: "Malta",
-    KEF: "Iceland", BIKF: "Iceland",
-    RKV: "Iceland", BIRK: "Iceland",
-    ARN: "Sweden", ESSA: "Sweden",
-    BMA: "Sweden", ESSB: "Sweden"
-  };
-
-  const CITY_OVERRIDES = {
-    "Hong Kong": "Hong Kong S.A.R.",
-    "Macau": "Macao S.A.R.",
-    "Macao": "Macao S.A.R.",
-    "Longyearbyen": "Svalbard",
-    "San Juan": "Puerto Rico",
-    "Tamuning": "Guam",
-    "Hagatna": "Guam",
-    "Rarotonga": "Cook Islands",
-    "Alofi": "Niue",
-    "Apia": "Samoa",
-    "Nuku'alofa": "Tonga",
-    "Bridgetown": "Barbados",
-    "St. George's": "Grenada",
-    "Saint George's": "Grenada",
-    "Roseau": "Dominica",
-    "St. John's": "Antigua and Barbuda",
-    "Saint John's": "Antigua and Barbuda",
-    "Basseterre": "Saint Kitts and Nevis",
-    "Castries": "Saint Lucia",
-    "Male": "Maldives",
-    "Malé": "Maldives",
-    "Singapore": "Singapore",
-    "Luqa": "Malta",
-    "Reykjavik": "Iceland",
-    "Stockholm": "Sweden"
-  };
-
-  const AIRPORT_NAME_OVERRIDES = {
-    "Antigua": "Antigua and Barbuda",
-    "Barbados": "Barbados",
-    "Grenada": "Grenada",
-    "Dominica": "Dominica",
-    "St Lucia": "Saint Lucia",
-    "Saint Lucia": "Saint Lucia",
-    "St Kitts": "Saint Kitts and Nevis",
-    "Saint Kitts": "Saint Kitts and Nevis",
-    "Cook Islands": "Cook Islands",
-    "Niue": "Niue",
-    "Samoa": "Samoa",
-    "Tonga": "Tonga",
-    "Maldives": "Maldives",
-    "Singapore": "Singapore",
-    "Malta": "Malta",
-    "Iceland": "Iceland",
-    "Sweden": "Sweden"
-  };
-
-  const COUNTRY_VALUE_OVERRIDES = {
-    "St Lucia": "Saint Lucia",
-    "Saint Lucia": "Saint Lucia",
-    "Antigua": "Antigua and Barbuda",
-    "St Kitts": "Saint Kitts and Nevis",
-    "Saint Kitts": "Saint Kitts and Nevis",
-    "Cook Islands": "Cook Islands",
-    "Niue": "Niue",
-    "Samoa": "Samoa",
-    "Tonga": "Tonga",
-    "Barbados": "Barbados",
-    "Grenada": "Grenada",
-    "Dominica": "Dominica",
-    "Maldives": "Maldives",
-    "Singapore": "Singapore",
-    "Malta": "Malta",
-    "Iceland": "Iceland",
-    "Sweden": "Sweden"
-  };
-
-  // --------------------------------------------------------------------------
-  // 4) Generic helpers
-  // --------------------------------------------------------------------------
-  function normaliseText(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[()'.,]/g, "")
-      .replace(/&/g, "and")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-  }
-
-  function canonicaliseCountryName(value) {
-    const raw = String(value || "").trim();
-    return REVERSE_COUNTRY_ALIASES[raw] || raw;
-  }
-
-  function getCanonicalVisitedCountry(name) {
-    return COUNTRY_ALIASES[name] || name;
-  }
-
-  function getExpansionTargets(countryName) {
-    return COUNTRY_EXPANSIONS[countryName] || [countryName];
-  }
-
-  function getFeatureDisplayName(feature) {
-    const props = feature.properties || {};
-    return props.ADMIN || props.NAME_LONG || props.NAME || props.GEOUNIT || props.BRK_NAME || props.FORMAL_EN || props.NAME_EN || "Unknown";
-  }
-
-  function getFeatureCandidateNames(feature) {
-    const props = feature.properties || {};
-    return [props.ADMIN, props.NAME_LONG, props.NAME, props.GEOUNIT, props.BRK_NAME, props.FORMAL_EN, props.NAME_EN].filter(Boolean);
-  }
-
-  function matchesVisitedCountry(feature, targetNames) {
-    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
-    return targetNames.some(name => candidateNames.includes(normaliseText(name)));
-  }
-
-  function resolvePolygonCountry(feature) {
-    const candidateNames = getFeatureCandidateNames(feature).map(normaliseText);
-    for (const country of (window.VISITED_COUNTRIES_DATA || [])) {
-      const canonical = getCanonicalVisitedCountry(country);
-      const expandedNames = getExpansionTargets(canonical).map(normaliseText);
-      if (expandedNames.some(name => candidateNames.includes(name))) return canonical;
-    }
-    return getFeatureDisplayName(feature);
-  }
-
-  async function fetchJsonWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-      } catch (error) {
-        lastError = error;
+    const state = {
+      absenceRanges: [],
+      dayLinks: {},
+      cityPins: [],
+      visitedCountries: [],
+      absentSet: new Set(),
+      rollingCounts: {},
+      safetyRollingCounts: {},
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth(),
+      mapStyle: null,
+      travelStats: {
+        countries: 0,
+        cities: 0,
+        airports: 0,
+        flights: 0,
+        routes: 0
       }
+    };
+
+    function $(id) { return document.getElementById(id); }
+
+    function parseDateLocal(isoDate) {
+      const [year, month, day] = String(isoDate).split("-").map(Number);
+      return new Date(year, month - 1, day);
     }
-    throw lastError || new Error("Unable to load JSON data.");
-  }
-
-  async function fetchTextWithFallback(urls) {
-    let lastError = null;
-    for (const url of urls) {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.text();
-      } catch (error) {
-        lastError = error;
-      }
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
     }
-    throw lastError || new Error("Unable to load text data.");
-  }
+    function addDays(date, offsetDays) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + offsetDays);
+      return copy;
+    }
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+    function percent(value, limit) {
+      return `${clamp((value / limit) * 100, 0, 100).toFixed(1)}%`;
+    }
+    function normaliseText(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[()'.,]/g, "")
+        .replace(/&/g, "and")
+        .replace(/-/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+    }
+    function canonicaliseCountryName(value) {
+      const raw = String(value || "").trim();
+      return REVERSE_COUNTRY_ALIASES[raw] || raw;
+    }
+    function expandedCountryNames(name) {
+      const canonical = COUNTRY_ALIASES[name] || name;
+      return COUNTRY_EXPANSIONS[canonical] || [canonical];
+    }
+    function toFeatureCollection(features) {
+      return { type: "FeatureCollection", features };
+    }
 
-  function parseCsv(text) {
-    const rows = [];
-    let row = [];
-    let value = "";
-    let inQuotes = false;
-
-    for (let i = 0; i < text.length; i += 1) {
-      const char = text[i];
-      const next = text[i + 1];
-
-      if (char === '"') {
-        if (inQuotes && next === '"') {
-          value += '"';
-          i += 1;
-        } else {
-          inQuotes = !inQuotes;
+    async function fetchJson(path) {
+      const response = await fetch(path, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Failed to load ${path}`);
+      return response.json();
+    }
+    async function fetchText(path) {
+      const response = await fetch(path, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Failed to load ${path}`);
+      return response.text();
+    }
+    async function fetchJsonFirst(urls) {
+      let lastError = null;
+      for (const url of urls) {
+        try {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Failed to load ${url}`);
+          return response.json();
+        } catch (error) {
+          lastError = error;
         }
-      } else if (char === "," && !inQuotes) {
-        row.push(value);
-        value = "";
-      } else if ((char === "\n" || char === "\r") && !inQuotes) {
-        if (char === "\r" && next === "\n") i += 1;
-        row.push(value);
-        value = "";
-        if (row.some(cell => cell !== "")) rows.push(row);
-        row = [];
-      } else {
-        value += char;
+      }
+      throw lastError || new Error("No fetch candidates succeeded");
+    }
+
+    function buildAbsenceSet(ranges) {
+      const absent = new Set();
+      for (const [start, end] of ranges) {
+        for (let cursor = parseDateLocal(start); cursor <= parseDateLocal(end); cursor = addDays(cursor, 1)) {
+          absent.add(formatDate(cursor));
+        }
+      }
+      return absent;
+    }
+
+    function buildRollingCounts(siteStart, siteEnd, absentSet, minimumIncludedDate = null) {
+      const counts = {};
+      const start = parseDateLocal(siteStart);
+      const end = parseDateLocal(siteEnd);
+      const threshold = minimumIncludedDate ? parseDateLocal(minimumIncludedDate) : null;
+
+      for (let current = new Date(start); current <= end; current = addDays(current, 1)) {
+        const windowStart = addDays(current, -364);
+        let count = 0;
+        for (let probe = new Date(windowStart); probe <= current; probe = addDays(probe, 1)) {
+          const key = formatDate(probe);
+          if (absentSet.has(key) && (!threshold || probe >= threshold)) count += 1;
+        }
+        counts[formatDate(current)] = count;
+      }
+      return counts;
+    }
+
+    function countAbsencesBetween(absentSet, startDate, endDate) {
+      let total = 0;
+      for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
+        if (absentSet.has(formatDate(cursor))) total += 1;
+      }
+      return total;
+    }
+
+    function getMaxRollingCount(rollingCounts, startDate, endDate) {
+      let maxCount = -1;
+      let maxDate = "";
+      for (let cursor = parseDateLocal(startDate); cursor <= parseDateLocal(endDate); cursor = addDays(cursor, 1)) {
+        const key = formatDate(cursor);
+        const value = rollingCounts[key] || 0;
+        if (value > maxCount) {
+          maxCount = value;
+          maxDate = key;
+        }
+      }
+      return { maxCount, maxDate };
+    }
+
+    function getStatusPill(value, limit, invert = false) {
+      if (invert) {
+        if (value <= 0) return ["bad", "Used up"];
+        if (value <= limit * 0.2) return ["warn", "Low"];
+        return ["good", "Healthy"];
+      }
+      if (value > limit) return ["bad", "Over"];
+      if (value > limit * 0.85) return ["warn", "Tight"];
+      return ["good", "OK"];
+    }
+
+    function setPill(id, css, text) {
+      const el = $(id);
+      el.className = `pill ${css}`;
+      el.textContent = text;
+    }
+
+    function setSummary() {
+      const todayKey = formatDate(new Date());
+      const todayRolling = state.rollingCounts[todayKey] || 0;
+      const ilrPeak = getMaxRollingCount(state.rollingCounts, IMMIGRATION_RULES.ilr.start, IMMIGRATION_RULES.ilr.end);
+      const citizenshipTotal = countAbsencesBetween(state.absentSet, IMMIGRATION_RULES.citizenship.start, IMMIGRATION_RULES.citizenship.end);
+      const citizenshipFinalYear = countAbsencesBetween(
+        state.absentSet,
+        IMMIGRATION_RULES.citizenship.finalTwelveMonthsStart,
+        IMMIGRATION_RULES.citizenship.finalTwelveMonthsEnd
+      );
+      const safetyReference = new Date() < parseDateLocal(IMMIGRATION_RULES.safetyBuffer.start)
+        ? parseDateLocal(IMMIGRATION_RULES.safetyBuffer.start)
+        : new Date();
+      const safetyUsed = state.safetyRollingCounts[formatDate(safetyReference)] || 0;
+      const safetyRemaining = IMMIGRATION_RULES.safetyBuffer.rollingLimit - safetyUsed;
+      const totalAbsent = countAbsencesBetween(state.absentSet, IMMIGRATION_RULES.siteStart, IMMIGRATION_RULES.siteEnd);
+      const remainingIlr = IMMIGRATION_RULES.ilr.rollingLimit - todayRolling;
+      const tripsTaken = state.absenceRanges.length;
+      const supportingDocs = Object.keys(state.dayLinks || {}).length;
+
+      const [ilrCss, ilrLabel] = getStatusPill(ilrPeak.maxCount, IMMIGRATION_RULES.ilr.rollingLimit);
+      $("heroIlrIcon").textContent = ilrCss === "bad" ? "⚠" : ilrCss === "warn" ? "•" : "✓";
+      $("heroIlrValue").textContent = `${ilrPeak.maxCount}/${IMMIGRATION_RULES.ilr.rollingLimit}`;
+      $("heroIlrWindow").textContent = `Peak rolling 12 months • ${ilrPeak.maxDate}`;
+
+      const isCitBad = citizenshipTotal > IMMIGRATION_RULES.citizenship.totalLimit || citizenshipFinalYear > IMMIGRATION_RULES.citizenship.finalTwelveMonthsLimit;
+      const isCitWarn = !isCitBad && (
+        citizenshipTotal > IMMIGRATION_RULES.citizenship.totalLimit * 0.85 ||
+        citizenshipFinalYear > IMMIGRATION_RULES.citizenship.finalTwelveMonthsLimit * 0.85
+      );
+      $("heroCitIcon").textContent = isCitBad ? "⚠" : isCitWarn ? "•" : "✓";
+      $("heroCitValue").textContent = `${citizenshipTotal}/${IMMIGRATION_RULES.citizenship.totalLimit}`;
+      $("heroCitWindow").textContent = `Final 12 months: ${citizenshipFinalYear}/${IMMIGRATION_RULES.citizenship.finalTwelveMonthsLimit}`;
+
+      $("heroDaysValue").textContent = remainingIlr;
+      $("summaryCitTotal").textContent = citizenshipTotal;
+      $("summaryCitFinal").textContent = citizenshipFinalYear;
+      $("summarySafetyRemaining").textContent = `${safetyRemaining} days`;
+      $("summaryTripsTaken").textContent = tripsTaken;
+      $("summaryTotalAbsent").textContent = totalAbsent;
+      $("summarySupportingDocs").textContent = supportingDocs;
+
+      const citPct = Math.min(100, (citizenshipTotal / IMMIGRATION_RULES.citizenship.totalLimit) * 100);
+      const finalPct = Math.min(100, (citizenshipFinalYear / IMMIGRATION_RULES.citizenship.finalTwelveMonthsLimit) * 100);
+      $("summaryCitGauge").style.setProperty("--gauge-fill", `${citPct}%`);
+      $("summaryCitFinalGauge").style.setProperty("--gauge-fill", `${finalPct}%`);
+
+      setPill("ilrPill", ilrCss, ilrLabel);
+      $("ilrText").innerHTML = `Highest rolling 12-month count: <strong>${ilrPeak.maxCount}</strong> day(s) on <strong>${ilrPeak.maxDate}</strong>. Limit: <strong>${IMMIGRATION_RULES.ilr.rollingLimit}</strong>.`;
+
+      setPill("citPill", isCitBad ? "bad" : isCitWarn ? "warn" : "good", isCitBad ? "Over" : isCitWarn ? "Tight" : "OK");
+      $("citText").innerHTML = `Total absence in citizenship window: <strong>${citizenshipTotal}</strong> / ${IMMIGRATION_RULES.citizenship.totalLimit}. Final 12 months: <strong>${citizenshipFinalYear}</strong> / ${IMMIGRATION_RULES.citizenship.finalTwelveMonthsLimit}.`;
+
+      $("dataText").textContent = `Tracked absence days: ${totalAbsent}.`;
+      $("today180Text").textContent = `Today's rolling 12-month count: ${todayRolling}/${IMMIGRATION_RULES.ilr.rollingLimit}.`;
+      $("today90Text").textContent = `Safety buffer remaining: ${safetyRemaining}/${IMMIGRATION_RULES.safetyBuffer.rollingLimit}.`;
+      $("currentDateText").textContent = `Updated for ${todayKey}.`;
+    }
+
+    function monthTitle(year, month) {
+      return new Date(year, month, 1).toLocaleString("en-GB", { month: "long", year: "numeric" });
+    }
+
+    function populateMonthYearControls() {
+      const monthPicker = $("monthPicker");
+      const yearPicker = $("yearPicker");
+      monthPicker.innerHTML = "";
+      yearPicker.innerHTML = "";
+
+      Array.from({ length: 12 }, (_, month) => month).forEach(month => {
+        const option = document.createElement("option");
+        option.value = String(month);
+        option.textContent = new Date(2024, month, 1).toLocaleString("en-GB", { month: "long" });
+        if (month === state.currentMonth) option.selected = true;
+        monthPicker.appendChild(option);
+      });
+
+      for (let year = 2024; year <= 2031; year += 1) {
+        const option = document.createElement("option");
+        option.value = String(year);
+        option.textContent = String(year);
+        if (year === state.currentYear) option.selected = true;
+        yearPicker.appendChild(option);
       }
     }
 
-    row.push(value);
-    if (row.some(cell => cell !== "")) rows.push(row);
-    return rows;
-  }
+    function createDayCell(date) {
+      const key = formatDate(date);
+      const day = document.createElement("div");
+      const todayKey = formatDate(new Date());
+      day.className = "day";
+      if (state.absentSet.has(key)) day.classList.add("absent");
+      if (key === todayKey) day.classList.add("today");
 
-  function loadFlightHistoryFromCsv(csvText) {
-    const rows = parseCsv(csvText);
-    if (!rows.length) return [];
+      const number = document.createElement("div");
+      number.className = "day-number";
+      number.textContent = String(date.getDate());
+      day.appendChild(number);
 
-    const header = rows[0];
-    const indexByColumn = Object.fromEntries(header.map((name, index) => [name, index]));
-    const fromToPattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
+      if (state.absentSet.has(key)) {
+        const badge = document.createElement("div");
+        badge.className = "day-badge";
+        badge.textContent = "Absent";
+        day.appendChild(badge);
 
-    return rows.slice(1).map(cells => {
-      const get = name => (cells[indexByColumn[name]] || "").trim();
-      const fromMatch = get("From").match(fromToPattern);
-      const toMatch = get("To").match(fromToPattern);
-      if (!fromMatch || !toMatch) return null;
+        const rolling = document.createElement("div");
+        rolling.className = "rolling";
+        rolling.textContent = `Rolling: ${state.rollingCounts[key] || 0}`;
+        day.appendChild(rolling);
+      }
 
-      const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
-      const [, toCity, toAirport, toIata, toIcao] = toMatch;
+      const support = state.dayLinks[key];
+      if (support) {
+        const link = document.createElement("a");
+        link.className = "support-link";
+        link.href = support;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Supporting doc";
+        day.appendChild(link);
+      }
+
+      if (!state.absentSet.has(key)) {
+        const note = document.createElement("div");
+        note.className = "day-note";
+        note.textContent = key === todayKey ? "Today" : "";
+        day.appendChild(note);
+      }
+
+      day.title = `${key}${state.absentSet.has(key) ? ` • Rolling count ${state.rollingCounts[key] || 0}` : ""}`;
+      return day;
+    }
+
+    function renderMonth() {
+      const year = state.currentYear;
+      const month = state.currentMonth;
+      const monthsEl = $("months");
+      monthsEl.innerHTML = "";
+
+      const title = document.createElement("div");
+      title.className = "month-title";
+      title.textContent = monthTitle(year, month);
+      monthsEl.appendChild(title);
+
+      const weekdays = document.createElement("div");
+      weekdays.className = "weekdays";
+      ["S", "M", "T", "W", "T", "F", "S"].forEach(label => {
+        const el = document.createElement("div");
+        el.className = "weekday";
+        el.textContent = label;
+        weekdays.appendChild(el);
+      });
+      monthsEl.appendChild(weekdays);
+
+      const days = document.createElement("div");
+      days.className = "days";
+      const firstOfMonth = new Date(year, month, 1);
+      for (let i = 0; i < firstOfMonth.getDay(); i += 1) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        days.appendChild(empty);
+      }
+      const count = new Date(year, month + 1, 0).getDate();
+      for (let day = 1; day <= count; day += 1) {
+        days.appendChild(createDayCell(new Date(year, month, day)));
+      }
+      monthsEl.appendChild(days);
+
+      $("monthPicker").value = String(month);
+      $("yearPicker").value = String(year);
+    }
+
+    function bindCalendarControls() {
+      $("monthPicker").addEventListener("change", e => {
+        state.currentMonth = Number(e.target.value);
+        renderMonth();
+      });
+      $("yearPicker").addEventListener("change", e => {
+        state.currentYear = Number(e.target.value);
+        renderMonth();
+      });
+      $("prevMonthBtn").addEventListener("click", () => shiftMonth(-1));
+      $("nextMonthBtn").addEventListener("click", () => shiftMonth(1));
+    }
+
+    function shiftMonth(delta) {
+      let month = state.currentMonth + delta;
+      let year = state.currentYear;
+      while (month < 0) { month += 12; year -= 1; }
+      while (month > 11) { month -= 12; year += 1; }
+      state.currentMonth = clamp(month, 0, 11);
+      state.currentYear = clamp(year, 2024, 2031);
+      renderMonth();
+    }
+
+    function parseCsv(csvText) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let quoted = false;
+
+      for (let i = 0; i < csvText.length; i += 1) {
+        const char = csvText[i];
+        const next = csvText[i + 1];
+
+        if (quoted) {
+          if (char === '"' && next === '"') {
+            cell += '"';
+            i += 1;
+          } else if (char === '"') {
+            quoted = false;
+          } else {
+            cell += char;
+          }
+        } else if (char === '"') {
+          quoted = true;
+        } else if (char === ",") {
+          row.push(cell);
+          cell = "";
+        } else if (char === "\n") {
+          row.push(cell);
+          rows.push(row);
+          row = [];
+          cell = "";
+        } else if (char !== "\r") {
+          cell += char;
+        }
+      }
+      row.push(cell);
+      if (row.length > 1 || row[0]) rows.push(row);
+      return rows;
+    }
+
+    function loadFlightHistoryFromCsv(csvText) {
+      const rows = parseCsv(csvText);
+      if (!rows.length) return [];
+      const header = rows[0];
+      const indexByColumn = Object.fromEntries(header.map((name, index) => [name, index]));
+      const pattern = /^(.*?)\s*\/\s*(.*?)\s*\(([A-Z0-9]{3,4})\/([A-Z0-9]{4})\)$/;
+
+      return rows.slice(1).map(cells => {
+        const get = name => (cells[indexByColumn[name]] || "").trim();
+        const fromMatch = get("From").match(pattern);
+        const toMatch = get("To").match(pattern);
+        if (!fromMatch || !toMatch) return null;
+
+        const [, fromCity, fromAirport, fromIata, fromIcao] = fromMatch;
+        const [, toCity, toAirport, toIata, toIcao] = toMatch;
+
+        return {
+          date: get("Date"),
+          airline: get("Airline"),
+          flightNumber: get("Flight number"),
+          fromCity: fromCity.trim(),
+          fromAirport: fromAirport.trim(),
+          fromIata: fromIata.trim(),
+          fromIcao: fromIcao.trim(),
+          toCity: toCity.trim(),
+          toAirport: toAirport.trim(),
+          toIata: toIata.trim(),
+          toIcao: toIcao.trim()
+        };
+      }).filter(Boolean);
+    }
+
+    function buildIataIndex(airportsByIcao) {
+      const byIata = {};
+      Object.values(airportsByIcao).forEach(airport => {
+        const iata = String(airport.iata || "").trim();
+        const lat = Number(airport.lat);
+        const lon = Number(airport.lon);
+        if (!iata || iata === "\\N" || !Number.isFinite(lat) || !Number.isFinite(lon)) return;
+        if (!byIata[iata]) byIata[iata] = airport;
+      });
+      return byIata;
+    }
+
+    function normaliseAirportRecord(record, fallbackIcao = "") {
+      if (!record) return null;
+      const lat = Number(record.lat ?? record.latitude);
+      const lon = Number(record.lon ?? record.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+      return {
+        name: record.name || "",
+        city: record.city || "",
+        country: record.country || "",
+        iata: record.iata || "",
+        icao: record.icao || fallbackIcao || "",
+        lat,
+        lon
+      };
+    }
+
+    function getAirportRecord(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
+      return (
+        normaliseAirportRecord(mwggAirports[icao], icao) ||
+        normaliseAirportRecord(openFlightsAirports[icao], icao) ||
+        (iata ? normaliseAirportRecord(mwggIataIndex[iata]) : null) ||
+        (iata ? normaliseAirportRecord(openFlightsIataIndex[iata]) : null) ||
+        null
+      );
+    }
+
+    function resolveTravelCountry({ country = "", city = "", airportName = "", iata = "", icao = "", cityCountryLookup = {} }) {
+      const cityKey = normaliseText(city);
+      const iataCode = String(iata).trim().toUpperCase();
+      const icaoCode = String(icao).trim().toUpperCase();
+      if (cityKey && cityCountryLookup[cityKey]) return cityCountryLookup[cityKey];
+      if (iataCode && AIRPORT_CODE_OVERRIDES[iataCode]) return AIRPORT_CODE_OVERRIDES[iataCode];
+      if (icaoCode && AIRPORT_CODE_OVERRIDES[icaoCode]) return AIRPORT_CODE_OVERRIDES[icaoCode];
+      if (city && CITY_OVERRIDES[city]) return CITY_OVERRIDES[city];
+      if (airportName && AIRPORT_NAME_OVERRIDES[airportName]) return AIRPORT_NAME_OVERRIDES[airportName];
+      if (country && COUNTRY_VALUE_OVERRIDES[country]) return COUNTRY_VALUE_OVERRIDES[country];
+      if (country) return canonicaliseCountryName(country);
+      if (city) return canonicaliseCountryName(city);
+      if (airportName) return canonicaliseCountryName(airportName);
+      return "";
+    }
+
+    function getStyleMeta() {
+      const metadata = state.mapStyle?.metadata || {};
+      const theme = metadata.theme || {};
+      const sizes = metadata.sizes || {};
 
       return {
-        date: get("Date"),
-        airline: get("Airline"),
-        flightNumber: get("Flight number"),
-        fromCity: fromCity.trim(),
-        fromAirport: fromAirport.trim(),
-        fromIata: fromIata.trim(),
-        fromIcao: fromIcao.trim(),
-        toCity: toCity.trim(),
-        toAirport: toAirport.trim(),
-        toIata: toIata.trim(),
-        toIcao: toIcao.trim()
+        countries: {
+          fill: theme.countries?.fill || "#2563eb",
+          line: theme.countries?.line || "#1d4ed8",
+          hoverFill: theme.countries?.hoverFill || "#1748d8",
+          hoverLine: theme.countries?.hoverLine || "#103aab",
+          opacity: sizes.countries?.fillOpacity ?? 0.76,
+          lineWidth: sizes.countries?.lineWidth ?? 1.4,
+          hoverLineWidth: sizes.countries?.hoverLineWidth ?? 2.3,
+          hoverFillOpacity: sizes.countries?.hoverFillOpacity ?? 0.92
+        },
+        cities: {
+          fill: theme.cities?.fill || "#10b981",
+          hoverFill: theme.cities?.hoverFill || "#059669",
+          radius: sizes.cities?.baseRadius ?? 4.8,
+          hoverRadius: sizes.cities?.hoverRadius ?? 7
+        },
+        airports: {
+          fill: theme.airports?.fill || "#14b8a6",
+          hoverFill: theme.airports?.hoverFill || "#0f766e",
+          radius: sizes.airports?.baseRadius ?? 4.1,
+          hoverRadius: sizes.airports?.hoverRadius ?? 6.2
+        },
+        routes: {
+          level1: theme.routes?.level1 || "#f59e0b",
+          level2: theme.routes?.level2 || "#f97316",
+          level3: theme.routes?.level3 || "#ef4444",
+          level4: theme.routes?.level4 || "#c026d3",
+          level5: theme.routes?.level5 || "#7c3aed",
+          baseWidth: sizes.routes?.baseWidth ?? 2,
+          hoverWidthBoost: sizes.routes?.hoverWidthBoost ?? 1.6
+        }
       };
-    }).filter(Boolean);
-  }
-
-  function buildIataIndex(airportsByIcao) {
-    const byIata = {};
-    Object.values(airportsByIcao).forEach(airport => {
-      const iata = String(airport.iata || "").trim();
-      const lat = Number(airport.lat);
-      const lon = Number(airport.lon);
-      if (!iata || iata === "\\N" || !Number.isFinite(lat) || !Number.isFinite(lon)) return;
-
-      if (!byIata[iata]) {
-        byIata[iata] = {
-          name: airport.name || "",
-          city: airport.city || "",
-          country: airport.country || "",
-          iata,
-          icao: airport.icao || "",
-          lat,
-          lon
-        };
-      }
-    });
-    return byIata;
-  }
-
-  function normaliseAirportRecord(record, fallbackIcao = "") {
-    if (!record) return null;
-    const lat = Number(record.lat);
-    const lon = Number(record.lon);
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-
-    return {
-      name: record.name || "",
-      city: record.city || "",
-      country: record.country || "",
-      iata: record.iata || "",
-      icao: record.icao || fallbackIcao,
-      lat,
-      lon
-    };
-  }
-
-  function getAirportRecord(icao, iata, mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex) {
-    return (
-      normaliseAirportRecord(mwggAirports[icao], icao) ||
-      normaliseAirportRecord(openFlightsAirports[icao], icao) ||
-      (iata ? normaliseAirportRecord(mwggIataIndex[iata]) : null) ||
-      (iata ? normaliseAirportRecord(openFlightsIataIndex[iata]) : null) ||
-      null
-    );
-  }
-
-  function resolveTravelCountry({ country = "", city = "", airportName = "", iata = "", icao = "", cityCountryLookup = {} }) {
-    const cityKey = normaliseText(city);
-    const iataCode = String(iata).trim().toUpperCase();
-    const icaoCode = String(icao).trim().toUpperCase();
-
-    if (cityKey && cityCountryLookup[cityKey]) return cityCountryLookup[cityKey];
-    if (iataCode && AIRPORT_CODE_OVERRIDES[iataCode]) return AIRPORT_CODE_OVERRIDES[iataCode];
-    if (icaoCode && AIRPORT_CODE_OVERRIDES[icaoCode]) return AIRPORT_CODE_OVERRIDES[icaoCode];
-    if (city && CITY_OVERRIDES[city]) return CITY_OVERRIDES[city];
-    if (airportName && AIRPORT_NAME_OVERRIDES[airportName]) return AIRPORT_NAME_OVERRIDES[airportName];
-    if (country && COUNTRY_VALUE_OVERRIDES[country]) return COUNTRY_VALUE_OVERRIDES[country];
-    if (country) return canonicaliseCountryName(country);
-    if (city) return canonicaliseCountryName(city);
-    if (airportName) return canonicaliseCountryName(airportName);
-    return "";
-  }
-
-  function interpolateGreatCircle(lat1, lon1, lat2, lon2, steps = 72) {
-    const toRad = degrees => degrees * Math.PI / 180;
-    const toDeg = radians => radians * 180 / Math.PI;
-
-    const phi1 = toRad(lat1);
-    const lambda1 = toRad(lon1);
-    const phi2 = toRad(lat2);
-    const lambda2 = toRad(lon2);
-
-    const distance = 2 * Math.asin(Math.sqrt(
-      Math.sin((phi2 - phi1) / 2) ** 2 +
-      Math.cos(phi1) * Math.cos(phi2) * Math.sin((lambda2 - lambda1) / 2) ** 2
-    ));
-
-    if (!isFinite(distance) || distance === 0) {
-      return [[lon1, lat1], [lon2, lat2]];
     }
 
-    const points = [];
-    let previousLng = null;
-
-    for (let i = 0; i <= steps; i += 1) {
-      const fraction = i / steps;
-      const a = Math.sin((1 - fraction) * distance) / Math.sin(distance);
-      const b = Math.sin(fraction * distance) / Math.sin(distance);
-
-      const x = a * Math.cos(phi1) * Math.cos(lambda1) + b * Math.cos(phi2) * Math.cos(lambda2);
-      const y = a * Math.cos(phi1) * Math.sin(lambda1) + b * Math.cos(phi2) * Math.sin(lambda2);
-      const z = a * Math.sin(phi1) + b * Math.sin(phi2);
-
-      const phi = Math.atan2(z, Math.sqrt(x * x + y * y));
-      let lng = toDeg(Math.atan2(y, x));
-
-      if (previousLng !== null) {
-        while (lng - previousLng > 180) lng -= 360;
-        while (lng - previousLng < -180) lng += 360;
-      }
-
-      previousLng = lng;
-      points.push([lng, toDeg(phi)]);
+    function routeColor(count, theme) {
+      if (count >= 9) return theme.routes.level5;
+      if (count >= 7) return theme.routes.level4;
+      if (count >= 5) return theme.routes.level3;
+      if (count >= 3) return theme.routes.level2;
+      return theme.routes.level1;
     }
 
-    return points;
-  }
-
-  function splitLineAtDateLine(points) {
-    if (!Array.isArray(points) || points.length === 0) return [];
-    const segments = [[points[0]]];
-    for (let i = 1; i < points.length; i += 1) {
-      const previous = points[i - 1];
-      const current = points[i];
-      if (Math.abs(current[0] - previous[0]) > 180) {
-        segments.push([current]);
-      } else {
-        segments[segments.length - 1].push(current);
-      }
-    }
-    return segments.filter(segment => segment.length >= 2);
-  }
-
-  function getRouteColor(flightCount) {
-    const MAP_THEME = getMapTheme();
-    if (flightCount >= 5) return MAP_THEME.routes.level5;
-    if (flightCount === 4) return MAP_THEME.routes.level4;
-    if (flightCount === 3) return MAP_THEME.routes.level3;
-    if (flightCount === 2) return MAP_THEME.routes.level2;
-    return MAP_THEME.routes.level1;
-  }
-
-  function toFeatureCollection(features) {
-    return { type: "FeatureCollection", features };
-  }
-
-  function uniqueBy(array, keyFn) {
-    const seen = new Set();
-    return array.filter(item => {
-      const key = keyFn(item);
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }
-
-  function setLayerVisibility(map, layerIds, isVisible) {
-    layerIds.forEach(layerId => {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, "visibility", isVisible ? "visible" : "none");
-      }
-    });
-  }
-
-  function createPopup() {
-    return new maplibregl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 12,
-      maxWidth: "320px"
-    });
-  }
-
-  function bindPopupForLayer(map, popup, layerId, htmlBuilder) {
-    map.on("mousemove", layerId, event => {
-      const feature = event.features && event.features[0];
-      if (!feature) return;
-      map.getCanvas().style.cursor = "pointer";
-      popup
-        .setLngLat(event.lngLat)
-        .setHTML(htmlBuilder(feature))
-        .addTo(map);
-    });
-
-    map.on("mouseleave", layerId, () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
-    });
-  }
-
-  /**
-   * Build the interactive travel map with MapLibre GL JS.
-   */
-  window.initTravelMap = function initTravelMap() {
-    debugLog("Initialising travel map (MapLibre)");
-
-    const mapContainer = getElementOrWarn("travelMap");
-    const statusText = getElementOrWarn("travelMapStatusText");
-    if (!mapContainer || typeof maplibregl === "undefined") return;
-
-    const isMobile = window.innerWidth <= 560;
-    const defaultCenter = isMobile ? [15, 42] : [15, 38];
-    const defaultZoom = isMobile ? -0.4 : 0.1;
-
-    const map = new maplibregl.Map({
-      container: "travelMap",
-      style: window.TRAVEL_MAP_STYLE,
-      center: defaultCenter,
-      zoom: defaultZoom,
-      attributionControl: false,
-      maxPitch: 0,
-      dragRotate: false,
-      touchZoomRotate: true
-    });
-
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-
-    const layerState = {
-      country: true,
-      city: false,
-      airport: false,
-      route: false
-    };
-
-    window.travelMapInstance = map;
-    const popup = createPopup();
-
-    const cityData = Array.isArray(window.CITY_PINS_DATA) ? window.CITY_PINS_DATA : [];
-    const cityCountryLookup = Object.fromEntries(
-      cityData.map(city => [normaliseText(city.name), canonicaliseCountryName(city.country || "")])
-    );
-
-    const counters = {
-      visitedCountries: (window.VISITED_NATIONS_DATA || []).length,
-      visitedCities: cityData.length,
-      visitedAirports: 0,
-      flightsTaken: 0,
-      routePairs: 0
-    };
-
-    function updateStatusText() {
-      if (statusText) statusText.textContent = "";
-      debugLog("Travel map counters updated", counters);
-
-      const heroCountryCount = getElementOrWarn("heroCountryCount");
-      if (heroCountryCount) heroCountryCount.textContent = String(counters.visitedCountries);
-
-      const heroCityCount = getElementOrWarn("heroCityCount");
-      if (heroCityCount) heroCityCount.textContent = String(counters.visitedCities);
-
-      const heroAirportCount = getElementOrWarn("heroAirportCount");
-      if (heroAirportCount) heroAirportCount.textContent = String(counters.visitedAirports);
-
-      const heroFlightCount = getElementOrWarn("heroFlightCount");
-      if (heroFlightCount) heroFlightCount.textContent = String(counters.flightsTaken);
-
-      const heroRouteCount = getElementOrWarn("heroRouteCount");
-      if (heroRouteCount) heroRouteCount.textContent = String(counters.routePairs);
+    function getFeatureName(feature) {
+      const props = feature.properties || {};
+      return props.ADMIN || props.NAME_LONG || props.NAME || props.GEOUNIT || props.BRK_NAME || props.FORMAL_EN || props.NAME_EN || "";
     }
 
-    function applyHoverHighlight(activeCountry) {
-      const ROUTE_SIZES = getRouteSizes();
-      const hoveredCountry = activeCountry ? canonicaliseCountryName(activeCountry) : null;
-      const hasHover = Boolean(hoveredCountry);
-
-      if (!map.isStyleLoaded()) return;
-
-      map.setPaintProperty("countries-fill", "fill-opacity", hasHover ? 0.18 : 0.78);
-      map.setPaintProperty("countries-line", "line-opacity", hasHover ? 0.2 : 1);
-
-      map.setPaintProperty("cities-base", "circle-opacity", hasHover ? 0.24 : 1);
-      map.setPaintProperty("cities-base", "circle-stroke-opacity", hasHover ? 0.24 : 1);
-
-      map.setPaintProperty("airports-base", "circle-opacity", hasHover ? 0.25 : 0.96);
-      map.setPaintProperty("airports-base", "circle-stroke-opacity", hasHover ? 0.25 : 1);
-
-      map.setPaintProperty("routes-base", "line-opacity", hasHover ? 0.16 : (ROUTE_SIZES.baseOpacity ?? 0.85));
-
-      const countryFilter = hoveredCountry
-        ? ["==", ["get", "country"], hoveredCountry]
-        : ["==", ["get", "country"], "___none___"];
-
-      const routeFilter = hoveredCountry
-        ? ["in", hoveredCountry, ["get", "countries"]]
-        : ["==", ["get", "routeId"], "___none___"];
-
-      map.setFilter("countries-hover-fill", countryFilter);
-      map.setFilter("countries-hover-line", countryFilter);
-      map.setFilter("cities-hover", countryFilter);
-      map.setFilter("airports-hover", countryFilter);
-      map.setFilter("routes-hover", routeFilter);
-    }
-
-    function addGeoJsonLayers(countryGeoJson, cityGeoJson, airportGeoJson, routeGeoJson) {
-      const MAP_THEME = getMapTheme();
-      const COUNTRY_SIZES = getCountrySizes();
-      const CITY_SIZES = getCitySizes();
-      const AIRPORT_SIZES = getAirportSizes();
-      const ROUTE_SIZES = getRouteSizes();
-      // Countries
-      map.addSource("visited-countries", {
-        type: "geojson",
-        data: countryGeoJson,
-        promoteId: "country"
-      });
-
-      map.addLayer({
-        id: "countries-fill",
-        type: "fill",
-        source: "visited-countries",
-        paint: {
-          "fill-color": MAP_THEME.countries.fill,
-          "fill-opacity": (COUNTRY_SIZES.fillOpacity ?? 0.78),
-          "fill-outline-color": MAP_THEME.countries.line,
-          "fill-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "countries-line",
-        type: "line",
-        source: "visited-countries",
-        paint: {
-          "line-color": MAP_THEME.countries.line,
-          "line-width": (COUNTRY_SIZES.lineWidth ?? 1.4),
-          "line-opacity": 1,
-          "line-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "countries-hover-fill",
-        type: "fill",
-        source: "visited-countries",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "fill-color": MAP_THEME.countries.hoverFill,
-          "fill-opacity": (COUNTRY_SIZES.hoverFillOpacity ?? 0.96),
-          "fill-outline-color": MAP_THEME.countries.hoverLine
-        }
-      });
-
-      map.addLayer({
-        id: "countries-hover-line",
-        type: "line",
-        source: "visited-countries",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "line-color": MAP_THEME.countries.hoverLine,
-          "line-width": (COUNTRY_SIZES.hoverLineWidth ?? 2.3),
-          "line-opacity": 1
-        }
-      });
-
-      // Cities
-      map.addSource("visited-cities", {
-        type: "geojson",
-        data: cityGeoJson
-      });
-
-      map.addLayer({
-        id: "cities-base",
-        type: "circle",
-        source: "visited-cities",
-        paint: {
-          "circle-radius": (CITY_SIZES.baseRadius ?? 4.6),
-          "circle-color": MAP_THEME.cities.fill,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": (CITY_SIZES.baseStrokeWidth ?? 1.4),
-          "circle-opacity": 1,
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "cities-hover",
-        type: "circle",
-        source: "visited-cities",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (CITY_SIZES.hoverRadius ?? 5.8),
-          "circle-color": MAP_THEME.cities.hoverFill,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": (CITY_SIZES.hoverStrokeWidth ?? 1.8),
-          "circle-opacity": 1
-        }
-      });
-
-      // Airports
-      map.addSource("visited-airports", {
-        type: "geojson",
-        data: airportGeoJson
-      });
-
-      map.addLayer({
-        id: "airports-base",
-        type: "circle",
-        source: "visited-airports",
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.baseRadius ?? 3.6),
-          "circle-color": MAP_THEME.airports.fill,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": (AIRPORT_SIZES.baseStrokeWidth ?? 1.2),
-          "circle-opacity": 0.96,
-          "circle-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "airports-hover",
-        type: "circle",
-        source: "visited-airports",
-        filter: ["==", ["get", "country"], "___none___"],
-        paint: {
-          "circle-radius": (AIRPORT_SIZES.hoverRadius ?? 4.8),
-          "circle-color": MAP_THEME.airports.hoverFill,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": (AIRPORT_SIZES.hoverStrokeWidth ?? 1.5),
-          "circle-opacity": 1
-        }
-      });
-
-      // Routes
-      map.addSource("flight-routes", {
-        type: "geojson",
-        data: routeGeoJson,
-        lineMetrics: true
-      });
-
-      map.addLayer({
-        id: "routes-base",
-        type: "line",
-        source: "flight-routes",
-        layout: { "line-cap": "round", "line-join": "round" },
-        paint: {
-          "line-color": ["get", "colour"],
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            1, Math.max(1, (ROUTE_SIZES.baseWidth ?? 2.1) - 0.9),
-            5, (ROUTE_SIZES.baseWidth ?? 2.1),
-            10, (ROUTE_SIZES.baseWidth ?? 2.1) + 0.9
-          ],
-          "line-opacity": (ROUTE_SIZES.baseOpacity ?? 0.85),
-          "line-opacity-transition": { duration: 220, delay: 0 }
-        }
-      });
-
-      map.addLayer({
-        id: "routes-hover",
-        type: "line",
-        source: "flight-routes",
-        filter: ["==", ["get", "country"], "___none___"],
-        layout: { "line-cap": "round", "line-join": "round" },
-        paint: {
-          "line-color": ["get", "colour"],
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            1, Math.max(1.2, (ROUTE_SIZES.hoverWidth ?? 2.8) - 0.8),
-            5, (ROUTE_SIZES.hoverWidth ?? 2.8),
-            10, (ROUTE_SIZES.hoverWidth ?? 2.8) + 0.8
-          ],
-          "line-opacity": (ROUTE_SIZES.hoverOpacity ?? 0.96)
-        }
-      });
-
-      // Layer visibility defaults to match the current toggle buttons
-      setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
-      setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
-      setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
-    }
-
-    function bindLegendButtons() {
-      document.querySelectorAll(".map-toggle-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          const key = button.dataset.layer;
-          layerState[key] = !layerState[key];
-          button.classList.toggle("active", layerState[key]);
-
-          if (key === "country") {
-            setLayerVisibility(map, ["countries-fill", "countries-line", "countries-hover-fill", "countries-hover-line"], layerState.country);
-          } else if (key === "city") {
-            setLayerVisibility(map, ["cities-base", "cities-hover"], layerState.city);
-          } else if (key === "airport") {
-            setLayerVisibility(map, ["airports-base", "airports-hover"], layerState.airport);
-          } else if (key === "route") {
-            setLayerVisibility(map, ["routes-base", "routes-hover"], layerState.route);
-          }
-        });
-      });
-    }
-
-    function bindHoverAndPopups() {
-      const MAP_THEME = getMapTheme();
-      ["countries-fill", "countries-hover-fill"].forEach(layerId => {
-        map.on("mousemove", layerId, event => {
-          const feature = event.features && event.features[0];
-          if (!feature) return;
-          const country = feature.properties.country;
-          applyHoverHighlight(country);
-          map.getCanvas().style.cursor = "pointer";
-          popup.setLngLat(event.lngLat).setHTML(country).addTo(map);
-        });
-        map.on("mouseleave", layerId, () => {
-          map.getCanvas().style.cursor = "";
-          popup.remove();
-          applyHoverHighlight(null);
-        });
-      });
-
-      map.on("mousemove", event => {
-        const features = map.queryRenderedFeatures(event.point, { layers: ["countries-fill", "countries-hover-fill"] });
-        if (!features || !features.length) {
-          popup.remove();
-          applyHoverHighlight(null);
-          map.getCanvas().style.cursor = "";
-        }
-      });
-
-      map.on("mouseout", () => {
-        popup.remove();
-        applyHoverHighlight(null);
-        map.getCanvas().style.cursor = "";
-      });
-
-      bindPopupForLayer(map, popup, "cities-base", feature => `${feature.properties.name}, ${feature.properties.country}`);
-      bindPopupForLayer(map, popup, "cities-hover", feature => `${feature.properties.name}, ${feature.properties.country}`);
-
-      bindPopupForLayer(map, popup, "airports-base", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
-      bindPopupForLayer(map, popup, "airports-hover", feature => `${feature.properties.city} · ${feature.properties.iata}<br>${feature.properties.airportName}`);
-
-      bindPopupForLayer(map, popup, "routes-base", feature => feature.properties.tooltipHtml);
-      bindPopupForLayer(map, popup, "routes-hover", feature => feature.properties.tooltipHtml);
-
-      map.on("click", "countries-fill", event => {
-        const feature = event.features && event.features[0];
-        if (!feature) return;
-        const bbox = new maplibregl.LngLatBounds();
-        const coords = feature.geometry.type === "MultiPolygon"
-          ? feature.geometry.coordinates.flat(2)
-          : feature.geometry.coordinates.flat(1);
-        coords.forEach(coord => bbox.extend(coord));
-        if (!bbox.isEmpty()) map.fitBounds(bbox, { padding: 24, duration: 700 });
-      });
+    function matchesCountry(feature, names) {
+      const candidateNames = [
+        feature.properties?.ADMIN,
+        feature.properties?.NAME_LONG,
+        feature.properties?.NAME,
+        feature.properties?.GEOUNIT,
+        feature.properties?.BRK_NAME,
+        feature.properties?.FORMAL_EN,
+        feature.properties?.NAME_EN
+      ].filter(Boolean).map(normaliseText);
+      return names.some(name => candidateNames.includes(normaliseText(name)));
     }
 
     async function buildCountryGeoJson() {
-      debugLog("Loading visited country polygons");
-      const geoJson = await fetchJsonWithFallback(TRAVEL_MAP_CONFIG.countryGeoJsonUrls);
-      const visitedCountries = Array.isArray(window.VISITED_COUNTRIES_DATA) ? window.VISITED_COUNTRIES_DATA : [];
-      const targetNames = visitedCountries.flatMap(country => {
-        const canonical = getCanonicalVisitedCountry(country);
-        return getExpansionTargets(canonical);
-      });
-
-      const features = geoJson.features
-        .filter(feature => matchesVisitedCountry(feature, targetNames))
+      const world = await fetchJsonFirst(DATA_PATHS.countryGeoJsonUrls);
+      const visited = new Set();
+      state.visitedCountries.forEach(name => expandedCountryNames(name).forEach(target => visited.add(target)));
+      const features = (world.features || []).filter(feature => matchesCountry(feature, Array.from(visited)))
         .map(feature => ({
           ...feature,
           properties: {
-            ...feature.properties,
-            country: canonicaliseCountryName(resolvePolygonCountry(feature))
-          },
-          id: canonicaliseCountryName(resolvePolygonCountry(feature))
+            ...(feature.properties || {}),
+            country: canonicaliseCountryName(getFeatureName(feature))
+          }
         }));
-
-      counters.visitedCountries = Array.isArray(window.VISITED_NATIONS_DATA) ? window.VISITED_NATIONS_DATA.length : 0;
       return toFeatureCollection(features);
     }
 
     function buildCityGeoJson() {
-      const features = cityData.map(city => ({
-        type: "Feature",
-        properties: {
-          name: city.name,
-          country: resolveTravelCountry({
-            city: city.name,
-            country: city.country,
-            cityCountryLookup
-          })
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [Number(city.lng), Number(city.lat)]
-        }
-      }));
-      return toFeatureCollection(features);
+      return toFeatureCollection(
+        state.cityPins
+          .filter(item => Number.isFinite(Number(item.lat)) && Number.isFinite(Number(item.lng)))
+          .map(city => ({
+            type: "Feature",
+            properties: {
+              kind: "city",
+              name: city.name || city.city || "",
+              country: canonicaliseCountryName(city.country || CITY_OVERRIDES[city.name] || "")
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [Number(city.lng), Number(city.lat)]
+            }
+          }))
+      );
     }
 
     async function buildFlightGeoJson() {
-      debugLog("Loading flight history and airport datasets");
       const [csvText, mwggAirports, openFlightsData] = await Promise.all([
-        fetchTextWithFallback([TRAVEL_MAP_CONFIG.flightHistoryCsvUrl]),
-        fetchJsonWithFallback(TRAVEL_MAP_CONFIG.mwggAirportUrls),
-        fetchJsonWithFallback([TRAVEL_MAP_CONFIG.openFlightsJsonUrl]).catch(() => ({ by_icao: {}, by_iata: {} }))
+        fetchText(DATA_PATHS.flightHistoryCsv),
+        fetchJsonFirst(DATA_PATHS.mwggAirportUrls),
+        fetchJson(DATA_PATHS.openFlightsAirports).catch(() => ({ by_icao: {}, by_iata: {} }))
       ]);
 
       const flights = loadFlightHistoryFromCsv(csvText);
-      const openFlightsAirports = openFlightsData.by_icao || {};
+      const mwggNormalised = Object.fromEntries(
+        Object.entries(mwggAirports).map(([icao, airport]) => [icao, normaliseAirportRecord(airport, icao)]).filter(([,v]) => v)
+      );
+      const mwggIataIndex = buildIataIndex(mwggNormalised);
+      const openFlightsByIcao = openFlightsData.by_icao || {};
       const openFlightsIataIndex = openFlightsData.by_iata || {};
-      const mwggIataIndex = buildIataIndex(
-        Object.fromEntries(
-          Object.entries(mwggAirports).map(([icao, airport]) => [
-            icao,
-            {
-              name: airport.name || "",
-              city: airport.city || "",
-              country: airport.country || "",
-              iata: airport.iata || "",
-              icao: airport.icao || icao,
-              lat: Number(airport.lat),
-              lon: Number(airport.lon)
-            }
-          ])
-        )
+
+      const cityCountryLookup = Object.fromEntries(
+        state.cityPins
+          .filter(city => city?.name && city?.country)
+          .map(city => [normaliseText(city.name), canonicaliseCountryName(city.country)])
       );
 
-      const uniqueAirports = [];
-      const routePairs = new Map();
+      const airportMap = new Map();
+      const routeMap = new Map();
 
       flights.forEach(flight => {
-        const originAirport = getAirportRecord(
-          flight.fromIcao, flight.fromIata,
-          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
-        );
-        const destinationAirport = getAirportRecord(
-          flight.toIcao, flight.toIata,
-          mwggAirports, openFlightsAirports, mwggIataIndex, openFlightsIataIndex
-        );
-
-        if (!originAirport || !destinationAirport) return;
+        const origin = getAirportRecord(flight.fromIcao, flight.fromIata, mwggNormalised, openFlightsByIcao, mwggIataIndex, openFlightsIataIndex);
+        const destination = getAirportRecord(flight.toIcao, flight.toIata, mwggNormalised, openFlightsByIcao, mwggIataIndex, openFlightsIataIndex);
+        if (!origin || !destination) return;
 
         const originCountry = resolveTravelCountry({
-          country: originAirport.country,
-          city: flight.fromCity,
-          airportName: flight.fromAirport,
-          iata: flight.fromIata,
-          icao: flight.fromIcao,
-          cityCountryLookup
+          country: origin.country, city: flight.fromCity, airportName: flight.fromAirport,
+          iata: flight.fromIata, icao: flight.fromIcao, cityCountryLookup
         });
-
         const destinationCountry = resolveTravelCountry({
-          country: destinationAirport.country,
-          city: flight.toCity,
-          airportName: flight.toAirport,
-          iata: flight.toIata,
-          icao: flight.toIcao,
-          cityCountryLookup
+          country: destination.country, city: flight.toCity, airportName: flight.toAirport,
+          iata: flight.toIata, icao: flight.toIcao, cityCountryLookup
         });
 
-        counters.flightsTaken += 1;
+        state.travelStats.flights += 1;
 
-        uniqueAirports.push({
-          key: flight.fromIcao,
-          lng: Number(originAirport.lon),
-          lat: Number(originAirport.lat),
-          city: flight.fromCity,
-          iata: flight.fromIata,
-          airportName: flight.fromAirport,
-          country: originCountry
+        [[origin, flight.fromCity, flight.fromAirport, flight.fromIata, flight.fromIcao, originCountry],
+         [destination, flight.toCity, flight.toAirport, flight.toIata, flight.toIcao, destinationCountry]
+        ].forEach(([airport, city, airportName, iata, icao, country]) => {
+          const key = `${icao || iata}:${airport.lat},${airport.lon}`;
+          if (!airportMap.has(key)) {
+            airportMap.set(key, {
+              type: "Feature",
+              properties: {
+                kind: "airport",
+                city,
+                airport: airportName || airport.name || "",
+                iata: iata || airport.iata || "",
+                icao: icao || airport.icao || "",
+                country
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [airport.lon, airport.lat]
+              }
+            });
+          }
         });
 
-        uniqueAirports.push({
-          key: flight.toIcao,
-          lng: Number(destinationAirport.lon),
-          lat: Number(destinationAirport.lat),
-          city: flight.toCity,
-          iata: flight.toIata,
-          airportName: flight.toAirport,
-          country: destinationCountry
-        });
-
-        const pairKey = [flight.fromIcao, flight.toIcao].sort().join("__");
-        const directionKey = `${flight.fromIcao}__${flight.toIcao}`;
-
-        if (!routePairs.has(pairKey)) {
-          routePairs.set(pairKey, {
-            fromLat: Number(originAirport.lat),
-            fromLng: Number(originAirport.lon),
-            toLat: Number(destinationAirport.lat),
-            toLng: Number(destinationAirport.lon),
-            countries: Array.from(new Set([originCountry, destinationCountry].filter(Boolean))),
-            directions: new Map()
-          });
-        }
-
-        const pair = routePairs.get(pairKey);
-
-        if (!pair.directions.has(directionKey)) {
-          pair.directions.set(directionKey, {
-            fromAirport: flight.fromAirport,
-            fromIata: flight.fromIata,
-            toAirport: flight.toAirport,
-            toIata: flight.toIata,
-            flights: []
-          });
-        }
-
-        pair.directions.get(directionKey).flights.push({
-          date: flight.date,
-          airline: flight.airline
-        });
+        const routeKey = [flight.fromIcao, flight.toIcao].join("→");
+        const reverseKey = [flight.toIcao, flight.fromIcao].join("→");
+        const canonicalKey = routeMap.has(reverseKey) ? reverseKey : routeKey;
+        const entry = routeMap.get(canonicalKey) || {
+          count: 0,
+          flights: [],
+          coordinates: [
+            [origin.lon, origin.lat],
+            [destination.lon, destination.lat]
+          ],
+          countries: [originCountry, destinationCountry]
+        };
+        entry.count += 1;
+        entry.flights.push(`${flight.date}${flight.airline ? ` • ${flight.airline}` : ""}${flight.flightNumber ? ` ${flight.flightNumber}` : ""}`);
+        routeMap.set(canonicalKey, entry);
       });
 
-      const airportFeatures = uniqueBy(uniqueAirports, airport => airport.key).map(airport => ({
+      state.travelStats.airports = airportMap.size;
+      state.travelStats.routes = routeMap.size;
+
+      const theme = getStyleMeta();
+      const routeFeatures = Array.from(routeMap.values()).map((entry, index) => ({
         type: "Feature",
         properties: {
-          key: airport.key,
-          city: airport.city,
-          iata: airport.iata,
-          airportName: airport.airportName,
-          country: airport.country
+          id: index + 1,
+          count: entry.count,
+          countries: entry.countries.join(" → "),
+          tooltip: entry.flights.slice(0, 12).join("<br>"),
+          colour: routeColor(entry.count, theme)
         },
         geometry: {
-          type: "Point",
-          coordinates: [airport.lng, airport.lat]
+          type: "LineString",
+          coordinates: entry.coordinates
         }
       }));
 
-      counters.visitedAirports = airportFeatures.length;
-      counters.routePairs = routePairs.size;
-
-      const routeFeatures = [];
-      routePairs.forEach(routePair => {
-        const points = interpolateGreatCircle(
-          routePair.fromLat,
-          routePair.fromLng,
-          routePair.toLat,
-          routePair.toLng,
-          72
-        );
-
-        const routeSegments = splitLineAtDateLine(points);
-        const totalFlightsOnPair = Array.from(routePair.directions.values())
-          .reduce((sum, direction) => sum + direction.flights.length, 0);
-
-        const tooltipHtml = Array.from(routePair.directions.values())
-          .map(direction =>
-            `${direction.fromAirport} (${direction.fromIata}) → ${direction.toAirport} (${direction.toIata})<br>` +
-            direction.flights
-              .map((flight, index) => `#${index + 1} ${flight.date}${flight.airline ? ` | ${flight.airline}` : ""}`)
-              .join("<br>")
-          )
-          .join("<br>──────────<br>");
-
-        routeSegments.forEach((segment, index) => {
-          routeFeatures.push({
-            type: "Feature",
-            properties: {
-              routeId: `${routePair.countries.join("_")}_${index}`,
-              countries: routePair.countries,
-              colour: getRouteColor(totalFlightsOnPair),
-              count: totalFlightsOnPair,
-              tooltipHtml
-            },
-            geometry: {
-              type: "LineString",
-              coordinates: segment
-            }
-          });
-        });
-      });
-
       return {
-        airportGeoJson: toFeatureCollection(airportFeatures),
+        airportGeoJson: toFeatureCollection(Array.from(airportMap.values())),
         routeGeoJson: toFeatureCollection(routeFeatures)
       };
     }
 
-    map.on("load", async () => {
-      debugLog("MapLibre style loaded");
-      if (statusText) statusText.textContent = "Loading travel map…";
+    function setTravelCounts() {
+      $("heroCountryCount").textContent = state.travelStats.countries;
+      $("heroCityCount").textContent = state.travelStats.cities;
+      $("heroAirportCount").textContent = state.travelStats.airports;
+      $("heroFlightCount").textContent = state.travelStats.flights;
+      $("heroRouteCount").textContent = state.travelStats.routes;
+    }
+
+    function bindMapToggleButtons(map) {
+      const layers = {
+        country: ["visited-countries-fill", "visited-countries-line"],
+        city: ["city-pins"],
+        airport: ["flight-airports"],
+        route: ["flight-routes"]
+      };
+      document.querySelectorAll(".map-toggle-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = btn.dataset.layer;
+          const active = btn.classList.toggle("active");
+          (layers[key] || []).forEach(layerId => {
+            if (map.getLayer(layerId)) {
+              map.setLayoutProperty(layerId, "visibility", active ? "visible" : "none");
+            }
+          });
+        });
+      });
+    }
+
+    function fitMapToFeatures(map, features) {
+      const bounds = new maplibregl.LngLatBounds();
+      let hasCoords = false;
+      features.forEach(feature => {
+        const geom = feature.geometry || {};
+        if (geom.type === "Point") {
+          bounds.extend(geom.coordinates);
+          hasCoords = true;
+        } else if (geom.type === "LineString") {
+          geom.coordinates.forEach(coord => {
+            bounds.extend(coord);
+            hasCoords = true;
+          });
+        } else if (geom.type === "Polygon") {
+          geom.coordinates.flat().forEach(coord => {
+            bounds.extend(coord);
+            hasCoords = true;
+          });
+        } else if (geom.type === "MultiPolygon") {
+          geom.coordinates.flat(2).forEach(coord => {
+            bounds.extend(coord);
+            hasCoords = true;
+          });
+        }
+      });
+      if (hasCoords) {
+        map.fitBounds(bounds, { padding: 40, duration: 0, maxZoom: 4.4 });
+      }
+    }
+
+    function popupHtml(title, lines) {
+      return `<div class="popup-title">${title}</div><div class="popup-meta">${lines.join("<br>")}</div>`;
+    }
+
+    async function initTravelMap() {
+      const status = $("travelMapStatusText");
+      const container = $("travelMap");
+      status.textContent = "Loading travel map…";
 
       try {
-        const [countryGeoJson, flightData] = await Promise.all([
-          buildCountryGeoJson(),
-          buildFlightGeoJson()
-        ]);
-        const cityGeoJson = buildCityGeoJson();
+        state.mapStyle = await fetchJson(DATA_PATHS.styleUrl);
+        const map = new maplibregl.Map({
+          container: "travelMap",
+          style: state.mapStyle,
+          attributionControl: true
+        });
 
-        addGeoJsonLayers(countryGeoJson, cityGeoJson, flightData.airportGeoJson, flightData.routeGeoJson);
-        bindLegendButtons();
-        bindHoverAndPopups();
-        updateStatusText();
+        map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
 
-        if (statusText) statusText.textContent = "";
+        map.on("load", async () => {
+          const theme = getStyleMeta();
+          const [countryGeoJson, flightGeoJson] = await Promise.all([
+            buildCountryGeoJson(),
+            buildFlightGeoJson()
+          ]);
+          const cityGeoJson = buildCityGeoJson();
+
+          map.addSource("visited-countries", { type: "geojson", data: countryGeoJson });
+          map.addLayer({
+            id: "visited-countries-fill",
+            type: "fill",
+            source: "visited-countries",
+            paint: {
+              "fill-color": theme.countries.fill,
+              "fill-opacity": theme.countries.opacity
+            }
+          });
+          map.addLayer({
+            id: "visited-countries-line",
+            type: "line",
+            source: "visited-countries",
+            paint: {
+              "line-color": theme.countries.line,
+              "line-width": theme.countries.lineWidth
+            }
+          });
+
+          map.addSource("flight-routes", { type: "geojson", data: flightGeoJson.routeGeoJson });
+          map.addLayer({
+            id: "flight-routes",
+            type: "line",
+            source: "flight-routes",
+            layout: { "line-cap": "round", "line-join": "round" },
+            paint: {
+              "line-color": ["get", "colour"],
+              "line-width": [
+                "+",
+                theme.routes.baseWidth,
+                ["interpolate", ["linear"], ["get", "count"], 1, 0.2, 3, 1.2, 6, 2.6, 10, 4.2]
+              ],
+              "line-opacity": 0.82
+            }
+          });
+
+          map.addSource("visited-cities", { type: "geojson", data: cityGeoJson });
+          map.addLayer({
+            id: "visited-cities",
+            type: "circle",
+            source: "visited-cities",
+            paint: {
+              "circle-radius": theme.cities.radius,
+              "circle-color": theme.cities.fill,
+              "circle-stroke-color": "#ffffff",
+              "circle-stroke-width": 1.3
+            }
+          });
+
+          map.addSource("visited-airports", { type: "geojson", data: flightGeoJson.airportGeoJson });
+          map.addLayer({
+            id: "visited-airports",
+            type: "circle",
+            source: "visited-airports",
+            paint: {
+              "circle-radius": theme.airports.radius,
+              "circle-color": theme.airports.fill,
+              "circle-stroke-color": "#ffffff",
+              "circle-stroke-width": 1.2
+            }
+          });
+
+          const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12 });
+
+          function bindPopup(layerId, renderContent) {
+            map.on("mouseenter", layerId, e => {
+              map.getCanvas().style.cursor = "pointer";
+              const feature = e.features?.[0];
+              if (!feature) return;
+              popup.setLngLat(e.lngLat).setHTML(renderContent(feature)).addTo(map);
+            });
+            map.on("mousemove", layerId, e => {
+              popup.setLngLat(e.lngLat);
+            });
+            map.on("mouseleave", layerId, () => {
+              map.getCanvas().style.cursor = "";
+              popup.remove();
+            });
+          }
+
+          bindPopup("visited-countries-fill", feature => popupHtml(
+            feature.properties?.country || getFeatureName(feature),
+            ["Visited country"]
+          ));
+          bindPopup("visited-cities", feature => popupHtml(
+            feature.properties?.name || "City",
+            [feature.properties?.country || ""]
+          ));
+          bindPopup("visited-airports", feature => popupHtml(
+            feature.properties?.airport || feature.properties?.iata || "Airport",
+            [
+              feature.properties?.city || "",
+              feature.properties?.country || "",
+              [feature.properties?.iata, feature.properties?.icao].filter(Boolean).join(" / ")
+            ].filter(Boolean)
+          ));
+          bindPopup("flight-routes", feature => popupHtml(
+            `${feature.properties?.count || 0} flight(s)`,
+            [
+              feature.properties?.countries || "",
+              feature.properties?.tooltip || ""
+            ].filter(Boolean)
+          ));
+
+          bindMapToggleButtons(map);
+          fitMapToFeatures(map, [
+            ...countryGeoJson.features,
+            ...cityGeoJson.features,
+            ...flightGeoJson.airportGeoJson.features,
+            ...flightGeoJson.routeGeoJson.features
+          ]);
+          setTravelCounts();
+          status.textContent = "";
+          setTimeout(() => map.resize(), 0);
+        });
       } catch (error) {
-        if (statusText) statusText.textContent = "Unable to load the travel map right now.";
-        mapContainer.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-        debugError("Travel map load failed", error);
+        console.error(error);
+        status.textContent = "Unable to load the travel map right now.";
+        container.innerHTML = '<div class="small" style="padding:16px;">Check that your map style and travel data files are available.</div>';
       }
-    });
-  };
-})();
+    }
+
+    async function init() {
+      try {
+        const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
+          fetchJson(DATA_PATHS.absenceRanges),
+          fetchJson(DATA_PATHS.dayLinks),
+          fetchJson(DATA_PATHS.cityPins),
+          fetchJson(DATA_PATHS.visitedCountries)
+        ]);
+
+        state.absenceRanges = Array.isArray(absenceRanges) ? absenceRanges : [];
+        state.dayLinks = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
+        state.cityPins = Array.isArray(cityPins) ? cityPins : [];
+        state.visitedCountries = (Array.isArray(visitedCountries) ? visitedCountries : [])
+          .filter(item => item?.visited === true)
+          .map(item => canonicaliseCountryName(item.country))
+          .sort();
+
+        state.absentSet = buildAbsenceSet(state.absenceRanges);
+        state.rollingCounts = buildRollingCounts(IMMIGRATION_RULES.siteStart, IMMIGRATION_RULES.siteEnd, state.absentSet);
+        state.safetyRollingCounts = buildRollingCounts(
+          IMMIGRATION_RULES.siteStart,
+          IMMIGRATION_RULES.siteEnd,
+          state.absentSet,
+          IMMIGRATION_RULES.safetyBuffer.start
+        );
+
+        state.travelStats.countries = state.visitedCountries.length;
+        state.travelStats.cities = state.cityPins.length;
+
+        const today = new Date();
+        if (today.getFullYear() >= 2024 && today.getFullYear() <= 2031) {
+          state.currentYear = today.getFullYear();
+          state.currentMonth = today.getMonth();
+        } else {
+          state.currentYear = 2024;
+          state.currentMonth = 9;
+        }
+
+        populateMonthYearControls();
+        bindCalendarControls();
+        setSummary();
+        renderMonth();
+        setTravelCounts();
+        initTravelMap();
+      } catch (error) {
+        console.error(error);
+        $("months").innerHTML = '<div class="small" style="padding:16px;">Unable to load absence data.</div>';
+        $("travelMapStatusText").textContent = "Unable to load travel data.";
+      }
+    }
+
+    init();
+  
 </script>
-
-<script>
-/*
-  ============================================================================
-  SITE DATA BOOTSTRAP
-  ----------------------------------------------------------------------------
-  Loads the local JSON datasets first, then initialises:
-  1) immigration day calculations
-  2) calendar
-  3) travel map
-  ============================================================================
-*/
-async function initSiteData() {
-  const months = getElementOrWarn("months");
-  const travelMapStatus = getElementOrWarn("travelMapStatusText");
-  const travelMap = getElementOrWarn("travelMap");
-
-  try {
-    const [absenceRanges, dayLinks, cityPins, visitedCountries] = await Promise.all([
-      fetchLocalJson("./data/absence_ranges.json"),
-      fetchLocalJson("./data/day_links.json"),
-      fetchLocalJson("./data/city_pins.json"),
-      fetchLocalJson("./data/visited_countries.json")
-    ]);
-
-    ABSENCE_RANGES_DATA = Array.isArray(absenceRanges) ? absenceRanges : [];
-    DAY_LINKS_DATA = dayLinks && typeof dayLinks === "object" ? dayLinks : {};
-    window.CITY_PINS_DATA = Array.isArray(cityPins) ? cityPins : [];
-
-    const visitedCountryRows = Array.isArray(visitedCountries) ? visitedCountries : [];
-    window.VISITED_NATIONS_DATA = visitedCountryRows
-      .filter(row => row && row.visited === true)
-      .map(row => row.country);
-    window.VISITED_COUNTRIES_DATA = window.VISITED_NATIONS_DATA.concat(window.VISITED_TERRITORIES_DATA || []);
-
-    debugLog("Primary datasets loaded", {
-      absenceRanges: ABSENCE_RANGES_DATA.length,
-      dayLinks: Object.keys(DAY_LINKS_DATA).length,
-      cityPins: window.CITY_PINS_DATA.length,
-      visitedCountries: window.VISITED_NATIONS_DATA.length
-    });
-
-    try {
-      initAbsenceTracker();
-      debugLog("Absence tracker initialised");
-    } catch (error) {
-      debugError("Absence tracker init failed", error);
-      if (months) {
-        months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
-      }
-    }
-
-    try {
-      await loadTravelMapStyle();
-      if (typeof window.initTravelMap === "function") {
-        window.initTravelMap();
-        debugLog("Travel map init triggered");
-      } else {
-        throw new Error("initTravelMap is not available");
-      }
-    } catch (error) {
-      debugError("Travel map init failed", error);
-      if (travelMapStatus) {
-        travelMapStatus.textContent = "Unable to load the travel map right now.";
-      }
-      if (travelMap) {
-        travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-      }
-    }
-  } catch (error) {
-    debugError("Initial data load failed", error);
-
-    if (months) {
-      months.innerHTML = '<div class="small" style="padding:16px;">Unable to load calendar data right now.</div>';
-    }
-    if (travelMapStatus) {
-      travelMapStatus.textContent = "Unable to load the travel map right now.";
-    }
-    if (travelMap) {
-      travelMap.innerHTML = '<div class="small" style="padding:16px;">Unable to load the travel map right now.</div>';
-    }
-  }
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSiteData);
-} else {
-  initSiteData();
-}
-</script>
-
-<script>
-(function () {
-  const STORAGE_KEY = "pakho-theme-mode";
-
-  const DARK_THEME = {
-    countries: { fill: "#2563eb", line: "#60a5fa", hoverFill: "#3b82f6", hoverLine: "#bfdbfe" },
-    cities: { fill: "#fbbf24", hoverFill: "#f59e0b" },
-    airports: { fill: "#2dd4bf", hoverFill: "#14b8a6" },
-    routes: { level1: "#fbbf24", level2: "#fb923c", level3: "#f87171", level4: "#e879f9", level5: "#a78bfa" },
-    ui: { bgTop: "#0f172a", bgBottom: "#020617" }
-  };
-
-  function currentMode() {
-    return localStorage.getItem(STORAGE_KEY) === "dark" ? "dark" : "anime";
-  }
-
-  function currentMapTheme() {
-    const base = (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
-    return currentMode() === "dark" ? {
-      ...base,
-      ...DARK_THEME,
-      countries: { ...(base.countries || {}), ...(DARK_THEME.countries || {}) },
-      cities: { ...(base.cities || {}), ...(DARK_THEME.cities || {}) },
-      airports: { ...(base.airports || {}), ...(DARK_THEME.airports || {}) },
-      routes: { ...(base.routes || {}), ...(DARK_THEME.routes || {}) },
-      ui: { ...(base.ui || {}), ...(DARK_THEME.ui || {}) }
-    } : base;
-  }
-
-  function applyMapThemeCss() {
-    const theme = currentMapTheme();
-    const root = document.documentElement;
-    if (theme.countries) {
-      root.style.setProperty("--map-country-fill", theme.countries.fill || "#2f6fff");
-      root.style.setProperty("--map-country-line", theme.countries.line || "#1847b8");
-    }
-    if (theme.cities) {
-      root.style.setProperty("--map-city-fill", theme.cities.fill || "#24c483");
-      root.style.setProperty("--map-city-hover", theme.cities.hoverFill || "#149d67");
-    }
-    if (theme.airports) {
-      root.style.setProperty("--map-airport-fill", theme.airports.fill || "#13b8a6");
-      root.style.setProperty("--map-airport-hover", theme.airports.hoverFill || "#0d9488");
-    }
-    if (theme.routes) {
-      root.style.setProperty("--map-route-level2", theme.routes.level2 || "#f79d65");
-      root.style.setProperty("--map-route-level4", theme.routes.level4 || "#e11d48");
-    }
-    if (theme.ui) {
-      root.style.setProperty("--map-bg-top", theme.ui.bgTop || "#eef6ff");
-      root.style.setProperty("--map-bg-bottom", theme.ui.bgBottom || "#dfeeff");
-    }
-  }
-
-  function refreshLiveMap() {
-    const map = window.travelMapInstance;
-    if (!map || !map.isStyleLoaded()) return;
-    const theme = currentMapTheme();
-
-    if (map.getLayer("countries-fill")) {
-      map.setPaintProperty("countries-fill", "fill-color", theme.countries.fill);
-      map.setPaintProperty("countries-fill", "fill-outline-color", theme.countries.line);
-    }
-    if (map.getLayer("countries-line")) {
-      map.setPaintProperty("countries-line", "line-color", theme.countries.line);
-    }
-    if (map.getLayer("countries-hover-fill")) {
-      map.setPaintProperty("countries-hover-fill", "fill-color", theme.countries.hoverFill);
-      map.setPaintProperty("countries-hover-fill", "fill-outline-color", theme.countries.hoverLine);
-    }
-    if (map.getLayer("countries-hover-line")) {
-      map.setPaintProperty("countries-hover-line", "line-color", theme.countries.hoverLine);
-    }
-    if (map.getLayer("cities-base")) {
-      map.setPaintProperty("cities-base", "circle-color", theme.cities.fill);
-    }
-    if (map.getLayer("cities-hover")) {
-      map.setPaintProperty("cities-hover", "circle-color", theme.cities.hoverFill);
-    }
-    if (map.getLayer("airports-base")) {
-      map.setPaintProperty("airports-base", "circle-color", theme.airports.fill);
-    }
-    if (map.getLayer("airports-hover")) {
-      map.setPaintProperty("airports-hover", "circle-color", theme.airports.hoverFill);
-    }
-
-    const routeExpr = ["match", ["get", "count"], 1, theme.routes.level1, 2, theme.routes.level2, 3, theme.routes.level3, 4, theme.routes.level4, theme.routes.level5];
-    if (map.getLayer("routes-base")) map.setPaintProperty("routes-base", "line-color", routeExpr);
-    if (map.getLayer("routes-hover")) map.setPaintProperty("routes-hover", "line-color", routeExpr);
-  }
-
-  function applyTheme() {
-    const dark = currentMode() === "dark";
-    document.documentElement.classList.toggle("theme-dark", dark);
-    document.body.classList.toggle("theme-dark", dark);
-    const btn = document.getElementById("themeSwitchBtn");
-    if (btn) btn.setAttribute("aria-pressed", dark ? "true" : "false");
-    applyMapThemeCss();
-    refreshLiveMap();
-  }
-
-  window.toggleSiteTheme = function () {
-    localStorage.setItem(STORAGE_KEY, currentMode() === "dark" ? "anime" : "dark");
-    applyTheme();
-  };
-
-  document.addEventListener("DOMContentLoaded", function () {
-    applyTheme();
-    const btn = document.getElementById("themeSwitchBtn");
-    if (btn) btn.addEventListener("click", window.toggleSiteTheme);
-  });
-})();
-</script>
-
-
-<script>
-(function () {
-  const bg = document.querySelector('.site-bg');
-  if (!bg) return;
-
-  function sizeBg() {
-    const vv = window.visualViewport;
-    const h = vv ? vv.height : window.innerHeight;
-    bg.style.minHeight = Math.ceil(h * 1.24) + 'px';
-  }
-
-  window.addEventListener('resize', sizeBg, { passive: true });
-  window.addEventListener('orientationchange', sizeBg, { passive: true });
-  window.addEventListener('pageshow', sizeBg, { passive: true });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', sizeBg, { passive: true });
-    window.visualViewport.addEventListener('scroll', sizeBg, { passive: true });
-  }
-  sizeBg();
-})();
-</script>
-
 </body>
 </html>
