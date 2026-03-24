@@ -79,24 +79,24 @@
           "fill": "#2563eb",
           "line": "#60a5fa",
           "hoverFill": "#3b82f6",
-          "hoverLine": "#93c5fd",
+          "hoverLine": "#bfdbfe",
           "fadedFill": "#1e293b",
           "fadedLine": "#334155"
         },
         "cities": {
           "fill": "#fbbf24",
+          "line": "#fde68a",
           "hoverFill": "#f59e0b",
-          "fadedFill": "#475569",
-          "line": "#fef3c7",
           "hoverLine": "#ffffff",
+          "fadedFill": "#475569",
           "fadedLine": "#64748b"
         },
         "airports": {
           "fill": "#2dd4bf",
+          "line": "#99f6e4",
           "hoverFill": "#14b8a6",
-          "fadedFill": "#334155",
-          "line": "#ccfbf1",
           "hoverLine": "#ffffff",
+          "fadedFill": "#334155",
           "fadedLine": "#64748b"
         },
         "routes": {
@@ -105,10 +105,6 @@
           "level3": "#f87171",
           "level4": "#e879f9",
           "level5": "#a78bfa"
-        },
-        "ui": {
-          "bgTop": "#0f172a",
-          "bgBottom": "#020617"
         },
         "baseMap": {
           "water": "#020617",
@@ -119,6 +115,10 @@
           "label": "#cbd5e1",
           "subLabel": "#94a3b8",
           "coastline": "#64748b"
+        },
+        "ui": {
+          "bgTop": "#0f172a",
+          "bgBottom": "#020617"
         }
       }
     }
