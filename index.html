@@ -848,52 +848,69 @@
         </div>
 </section>
 
-    <section class="panel glass map-panel" style="margin-top:-4px;">
-      <div class="panel-header">
-        <div>
-          <h3 class="panel-subtitle">Travel Map</h3>
-        </div>
-        <div class="travel-map-actions external-links" style="margin-top:0;">
-          <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
-          <button onclick="openExternal('flightradar')">myFlightradar24</button>
-        </div>
-      </div>
+        <section class="panel glass map-panel" style="margin-top:-4px;">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-subtitle">Travel Map</h3>
+            </div>
+            <div class="travel-map-actions external-links" style="margin-top:0;">
+              <button onclick="openExternal('tripadvisor')">Tripadvisor Travel Map</button>
+              <button onclick="openExternal('flightradar')">myFlightradar24</button>
+            </div>
+          </div>
+        
+          <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
+            <div class="kpi-item">
+              <div class="kpi-value" id="heroCountryCount">--</div>
+              <div class="kpi-label">Countries Visited</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="heroCityCount">--</div>
+              <div class="kpi-label">Cities Visited</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="heroAirportCount">--</div>
+              <div class="kpi-label">Airports Visited</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="heroFlightCount">--</div>
+              <div class="kpi-label">Flights Taken</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="heroRouteCount">--</div>
+              <div class="kpi-label">Routes Flown</div>
+            </div>
+          </div>
+        
+          <div class="travel-map-controls">
+            <div class="legend-row">
+              <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Countries</button>
+              <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>Cities</button>
+              <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airports</button>
+              <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flights</button>
+            </div>
+          </div>
+        
+          <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
+          <div id="travelMap" class="country-visited-map"></div>
+        </section>
 
-      <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);">
-        <div class="kpi-item">
-          <div class="kpi-value" id="heroCountryCount">--</div>
-          <div class="kpi-label">Countries Visited</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-value" id="heroCityCount">--</div>
-          <div class="kpi-label">Cities Visited</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-value" id="heroAirportCount">--</div>
-          <div class="kpi-label">Airports Visited</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-value" id="heroFlightCount">--</div>
-          <div class="kpi-label">Flights Taken</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-value" id="heroRouteCount">--</div>
-          <div class="kpi-label">Routes Flown</div>
-        </div>
+    <section>
+      <div id="changeThemeButton">
+        Change theme
       </div>
-
-      <div class="travel-map-controls">
-        <div class="legend-row">
-          <button type="button" class="map-toggle-btn active" data-layer="country"><span class="swatch country-swatch-visited"></span>Countries</button>
-          <button type="button" class="map-toggle-btn" data-layer="city"><span class="swatch country-swatch-city"></span>Cities</button>
-          <button type="button" class="map-toggle-btn" data-layer="airport"><span class="swatch flight-airport-swatch"></span>Airports</button>
-          <button type="button" class="map-toggle-btn" data-layer="route"><span class="swatch flight-route-swatch"></span>Flights</button>
-        </div>
-      </div>
-
-      <div id="travelMapStatusText" class="status-line">Loading travel map…</div>
-      <div id="travelMap" class="country-visited-map"></div>
     </section>
+
+    <div class="hidden-support">
+      <div id="ilrPill"></div>
+      <div id="ilrText"></div>
+      <div id="citPill"></div>
+      <div id="citText"></div>
+      <div id="dataText"></div>
+      <div id="today180Text"></div>
+      <div id="today90Text"></div>
+      <div id="currentDateText"></div>
+    </div>
   </div>
 </div>
 
@@ -926,143 +943,8 @@ function getElementOrWarn(id) {
   return element;
 }
 
-window.TRAVEL_MAP_STYLE = {
-  "version": 8,
-  "name": "Travel Map",
-  "metadata": {
-    "theme": {
-      "countries": {
-        "fill": "#93c5fd",
-        "line": "#1d4ed8",
-        "hoverFill": "#1748d8",
-        "hoverLine": "#103aab",
-        "fadedFill": "#e8f0ff",
-        "fadedLine": "#d7e4ff"
-      },
-      "cities": {
-        "fill": "#fbbf24",
-        "hoverFill": "#f59e0b",
-        "fadedFill": "#fbbf24",
-        "line": "#ffffff",
-        "hoverLine": "#ffffff",
-        "fadedLine": "#d9efe5"
-      },
-      "airports": {
-        "fill": "#13b8a6",
-        "hoverFill": "#0d9488",
-        "fadedFill": "#99f6e4",
-        "line": "#ffffff",
-        "hoverLine": "#ffffff",
-        "fadedLine": "#d7f7f1"
-      },
-      "routes": {
-        "level1": "#f59e0b",
-        "level2": "#f97316",
-        "level3": "#ef4444",
-        "level4": "#c026d3",
-        "level5": "#7c3aed"
-      },
-      "ui": {
-        "bgTop": "#eef6ff",
-        "bgBottom": "#dfeeff"
-      },
-      "sizes": {
-        "countries": {
-          "lineWidth": 1.4,
-          "hoverLineWidth": 2.3,
-          "fillOpacity": 0.78,
-          "hoverFillOpacity": 0.96
-        },
-        "cities": {
-          "baseRadius": 2.5,
-          "baseStrokeWidth": 1,
-          "hoverRadius": 3.5,
-          "hoverStrokeWidth": 1.5
-        },
-        "airports": {
-          "baseRadius": 2,
-          "baseStrokeWidth": 0.8,
-          "hoverRadius": 3,
-          "hoverStrokeWidth": 1.2
-        },
-        "routes": {
-          "baseWidth": 2.3,
-          "baseOpacity": 0.85,
-          "hoverWidth": 2.8,
-          "hoverOpacity": 0.96
-        }
-      },
-      "baseMap": {
-        "water": "#cfe8ff",
-        "land": "#fff4dc",
-        "landShadow": "#f3e5c8",
-        "border": "#d6e4f5",
-        "waterway": "#b9ddff",
-        "label": "#6b7da3",
-        "subLabel": "#8b9bb8"
-      }
-    }
-  },
-  "transition": {
-    "duration": 250,
-    "delay": 0
-  },
-  "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
-  "sources": {
-    "maplibre-world": {
-      "type": "vector",
-      "url": "https://demotiles.maplibre.org/tiles/tiles.json"
-    }
-  },
-  "layers": [
-    {
-      "id": "background",
-      "type": "background",
-      "paint": {
-        "background-color": "#cfe8ff"
-      }
-    },
-    {
-      "id": "basemap-countries-fill",
-      "type": "fill",
-      "source": "maplibre-world",
-      "source-layer": "countries",
-      "paint": {
-        "fill-color": "#fff4dc",
-        "fill-opacity": 1.0,
-        "fill-outline-color": "#f3e5c8"
-      }
-    },
-    {
-      "id": "basemap-countries-line",
-      "type": "line",
-      "source": "maplibre-world",
-      "source-layer": "countries",
-      "paint": {
-        "line-color": "#d6e4f5",
-        "line-width": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "zoom"
-          ],
-          0,
-          0.25,
-          3,
-          0.5,
-          6,
-          0.8
-        ],
-        "line-opacity": 0.75
-      }
-    }
-  ]
-};
-
 function getTravelMapTheme() {
-  return (window.TRAVEL_MAP_STYLE && window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme) || {};
+  return (window.TRAVEL_MAP_STYLE.metadata && window.TRAVEL_MAP_STYLE.metadata.theme);
 }
 
 function applyTravelMapThemeToCss(theme) {
@@ -1108,8 +990,7 @@ async function loadTravelMapStyle() {
     applyTravelMapThemeToCss(getTravelMapTheme());
     debugLog("Travel map style JSON loaded", styleJson.metadata?.theme || {});
   } catch (error) {
-    debugWarn("Using fallback travel map style", error);
-    applyTravelMapThemeToCss(getTravelMapTheme());
+    debugWarn(error);
   }
 }
 
