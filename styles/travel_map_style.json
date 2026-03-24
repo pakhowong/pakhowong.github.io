@@ -76,35 +76,35 @@
       },
       "darkMode": {
         "countries": {
-          "fill": "#2563eb",
-          "line": "#60a5fa",
-          "hoverFill": "#3b82f6",
-          "hoverLine": "#bfdbfe",
-          "fadedFill": "#1e293b",
-          "fadedLine": "#334155"
+          "fill": "#93c5fd",
+          "line": "#1d4ed8",
+          "hoverFill": "#1748d8",
+          "hoverLine": "#103aab",
+          "fadedFill": "#e8f0ff",
+          "fadedLine": "#d7e4ff"
         },
         "cities": {
           "fill": "#fbbf24",
-          "line": "#fde68a",
           "hoverFill": "#f59e0b",
-          "hoverLine": "#ffffff",
-          "fadedFill": "#475569",
-          "fadedLine": "#64748b"
+          "fadedFill": "#fbbf24",
+          "line": "#b45309",
+          "hoverLine": "#b45309",
+          "fadedLine": "#d9efe5"
         },
         "airports": {
-          "fill": "#2dd4bf",
-          "line": "#99f6e4",
-          "hoverFill": "#14b8a6",
+          "fill": "#13b8a6",
+          "hoverFill": "#0d9488",
+          "fadedFill": "#99f6e4",
+          "line": "#ffffff",
           "hoverLine": "#ffffff",
-          "fadedFill": "#334155",
-          "fadedLine": "#64748b"
+          "fadedLine": "#d7f7f1"
         },
         "routes": {
-          "level1": "#fbbf24",
-          "level2": "#fb923c",
-          "level3": "#f87171",
-          "level4": "#e879f9",
-          "level5": "#a78bfa"
+          "level1": "#f59e0b",
+          "level2": "#f97316",
+          "level3": "#ef4444",
+          "level4": "#c026d3",
+          "level5": "#7c3aed"
         },
         "baseMap": {
           "water": "#020617",
