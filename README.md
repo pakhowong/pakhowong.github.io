@@ -1,121 +1,104 @@
-# 🌍 Travel History Tracker
+# 🌏 Travel Dashboard
 
-This repository powers my personal website:  
-👉 https://pakhowong.github.io/
+A visually rich, Japanese anime-inspired travel dashboard that transforms your
+global journeys into an interactive, data-driven experience.
 
-It combines **UK immigration tracking**, **global travel visualisation**, and **flight history mapping** into a single interactive dashboard.
+🔗 Live Site: https://pakhowong.github.io/
 
----
+------------------------------------------------------------------------
 
-## ✨ Features
+## ✨ What is this?
 
-### 🇬🇧 UK Immigration Absence Tracker
-- Tracks absences under the **BN(O) 5+1 route**
-- Calculates:
-  - Total days outside the UK
-  - Rolling 12-month compliance
-  - Maximum accumulated absence days
-- Daily breakdown with direct links to supporting records
+A personal travel history visualisation tool that combines:
 
----
+-   🌍 A fully interactive world map\
+-   📊 Travel analytics and insights\
+-   📅 Immigration and absence tracking\
+-   🎨 A clean, modern anime-style UI
 
-### 🌏 Visited Countries Map
-- Interactive world map using **Leaflet**
-- Based on **Natural Earth datasets**
-- Handles:
-  - Overseas territories
-  - Countries vs sovereign states
-- Includes expansion logic (e.g. Cyprus includes both Southern and Northern Cyprus)
+It is designed to turn raw travel data into something meaningful,
+intuitive, and visually engaging.
 
----
+------------------------------------------------------------------------
 
-### 📍 Visited Cities (Pin Layer)
-- Displays visited locations as map pins
-- Pins always remain above country layers
-- Data stored in:
-```
-city_pins.js
-```
+## 🚀 Key Features
 
----
+### 🗺️ Interactive Travel Map
 
-### ✈️ Flight History Map
-- Visualises all flight routes using great-circle arcs
-- Features:
-  - Route grouping (including round trips)
-  - Colour-coded frequency:
-    - Once → Orange
-    - Twice → Red
-    - Three → Maroon
-    - Four → Violet
-    - Five+ → Purple
-  - Interactive tooltips with date and airline
-- Handles antimeridian wrapping for smooth global routes
+-   Vector-based global map powered by MapLibre
+-   Highlight visited countries
+-   Plot visited cities and airports
+-   Visualise flight routes with colour-coded frequency
+-   Smooth hover and interaction effects
 
----
+------------------------------------------------------------------------
 
-## 🧠 Data Architecture
+### 📊 Travel Insights
 
-```
-/
-├── index.html
-├── city_pins.js
-├── absence_ranges.js
-├── day_links.js
-├── flight_history.csv
-```
+-   Countries, cities, airports visited
+-   Flights taken and routes flown
+-   Clear visual summaries of travel history
 
----
+------------------------------------------------------------------------
 
-## 🛫 Airport Resolution (Hybrid System)
+### 📅 UK Immigration Absence Tracker
 
-Airport coordinates are resolved using:
+-   Track absence days for ILR / citizenship requirements
+-   Rolling 12-month calculation
+-   Safety buffer and remaining quota indicators
 
-1. **Primary**: mwgg/Airports  
-2. **Fallback**: OpenFlights  
+------------------------------------------------------------------------
 
-Lookup logic:
-```
-ICAO → IATA → (optional override)
+### 🎨 Custom Design System
+
+-   Fully themeable via JSON configuration
+-   Soft, sky-themed aesthetic
+-   Clean glass-style UI components
+
+------------------------------------------------------------------------
+
+### 📱 Fully Responsive
+
+-   Works across desktop, tablet, and mobile
+-   Optimised layout for different screen sizes
+
+------------------------------------------------------------------------
+
+## 🏗️ How it works (high level)
+
+``` text
+Travel Data → Processing → Map + UI Rendering
 ```
 
-This improves coverage for:
-- Legacy ICAO codes
-- Missing dataset entries
+-   Map rendering: MapLibre GL JS\
+-   Styling: JSON-based theme system\
+-   UI: Lightweight HTML + CSS + JS
 
----
+------------------------------------------------------------------------
 
-## 🗺️ Technology Stack
+## 🎨 Customisation
 
-- Leaflet.js
-- Natural Earth (Admin-0)
-- Carto basemap (English-only)
+All map styling is controlled via:
 
----
+``` text
+/styles/travel_map_style.json
+```
 
-## ⚙️ Design Principles
+You can easily change: - Map colours (sea, land, borders) - Country
+highlight styles - City and airport markers - Flight route colours and thickness
 
-- Modular data separation (JS + JSON + CSV)
-- Accurate geographic modelling (countries vs sovereign states)
-- Performance-focused (lightweight HTML)
+------------------------------------------------------------------------
 
----
+## 🔮 Future Ideas
 
-## 🚀 Future Improvements
+-   Travel insights engine (top countries, longest routes)
+-   Timeline view of trips
+-   Shareable travel summary cards
+-   Dark mode / theme switching
 
-- Travel analytics dashboard
-- Timeline visualisation
-- Google Photos integration
-- Mobile optimisation
-
----
-
-## 📌 Notes
-
-This project is for personal travel tracking and visualisation only.
-
----
+------------------------------------------------------------------------
 
 ## 👤 Author
 
-Pakho Wong
+Pakho Wong\
+A travel enthusiast
