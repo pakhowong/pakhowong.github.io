@@ -360,7 +360,7 @@
     "lng": 12.5683
   },
   {
-    "name": "Helsingør",
+    "name": "HelsingĂ¸r",
     "country": "Denmark",
     "lat": 56.0369,
     "lng": 12.6136
@@ -570,13 +570,13 @@
     "lng": -21.129
   },
   {
-    "name": "Grundarfjörður",
+    "name": "GrundarfjĂśrĂ°ur",
     "country": "Iceland",
     "lat": 64.9249,
     "lng": -23.2665
   },
   {
-    "name": "Vatnajökull",
+    "name": "VatnajĂśkull",
     "country": "Iceland",
     "lat": 64.422,
     "lng": -16.79
@@ -1422,7 +1422,7 @@
     "lng": 29.06
   },
   {
-    "name": "Göreme",
+    "name": "GĂśreme",
     "country": "Turkey",
     "lat": 38.6431,
     "lng": 34.8289
@@ -1440,7 +1440,7 @@
     "lng": 29.1187
   },
   {
-    "name": "Selçuk",
+    "name": "SelĂ§uk",
     "country": "Turkey",
     "lat": 37.9514,
     "lng": 27.3681
@@ -1738,5 +1738,173 @@
     "country": "Qatar",
     "lat": 25.2854,
     "lng": 51.531
+  },
+  {
+    "name": "Berat",
+    "country": "Albania",
+    "lat": 40.7058,
+    "lng": 19.9522
+  },
+  {
+    "name": "Gjirokaster",
+    "country": "Albania",
+    "lat": 40.0758,
+    "lng": 20.1389
+  },
+  {
+    "name": "Andorra la Vella",
+    "country": "Andorra",
+    "lat": 42.5063,
+    "lng": 1.5218
+  },
+  {
+    "name": "Bridgetown",
+    "country": "Barbados",
+    "lat": 13.0975,
+    "lng": -59.6167
+  },
+  {
+    "name": "Krka National Park",
+    "country": "Croatia",
+    "lat": 43.8051,
+    "lng": 15.9623
+  },
+  {
+    "name": "Plitvice Lakes National Park",
+    "country": "Croatia",
+    "lat": 44.8804,
+    "lng": 15.6167
+  },
+  {
+    "name": "Split",
+    "country": "Croatia",
+    "lat": 43.5081,
+    "lng": 16.4402
+  },
+  {
+    "name": "Zagreb",
+    "country": "Croatia",
+    "lat": 45.815,
+    "lng": 15.9819
+  },
+  {
+    "name": "Roseau",
+    "country": "Dominica",
+    "lat": 15.3092,
+    "lng": -61.3794
+  },
+  {
+    "name": "St George's",
+    "country": "Grenada",
+    "lat": 12.0561,
+    "lng": -61.7488
+  },
+  {
+    "name": "Pristina",
+    "country": "Kosovo",
+    "lat": 42.6629,
+    "lng": 21.1655
+  },
+  {
+    "name": "Prizren",
+    "country": "Kosovo",
+    "lat": 42.2139,
+    "lng": 20.7397
+  },
+  {
+    "name": "MalĂŠ",
+    "country": "Maldives",
+    "lat": 4.1755,
+    "lng": 73.5093
+  },
+  {
+    "name": "Monaco",
+    "country": "Monaco",
+    "lat": 43.7384,
+    "lng": 7.4246
+  },
+  {
+    "name": "Ohrid",
+    "country": "North Macedonia",
+    "lat": 41.1231,
+    "lng": 20.8016
+  },
+  {
+    "name": "Skopje",
+    "country": "North Macedonia",
+    "lat": 41.9981,
+    "lng": 21.4254
+  },
+  {
+    "name": "Apia",
+    "country": "Samoa",
+    "lat": -13.8507,
+    "lng": -171.7514
+  },
+  {
+    "name": "San Marino",
+    "country": "San Marino",
+    "lat": 43.9424,
+    "lng": 12.4578
+  },
+  {
+    "name": "Golubac",
+    "country": "Serbia",
+    "lat": 44.6549,
+    "lng": 21.6319
+  },
+  {
+    "name": "Bled",
+    "country": "Slovenia",
+    "lat": 46.3692,
+    "lng": 14.1136
+  },
+  {
+    "name": "Castries",
+    "country": "Saint Lucia",
+    "lat": 14.0101,
+    "lng": -60.9875
+  },
+  {
+    "name": "Stockholm",
+    "country": "Sweden",
+    "lat": 59.3293,
+    "lng": 18.0686
+  },
+  {
+    "name": "Nuku'alofa",
+    "country": "Tonga",
+    "lat": -21.1394,
+    "lng": -175.2049
+  },
+  {
+    "name": "Aberdeen",
+    "country": "United Kingdom",
+    "lat": 57.1497,
+    "lng": -2.0943
+  },
+  {
+    "name": "Glasgow",
+    "country": "United Kingdom",
+    "lat": 55.8642,
+    "lng": -4.2518
+  },
+  {
+    "name": "Inverness",
+    "country": "United Kingdom",
+    "lat": 57.4778,
+    "lng": -4.2247
+  },
+  {
+    "name": "Isle of Skye",
+    "country": "United Kingdom",
+    "lat": 57.2736,
+    "lng": -6.215
+  },
+  {
+    "name": "Vatican City",
+    "country": "Vatican City",
+    "lat": 41.9029,
+    "lng": 12.4534
   }
 ]
