@@ -25,7 +25,7 @@
   },
   {
     "country": "Argentina",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Armenia",
@@ -93,7 +93,7 @@
   },
   {
     "country": "Brazil",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Brunei",
@@ -745,7 +745,7 @@
   },
   {
     "country": "Uruguay",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Uzbekistan",
