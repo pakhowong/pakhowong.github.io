@@ -1,5 +1,17 @@
 [
   {
+    "name": "El Chalten",
+    "lat": -49.3315,
+    "lng": -72.8863,
+    "country": "Argentina"
+  },
+  {
+    "name": "Sao Paulo",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "country": "Brazil"
+  },
+  {
     "name": "Rio de Janeiro",
     "lat": -22.9068,
     "lng": -43.1729,
