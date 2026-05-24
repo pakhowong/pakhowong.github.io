@@ -145,7 +145,7 @@
   },
   {
     "country": "Colombia",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Comoros",
@@ -209,7 +209,7 @@
   },
   {
     "country": "El Salvador",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Equatorial Guinea",
@@ -293,7 +293,7 @@
   },
   {
     "country": "Honduras",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Hungary",
@@ -493,7 +493,7 @@
   },
   {
     "country": "Nicaragua",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Niger",
