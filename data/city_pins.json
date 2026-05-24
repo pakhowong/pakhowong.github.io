@@ -6,6 +6,60 @@
     "country": "Argentina"
   },
   {
+    "name": "Bogota",
+    "lat": 4.7110,
+    "lng": -74.0721,
+    "country": "Colombia"
+  },
+  {
+    "name": "Yosemite National Park",
+    "lat": 37.8651,
+    "lng": -119.5383,
+    "country": "United States"
+  },
+  {
+    "name": "San Diego",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "country": "United States"
+  },
+  {
+    "name": "Zion National Park",
+    "lat": 37.2982,
+    "lng": -113.0263,
+    "country": "United States"
+  },
+  {
+    "name": "Managua",
+    "lat": 12.1364,
+    "lng": -86.2514,
+    "country": "Nicaragua"
+  },
+  {
+    "name": "Granada",
+    "lat": 11.9344,
+    "lng": -85.9560,
+    "country": "Nicaragua"
+  },
+  {
+    "name": "Leon",
+    "lat": 12.4379,
+    "lng": -86.8780,
+    "country": "Nicaragua"
+  },
+  {
+    "name": "Tegucigalpa",
+    "lat": 14.0723,
+    "lng": -87.1921,
+    "country": "Honduras"
+  },
+  {
+    "name": "San Salvador",
+    "lat": 13.6929,
+    "lng": -89.2182,
+    "country": "El Salvador"
+  },
+  {
     "name": "Sao Paulo",
     "lat": -23.5505,
     "lng": -46.6333,
