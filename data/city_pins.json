@@ -1,5 +1,11 @@
 [
   {
+    "name": "Cardiff",
+    "lat": 51.4816,
+    "lng": -3.1791,
+    "country": "United Kingdom"
+  },
+  {
     "name": "El Chalten",
     "lat": -49.3315,
     "lng": -72.8863,
