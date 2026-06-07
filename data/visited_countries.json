@@ -101,7 +101,7 @@
   },
   {
     "country": "Bulgaria",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Burkina Faso",
@@ -445,7 +445,7 @@
   },
   {
     "country": "Moldova",
-    "visited": false
+    "visited": true
   },
   {
     "country": "Monaco",
