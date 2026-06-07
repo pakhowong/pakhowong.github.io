@@ -1,5 +1,41 @@
 [
   {
+    "name": "Isle of Wight",
+    "lat": 50.6938,
+    "lng": -1.3047,
+    "country": "United Kingdom"
+  },
+  {
+    "name": "Sofia",
+    "lat": 42.6977,
+    "lng": 23.3219,
+    "country": "Bulgaria"
+  },
+  {
+    "name": "Brasov",
+    "lat": 45.6579,
+    "lng": 25.6012,
+    "country": "Romania"
+  },
+  {
+    "name": "Sighisoara",
+    "lat": 46.2197,
+    "lng": 24.7964,
+    "country": "Romania"
+  },
+  {
+    "name": "Iasi",
+    "lat": 47.1585,
+    "lng": 27.6014,
+    "country": "Romania"
+  },
+  {
+    "name": "Chisinau",
+    "lat": 47.0105,
+    "lng": 28.8638,
+    "country": "Moldova"
+  },
+  {
     "name": "Cardiff",
     "lat": 51.4816,
     "lng": -3.1791,
