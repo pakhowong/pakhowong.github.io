@@ -1,5 +1,11 @@
 [
   {
+    "name": "Jersey",
+    "lat": 49.2144,
+    "lng": -2.1313,
+    "country": "United Kingdom"
+  },
+  {
     "name": "Isle of Wight",
     "lat": 50.6938,
     "lng": -1.3047,
