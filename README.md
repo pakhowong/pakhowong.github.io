@@ -1,6 +1,6 @@
 # 🌏 Travel Dashboard
 
-A visually rich, Japanese anime-inspired travel dashboard that transforms your
+A visually rich, Japanese anime-inspired travel dashboard that transforms my
 global journeys into an interactive, data-driven experience.
 
 🔗 Live Site: https://pakhowong.github.io/
