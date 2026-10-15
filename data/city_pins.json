@@ -1,5 +1,11 @@
 [
   {
+    "name": "Vianden",
+    "lat": 49.9350,
+    "lng": 6.2089,
+    "country": "Luxembourg"
+  },
+  {
     "name": "Jersey",
     "lat": 49.2144,
     "lng": -2.1313,
