@@ -1,5 +1,41 @@
 [
   {
+    "name": "Fukuoka",
+    "lat": 33.5902,
+    "lng": 130.4017,
+    "country": "Japan"
+  },
+  {
+    "name": "Nagasaki",
+    "lat": 32.7503,
+    "lng": 129.8777,
+    "country": "Japan"
+  },
+  {
+    "name": "Kumamoto",
+    "lat": 32.8031,
+    "lng": 130.7079,
+    "country": "Japan"
+  },
+  {
+    "name": "Aso",
+    "lat": 32.9519,
+    "lng": 131.1214,
+    "country": "Japan"
+  },
+  {
+    "name": "Takachiho",
+    "lat": 32.7117,
+    "lng": 131.3078,
+    "country": "Japan"
+  },
+  {
+    "name": "Dazaifu",
+    "lat": 33.5128,
+    "lng": 130.5239,
+    "country": "Japan"
+  },
+  {
     "name": "Vianden",
     "lat": 49.9350,
     "lng": 6.2089,
