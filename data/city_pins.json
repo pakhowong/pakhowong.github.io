@@ -1,5 +1,11 @@
 [
   {
+    "name": "Birmingham",
+    "lat": 52.4862,
+    "lng": -1.8904,
+    "country": "United Kingdom"
+  },
+  {
     "name": "Fukuoka",
     "lat": 33.5902,
     "lng": 130.4017,
