@@ -1,5 +1,83 @@
 [
   {
+    "name": "Wakayama",
+    "lat": 34.2305,
+    "lng": 135.1708,
+    "country": "Japan"
+  },
+  {
+    "name": "Kumano Kodo",
+    "lat": 33.8364,
+    "lng": 135.7736,
+    "country": "Japan"
+  },
+  {
+    "name": "Tanabe",
+    "lat": 33.7280,
+    "lng": 135.3778,
+    "country": "Japan"
+  },
+  {
+    "name": "Shirahama",
+    "lat": 33.6782,
+    "lng": 135.3481,
+    "country": "Japan"
+  },
+  {
+    "name": "Kushimoto",
+    "lat": 33.4725,
+    "lng": 135.7812,
+    "country": "Japan"
+  },
+  {
+    "name": "Amanohashidate",
+    "lat": 35.5694,
+    "lng": 135.1919,
+    "country": "Japan"
+  },
+  {
+    "name": "Miyoshi",
+    "lat": 34.0260,
+    "lng": 133.8072,
+    "country": "Japan"
+  },
+  {
+    "name": "Kamikochi",
+    "lat": 36.2494,
+    "lng": 137.6370,
+    "country": "Japan"
+  },
+  {
+    "name": "Tateyama",
+    "lat": 36.5759,
+    "lng": 137.6197,
+    "country": "Japan"
+  },
+  {
+    "name": "Mount Fuji",
+    "lat": 35.3606,
+    "lng": 138.7274,
+    "country": "Japan"
+  },
+  {
+    "name": "Kamakura",
+    "lat": 35.3192,
+    "lng": 139.5467,
+    "country": "Japan"
+  },
+  {
+    "name": "Hikone",
+    "lat": 35.2745,
+    "lng": 136.2596,
+    "country": "Japan"
+  },
+  {
+    "name": "Gifu",
+    "lat": 35.4233,
+    "lng": 136.7607,
+    "country": "Japan"
+  },
+  {
     "name": "Lake District",
     "lat": 54.4609,
     "lng": -3.0886,
