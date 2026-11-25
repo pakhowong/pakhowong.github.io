@@ -1,5 +1,11 @@
 [
   {
+    "name": "Lake District",
+    "lat": 54.4609,
+    "lng": -3.0886,
+    "country": "United Kingdom"
+  },
+  {
     "name": "Birmingham",
     "lat": 52.4862,
     "lng": -1.8904,
