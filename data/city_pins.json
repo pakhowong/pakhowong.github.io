@@ -1,5 +1,23 @@
 [
   {
+    "name": "Fujikawaguchiko",
+    "lat": 35.4973,
+    "lng": 138.7550,
+    "country": "Japan"
+  },
+  {
+    "name": "Ginzan Onsen",
+    "lat": 38.5703,
+    "lng": 140.5308,
+    "country": "Japan"
+  },
+  {
+    "name": "Gotemba",
+    "lat": 35.3086,
+    "lng": 138.9348,
+    "country": "Japan"
+  },
+  {
     "name": "Wakayama",
     "lat": 34.2305,
     "lng": 135.1708,
